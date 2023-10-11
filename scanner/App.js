@@ -1,30 +1,24 @@
-import { NavigationContainer } from '@react-navigation/native';
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import { ThemeProvider } from './context/ThemeContext';
-import { AppContextProvider } from './context/AppContext';
-import StackNavigation from './screens/StackNavigation.jsx';
+import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native";
+import { StatusBar } from "expo-status-bar";
+import { ThemeProvider } from "./context/ThemeContext";
+import { AppContextProvider } from "./context/AppContext";
+import { Navigator } from "./screens";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { useColorScheme } from "react-native";
 
 export default function App() {
-  return (
-      <ThemeProvider>
-          <AppContextProvider>
-              <NavigationContainer>
-                  <View style={styles.container}>
-                      <StackNavigation />
-                      <StatusBar style="auto" />
-                  </View>
-              </NavigationContainer>
-          </AppContextProvider>
-      </ThemeProvider>
-  );
-}
+    const systemTheme = useColorScheme();
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+    return (
+        <ThemeProvider>
+            <AppContextProvider>
+                <NavigationContainer theme={systemTheme==='dark'? DarkTheme : DefaultTheme}>
+                    <SafeAreaProvider>
+                        <StatusBar style="auto" />
+                        <Navigator />
+                    </SafeAreaProvider>
+                </NavigationContainer>
+            </AppContextProvider>
+        </ThemeProvider>
+    );
+}

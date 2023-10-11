@@ -1,27 +1,31 @@
 import { StyleSheet, TextInput, View, Text, Pressable } from "react-native";
 import getThemeContext from "../../context/ThemeContext";
-import { getAppContext } from "../../context/AppContext";
+import { forwardRef } from "react";
 
 
-const ThemeTextInput = ({
-    title, 
-    value,
-    textColor,
-    onPressIcon, 
-    onChange, 
-    icon,
-    placeholder,
-    textSize,
-    width,
-    keyboardType,
-    editable,
-    disabled,
-    multiline,
-    numOfLines,
-    maxLength,
-}) => {
+const ThemeTextInput = forwardRef((props, ref) => {
+
+    const {
+        title, 
+        value,
+        textColor,
+        onPressIcon, 
+        onChange, 
+        icon,
+        placeholder,
+        textSize,
+        width,
+        keyboardType,
+        editable,
+        disabled,
+        multiline,
+        numOfLines,
+        maxLength,
+        onFocus,
+        onFocusLoss,
+    } = props;
+
     const { theme } = getThemeContext();
-    const { tabColor } = getAppContext();
 
     const styles = StyleSheet.create({
         textH1: {
@@ -58,7 +62,7 @@ const ThemeTextInput = ({
             marginBottom: 5,
             width: width || "100%",
             borderWidth: 1,
-            borderColor: tabColor,
+            borderColor: theme.colors.primary,
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "center",
@@ -82,8 +86,12 @@ const ThemeTextInput = ({
                 </Text>
             )}
             <TextInput
+                ref={ref}
                 value={value}
+                onFocus={onFocus}
+                onBlur={onFocusLoss}
                 placeholder={placeholder}
+                placeholderTextColor={disabled ? "#888" : theme.colors.text}
                 keyboardType={keyboardType || null}
                 editable={(editable===false ? false : true) && !disabled}
                 multiline={multiline || false}
@@ -104,6 +112,6 @@ const ThemeTextInput = ({
             ) : null}
         </View>
     );
-};
+});
 
 export default ThemeTextInput;
