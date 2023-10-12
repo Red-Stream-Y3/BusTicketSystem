@@ -7,7 +7,6 @@ export const userSchema = mongoose.Schema(
       type: String,
       required: true,
       pattern: '^[a-zA-Z0-9_]*$',
-      unique: true,
     },
     firstName: {
       type: String,
@@ -28,49 +27,26 @@ export const userSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    address: {
-      street: {type: String, default: ''},
-      city: {type: String, default: ''},
-      state: {type: String, default: ''},
-      zip: {type: String, default: ''},
-      country: {type: String, default: ''},
-    },
     phone: {
       type: String,
       default: '',
       pattern: '^[0-9]*$',
     },
-    profilePic: {
+    role: {
       type: String,
-      default:
-        'https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=580&q=80',
+      enum: ['passenger', 'driver', 'manager', 'admin', 'ínspector'],
+      default: 'passenger',
+      required: true,
     },
-    // role: {
-    //   type: String,
-    //   enum: ['regular', 'contributor', 'moderator', 'admin'],
-    //   default: 'regular',
-    // },
-    // request: {
-    //   type: String,
-    //   default: '',
-    // },
-    services: {
-      serviceTypes: [String],
-      petTypes: [String],
-      description: {type: String},
-      workDays: [String],
-      businessPhone: [{
-        type: String,
-        default: '',
-        pattern: '^[0-9]*$',
-      }],
-      activeCities: [String],
-      fees: [
-        {
-          tag: {type: String},
-          price: {type: Number},
-        }
-      ]
+    credits: {
+      type: Number,
+      default: 0,
+      required: true,
+    },
+    card: {
+      cardNumber: {type: String, default: ''},
+      expirationDate: {type: String, default: ''},
+      cvv: {type: String, default: ''},
     },
   },
   {
@@ -78,11 +54,9 @@ export const userSchema = mongoose.Schema(
   }
 );
 
-//create compound index for service providers
-userSchema.index(
-  { _id: 1, firstName: 1, lastName: 1, services: 1 },
-  { partialFilterExpression: { services: { $exists: true } } }
-);
+//create indexes
+userSchema.index({ role: 1, username: 1, email: 1 }, { unique: true });
+userSchema.index({ username: 1, credits: 1 });
 
 userSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);

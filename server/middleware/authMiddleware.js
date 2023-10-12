@@ -40,28 +40,31 @@ const admin = (req, res, next) => {
   }
 };
 
-const adminMod = (req, res, next) => {
-  if (
-    req.user &&
-    (req.user.role === 'admin' || req.user.role === 'moderator')
-  ) {
+const manager = (req, res, next) => {
+  if (req.user && req.user.role === 'manager') {
     next();
   } else {
     res.status(401);
-    throw new Error(`Not authorized as an admin or moderator`);
+    throw new Error('Not authorized as a manager');
   }
 };
 
-const adminContributor = (req, res, next) => {
-  if (
-    req.user &&
-    (req.user.role === 'admin' || req.user.role === 'contributor')
-  ) {
+const inspector = (req, res, next) => {
+  if (req.user && req.user.role === 'inspector') {
     next();
   } else {
     res.status(401);
-    throw new Error(`Not authorized as an admin or contributor`);
+    throw new Error('Not authorized as an inspector');
   }
 };
 
-export { protect, admin, adminMod, adminContributor };
+const driver = (req, res, next) => {
+  if (req.user && req.user.role === 'driver') {
+    next();
+  } else {
+    res.status(401);
+    throw new Error('Not authorized as a driver');
+  }
+};
+
+export { protect, admin, manager, inspector, driver };

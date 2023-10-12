@@ -1,5 +1,5 @@
 import { useState, useEffect, createContext, useContext } from "react";
-import { Appearance, useColorScheme } from "react-native";
+import { Appearance } from "react-native";
 
 const ThemeContext = createContext();
 
@@ -53,7 +53,7 @@ const DARK_THEME = {
 
 export const ThemeProvider = ({ children }) => {
     const [theme, setTheme] = useState(LIGHT_THEME);
-    const systemTheme = useColorScheme();
+    const systemTheme = Appearance.getColorScheme();
 
     useEffect(() => {
         if (systemTheme === "dark") {

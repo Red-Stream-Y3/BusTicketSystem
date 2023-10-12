@@ -8,6 +8,8 @@ import findConfig from 'find-config';
 import connectDB from './config/db.js';
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 
+import userRoutes from './routes/userRoutes.js';
+
 let dbUri;
 
 if (process.env.NODE_ENV !== 'production') {
@@ -22,7 +24,7 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-//app.use('/api/users', require('./routes/userRoutes'));
+app.use('/api/users', userRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

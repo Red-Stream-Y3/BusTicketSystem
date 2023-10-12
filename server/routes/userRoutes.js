@@ -8,14 +8,16 @@ import {
   deleteUser,
   getUserById,
   updateUser,
-  requestRole,
-  getAuthorInfoById,
+  getUserByUsernameAndRole,
+	getUserCredits,
+	updateUserCredits,
+  getUserByEmail,
 } from '../controllers/userController.js';
-import { protect, admin, adminMod } from '../middleware/authMiddleware.js';
+import { protect, admin, manager, inspector, driver } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-router.route('/').post(registerUser).get(protect, adminMod, getUsers);
+router.route('/').post(registerUser).get(protect, getUsers);
 router.post('/login', authUser);
 router
   .route('/profile')
@@ -24,9 +26,12 @@ router
 router
   .route('/:id')
   .delete(protect, admin, deleteUser)
-  .get(protect, adminMod, getUserById)
-  .put(protect, adminMod, updateUser);
-router.route('/:id/request').put(protect, requestRole);
-router.route('/:id/author').get(getAuthorInfoById);
+  .get(protect, getUserById)
+  .put(protect, updateUser);
+router.route('/:username/:role').get(getUserByUsernameAndRole);
+router.route('/:username/credits')
+  .get(protect, getUserCredits)
+  .put(protect, updateUserCredits);
+router.route('/users/:email').get(getUserByEmail);
 
 export default router;
