@@ -11,8 +11,9 @@
   <button id="submit-button" class="paymentButton">COMPLETE PAYMENT</button>
   <script>
     var button = document.querySelector('#submit-button');
+
     braintree.dropin.create({
-      authorization: '', //the tokenization key from Braintree
+      authorization: 'sandbox_ykkc6b4z_sxd9nrwy2bwkr8m3', //the tokenization key from Braintree
       container: '#dropin-container'
     }, function (createErr, instance) {
       button.addEventListener('click', function () {

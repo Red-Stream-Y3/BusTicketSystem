@@ -10,6 +10,11 @@ import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 
 import userRoutes from './routes/userRoutes.js';
 import paymentRoutes from './routes/paymentRoutes.js';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 let dbUri;
 
@@ -28,12 +33,12 @@ app.use(bodyParser.json());
 app.use('/api/users', userRoutes);
 app.use('/api/braintree', paymentRoutes);
 
-app.use(notFound);
-app.use(errorHandler);
-
 app.get('/braintree', (req, res) => {
   res.sendFile(path.join(__dirname, 'braintree.html'));
 });
+
+app.use(notFound);
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 if (process.env.NODE_ENV !== 'test') {
