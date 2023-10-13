@@ -7,5 +7,5 @@ export { default as ThemeTextInput } from './common/ThemeTextInput';
 export { default as ThemeOverlay } from './common/ThemeOverlay';
 
 export { default as HomeContainer } from './HomeContainer';
-
+export { default as HistoryContainer } from './HistoryContainer';
 export { default as RegisterContainer } from './RegisterContainer';

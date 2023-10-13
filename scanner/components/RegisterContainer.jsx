@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import ThemeTextInput from "./common/ThemeTextInput";
 import ThemeButton from "./common/ThemeButton";
+import ThemeDropDownInput from "./common/ThemeDropDownInput";
 import { Feather } from "@expo/vector-icons";
 import getThemeContext from "../context/ThemeContext";
 import Animated, { FadeInUp, FadeOutUp } from "react-native-reanimated";
@@ -17,15 +18,16 @@ import { getAppContext } from "../context/AppContext";
 const RegisterContainer = ({ setOverlayOpen, setLoginEmail, setLoginPassword }) => {
     const { theme } = getThemeContext();
     const { SERVER_URL } = getAppContext();
-    const [email, setEmail] = useState("dinushkasam@gmail.com");
-    const [username, setUsername] = useState("Dinushkasam");
-    const [firstName, setFirstName] = useState("Dinushka");
-    const [lastName, setLastName] = useState("Samaranayake");
-    const [phone, setPhone] = useState("0776283129");
-    const [password, setPassword] = useState("Dinushka1029");
+    const [email, setEmail] = useState("");
+    const [username, setUsername] = useState("");
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [phone, setPhone] = useState("");
+    const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
-    const [retypePassword, setRetypePassword] = useState("Dinushka1029");
+    const [retypePassword, setRetypePassword] = useState("");
     const [showRetypePassword, setShowRetypePassword] = useState(false);
+    const [userType, setUserType] = useState(""); // ["inspector", "manager", "driver"]
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
 
@@ -34,7 +36,8 @@ const RegisterContainer = ({ setOverlayOpen, setLoginEmail, setLoginPassword }) 
             email === "" ||
             username === "" ||
             password === "" ||
-            retypePassword === ""
+            retypePassword === "" ||
+            userType === ""
         ) {
             setError("Please fill all required fields");
             return;
@@ -52,6 +55,7 @@ const RegisterContainer = ({ setOverlayOpen, setLoginEmail, setLoginPassword }) 
             lastName,
             phone,
             password,
+            role: userType,
         };
 
         setLoading(true);
@@ -149,6 +153,15 @@ const RegisterContainer = ({ setOverlayOpen, setLoginEmail, setLoginPassword }) 
                 onChange={(text) => setLastName(text)}
                 textContentType='familyName'
             />
+
+            <ThemeDropDownInput 
+                value={userType}
+                setValue={(text) => setUserType(text)}
+                title='User Type'
+                placeholder='Select User Type'
+                options={['inspector', 'manager', 'driver']}
+            />
+
             <ThemeTextInput
                 title='Phone'
                 keyboardType='phone-pad'
