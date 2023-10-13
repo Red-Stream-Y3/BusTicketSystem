@@ -1,5 +1,5 @@
-**/node_modules/
-mobile/
-scanner/
-web/
+node_modules
+mobile
+scanner
+web
 .env*

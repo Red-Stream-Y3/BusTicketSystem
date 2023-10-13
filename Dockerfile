@@ -4,11 +4,11 @@ WORKDIR /app
 #copy package.json and from server folder to /app
 COPY server/package.json ./
 #copy yarn.lock to /app
-COPY server/yarn.lock ./
+#COPY server/yarn.lock ./
 
 #install dependencies
-RUN npm install yarn
-RUN yarn install
+RUN npm install
+#RUN yarn install
 
 #copy backend folder to /app
 COPY server/ ./
