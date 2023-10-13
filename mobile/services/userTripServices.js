@@ -8,7 +8,10 @@ export const getUserTrips = async (limit, token) => {
         },
     };
 
-    const { data } = await axios.get(`${BASE}/api/usertrips/get/${limit}`, config);
+    const response = await axios.get(`${BASE}/api/usertrips/get/${limit}`, config);
 
-    return data;
+    if (response.status !== 200) {
+        throw new Error("Error fetching user trips");
+    }
+    return response.data;
 };

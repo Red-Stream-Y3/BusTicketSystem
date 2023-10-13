@@ -68,7 +68,8 @@ export const getUserTrips = asyncHandler(async (req, res) => {
                     user: 1,
                     route: {
                         _id: 1,
-                        name: 1,
+                        routeName: 1,
+                        routeNumber: 1,
                     },
                     origin: {
                         _id: 1,

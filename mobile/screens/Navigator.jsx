@@ -17,6 +17,7 @@ import SplashScreen from "./SplashScreen";
 import RechargeScreen from "./RechargeScreen";
 import QRScreen from "./QRScreen";
 import NewTripScreen from "./NewTripScreen";
+import HistoryScreen from "./HistoryScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -66,6 +67,14 @@ const Navigator = () => {
                                 options={{
                                     title: "New Trip",
                                     animation: "slide_from_left",
+                                }}
+                            />
+                            <Stack.Screen
+                                name='History'
+                                component={HistoryScreen}
+                                options={{
+                                    title: "History",
+                                    animation: "slide_from_bottom",
                                 }}
                             />
                         </>

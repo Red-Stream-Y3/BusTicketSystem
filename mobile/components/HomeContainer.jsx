@@ -15,12 +15,27 @@ import { getAppContext } from "../context/AppContext";
 import QRCode from "react-native-qrcode-svg";
 import Animated from "react-native-reanimated";
 import { Entypo } from "@expo/vector-icons";
+import { getUserTrips } from "../services/userTripServices";
 
 const HomeContainer = ({ navigation }) => {
     const { theme } = getThemeContext();
     const { USER, credits, fetchCredits, removeUser } = getAppContext();
     const [recent, setRecent] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
+
+    const fetchRecent = async () => {
+        try {
+            const data = await getUserTrips(5, USER.token);
+            // console.log(data);
+            setRecent(data);
+        } catch (error) {
+            Toast.show({
+                type: "error",
+                text1: "Error",
+                text2: error.response?.data?.error || error.message,
+            });
+        }
+    };
 
     const styles = StyleSheet.create({
         container: {
@@ -65,6 +80,11 @@ const HomeContainer = ({ navigation }) => {
             fontWeight: "bold",
             color: theme.colors.text,
         },
+        subtitle: {
+            fontSize: 14,
+            fontWeight: "bold",
+            color: theme.colors.text,
+        },
         qrCodeContainer: {
             justifyContent: "center",
             alignItems: "center",
@@ -81,9 +101,12 @@ const HomeContainer = ({ navigation }) => {
             borderColor: theme.colors.primary,
         },
         itemStyle: {
-            paddingVertical: 10,
-            borderBottomWidth: 1,
-            borderBottomColor: theme.colors.primary,
+            paddingVertical: 5,
+            paddingHorizontal: 10,
+            borderWidth: theme.mode==='dark' ? 1 : 0,
+            borderColor: "#666",
+            borderRadius: 5,
+            width: Dimensions.get("window").width * 0.8,
         },
         hr: {
             borderBottomWidth: 1,
@@ -99,11 +122,13 @@ const HomeContainer = ({ navigation }) => {
     const handleRefresh = async () => {
         setRefreshing(true);
         await fetchCredits();
+        await fetchRecent();
         setRefreshing(false);
     };
 
     useEffect(() => {
         handleRefresh();
+        fetchRecent();
     }, []);
 
     return (
@@ -179,7 +204,20 @@ const HomeContainer = ({ navigation }) => {
                 </View>
 
                 <View style={styles.card}>
-                    <Text style={styles.title}>Recent Trips</Text>
+                    <View style={styles.flexRowBetween}>
+                        <Text style={styles.title}>Recent Trips</Text>
+                        <ThemeButton
+                            title={"View All"}
+                            variant={"clear"}
+                            textSize={14}
+                            onPress={() => navigation.navigate("History")}>
+                            <Entypo
+                                name='list'
+                                size={24}
+                                color={theme.colors.primaryIcon}
+                            />
+                        </ThemeButton>
+                    </View>
                     <View style={styles.hr} />
                     <View style={styles.center}>
                         {refreshing && (
@@ -188,13 +226,16 @@ const HomeContainer = ({ navigation }) => {
                                 color={theme.colors.primary}
                             />
                         )}
-                        {!refreshing && recent.length > 0 ? (
+                        {!refreshing && recent?.length > 0 ? (
                             recent.map((item) => (
                                 <View key={item._id} style={styles.itemStyle}>
                                     <Text style={styles.text}>
-                                        {item.title}
+                                        From {item.origin.name} to{" "}
+                                        {item.destination.name}
                                     </Text>
-                                    <Text style={styles.text}>{item.date}</Text>
+                                    <Text style={styles.subtitle}>
+                                        {item.state}
+                                    </Text>
                                 </View>
                             ))
                         ) : (
