@@ -32,7 +32,7 @@ const Navigator = () => {
                 <StatusBar style='auto' />
                 <Stack.Navigator>
                     {!USER?.token ? (
-                        <Stack.Screen name='Login' component={LoginScreen} />
+                        <Stack.Screen name='Login' component={LoginScreen} options={{title:"Sign in"}} />
                     ) : (
                         <>
                             <Stack.Screen name='Home' component={HomeScreen} />

@@ -5,7 +5,7 @@ import {
     NavigationContainer,
 } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
-import { createStackNavigator } from "@react-navigation/stack";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 import HomeScreen from "./HomeScreen";
@@ -14,8 +14,10 @@ import getThemeContext from "../context/ThemeContext";
 import LoginScreen from "./LoginScreen";
 import { getAppContext } from "../context/AppContext";
 import SplashScreen from "./SplashScreen";
+import RechargeScreen from "./RechargeScreen";
+import QRScreen from "./QRScreen";
 
-const Stack = createStackNavigator();
+const Stack = createNativeStackNavigator();
 
 const Navigator = () => {
     const { theme } = getThemeContext();
@@ -32,13 +34,30 @@ const Navigator = () => {
                 <StatusBar style='auto' />
                 <Stack.Navigator>
                     {!USER?.token ? (
-                        <Stack.Screen name='Login' component={LoginScreen} />
+                        <Stack.Screen
+                            name='Login'
+                            component={LoginScreen}
+                            options={{ title: "Sign in" }}
+                        />
                     ) : (
                         <>
                             <Stack.Screen name='Home' component={HomeScreen} />
                             <Stack.Screen
                                 name='Scanner'
                                 component={ScannerScreen}
+                            />
+                            <Stack.Screen
+                                name='Recharge'
+                                component={RechargeScreen}
+                                options={{ animation: "slide_from_right" }}
+                            />
+                            <Stack.Screen
+                                name='QRscreen'
+                                component={QRScreen}
+                                options={{
+                                    title: "QR Code",
+                                    animation: "slide_from_bottom",
+                                }}
                             />
                         </>
                     )}

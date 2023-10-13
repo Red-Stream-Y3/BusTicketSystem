@@ -21,7 +21,7 @@ import Animated, { FadeInUp, FadeOutUp } from "react-native-reanimated";
 
 const LoginScreen = () => {
     const { theme } = getThemeContext();
-    const { SERVER_URL, storeUser, USER } = getAppContext();
+    const { SERVER_URL, storeUser, APP_NAME } = getAppContext();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
@@ -53,7 +53,7 @@ const LoginScreen = () => {
 
             setLoading(false);
         } catch (error) {
-            setError(error.response.data.error || error.message);
+            setError(error.response?.data?.error || error.message);
             setLoading(false);
         }
     };
@@ -75,6 +75,7 @@ const LoginScreen = () => {
             justifyContent: "center",
             alignItems: "center",
             paddingHorizontal: 20,
+            backgroundColor: theme.colors.background,
         },
         title: {
             fontSize: 24,
@@ -103,7 +104,7 @@ const LoginScreen = () => {
                 />
             </ThemeOverlay>
 
-            <Text style={styles.title}>Login</Text>
+            <Text style={styles.title}>{APP_NAME}</Text>
 
             {error && (
                 <Animated.Text
