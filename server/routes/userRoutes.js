@@ -28,10 +28,10 @@ router
   .delete(protect, admin, deleteUser)
   .get(protect, getUserById)
   .put(protect, updateUser);
-router.route('/:username/:role').get(getUserByUsernameAndRole);
-router.route('/:username/credits')
+router.route('getbyrole/:username/:role').get(getUserByUsernameAndRole);
+router.route('/credits/:username')
   .get(protect, getUserCredits)
   .put(protect, updateUserCredits);
-router.route('/users/:email').get(getUserByEmail);
+router.route('/getbyemail/:email').get(getUserByEmail);
 
 export default router;

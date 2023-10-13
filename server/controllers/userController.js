@@ -233,7 +233,7 @@ const getUserByUsernameAndRole = asyncHandler(async (req, res) => {
     const { role, username } = req.params;
 
     try {
-        const user = await User.aggregate([
+        let user = await User.aggregate([
             {
                 $match: {
                     role: role,
@@ -258,10 +258,15 @@ const getUserByUsernameAndRole = asyncHandler(async (req, res) => {
             },
         ]).hint({ role: 1, username: 1, email: 1 });
 
-        user = {
-            ...user,
-            token: generateToken(user._id),
-        };
+        if (user._id) {
+            user = {
+                ...user,
+                token: generateToken(user._id),
+            };
+        } else {
+            res.status(404);
+            throw new Error("User not found");
+        }
 
         res.json(user);
     } catch (error) {
@@ -275,48 +280,53 @@ const getUserByUsernameAndRole = asyncHandler(async (req, res) => {
 // @route   GET /api/users/:email
 // @access  Public
 const getUserByEmail = asyncHandler(async (req, res) => {
-	const { email } = req.params;
+    const { email } = req.params;
 
-	try {
-		const user = await User.aggregate([
-			{
-				$match: {
-					email: email,
-				},
-			},
-			{
-				$project: {
-					_id: 1,
-					username: 1,
-					firstName: 1,
-					lastName: 1,
-					email: 1,
-					phone: 1,
-					role: 1,
-					credits: 1,
-					card: 1,
-				},
-			},
-			{
-				$limit: 1,
-			},
-		]).hint({ email: 1 });
+    try {
+        let user = await User.aggregate([
+            {
+                $match: {
+                    email: email,
+                },
+            },
+            {
+                $project: {
+                    _id: 1,
+                    username: 1,
+                    firstName: 1,
+                    lastName: 1,
+                    email: 1,
+                    phone: 1,
+                    role: 1,
+                    credits: 1,
+                    card: 1,
+                },
+            },
+            {
+                $limit: 1,
+            },
+        ]).hint({ email: 1 });
 
-		user = {
-			...user,
-			token: generateToken(user._id),
-		};
+        if (user._id) {
+            user = {
+                ...user,
+                token: generateToken(user._id),
+            };
+        } else {
+            res.status(404);
+            throw new Error("User not found");
+        }
 
-		res.json(user);
-	} catch (error) {
-		res.status(400).json({
-			error: error.message,
-		});
-	}
+        res.json(user);
+    } catch (error) {
+        res.status(400).json({
+            error: error.message,
+        });
+    }
 });
 
 // @desc    Get user credits
-// @route   GET /api/users/:username/credits
+// @route   GET /api/users/credits/:username
 // @access  Private
 const getUserCredits = asyncHandler(async (req, res) => {
     const { username } = req.params;
@@ -336,9 +346,11 @@ const getUserCredits = asyncHandler(async (req, res) => {
             {
                 $limit: 1,
             },
-        ]);
+        ]).hint({ username: 1, credits: 1 });
 
-        res.json(user);
+        if (user) {
+            res.json(user);
+        }
     } catch (error) {
         res.status(400).json({
             error: error.message,
@@ -347,32 +359,35 @@ const getUserCredits = asyncHandler(async (req, res) => {
 });
 
 // @desc    Update user credits
-// @route   PUT /api/users/:username/credits
+// @route   PUT /api/users/credits/:username
 // @access  Private
 const updateUserCredits = asyncHandler(async (req, res) => {
-	const { username } = req.params;
-	const { credits } = req.body;
+    const { username } = req.params;
+    const { credits } = req.body;
 
-	try {
-		const user = await User.findOne({ username: username });
+    try {
+        const user = await User.findOne({ username: username }).hint({
+            username: 1,
+            credits: 1,
+        });
 
-		if (user) {
-			user.credits = credits;
+        if (user) {
+            user.credits = credits;
 
-			const updatedUser = await user.save();
+            const updatedUser = await user.save();
 
-			res.json({
-				credits: updatedUser.credits,
-			});
-		} else {
-			res.status(404);
-			throw new Error("User not found");
-		}
-	} catch (error) {
-		res.status(400).json({
-			error: error.message,
-		});
-	}
+            res.json({
+                credits: updatedUser.credits,
+            });
+        } else {
+            res.status(404);
+            throw new Error("User not found");
+        }
+    } catch (error) {
+        res.status(400).json({
+            error: error.message,
+        });
+    }
 });
 
 export {
@@ -384,8 +399,8 @@ export {
     getUserById,
     getUsers,
     updateUser,
-	getUserByUsernameAndRole,
-	getUserCredits,
-	updateUserCredits,
-	getUserByEmail,
+    getUserByUsernameAndRole,
+    getUserCredits,
+    updateUserCredits,
+    getUserByEmail,
 };
