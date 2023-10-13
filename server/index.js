@@ -9,6 +9,7 @@ import connectDB from './config/db.js';
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 
 import userRoutes from './routes/userRoutes.js';
+import paymentRoutes from './routes/paymentRoutes.js';
 
 let dbUri;
 
@@ -25,9 +26,14 @@ app.use(cors());
 app.use(bodyParser.json());
 
 app.use('/api/users', userRoutes);
+app.use('/api/braintree', paymentRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
+
+app.get('/braintree', (req, res) => {
+  res.sendFile(path.join(__dirname, 'braintree.html'));
+});
 
 const PORT = process.env.PORT || 5000;
 if (process.env.NODE_ENV !== 'test') {
