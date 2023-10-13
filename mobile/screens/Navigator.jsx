@@ -20,6 +20,7 @@ const Stack = createStackNavigator();
 const Navigator = () => {
     const { theme } = getThemeContext();
     const { USER, loadingUser } = getAppContext();
+
     if (loadingUser) {
         return <SplashScreen />;
     }

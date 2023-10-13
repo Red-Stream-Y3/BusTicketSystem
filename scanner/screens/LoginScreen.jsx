@@ -47,14 +47,13 @@ const LoginScreen = () => {
                 `${SERVER_URL}/api/users/login`,
                 data
             );
-            console.log(response.data);
             if (response) {
-                //storeUser(response.data);
+                storeUser(response.data);
             }
 
             setLoading(false);
         } catch (error) {
-            setError(error.response?.data?.error || error.message);
+            setError(error.response.data.error || error.message);
             setLoading(false);
         }
     };
@@ -76,7 +75,6 @@ const LoginScreen = () => {
             justifyContent: "center",
             alignItems: "center",
             paddingHorizontal: 20,
-            backgroundColor: theme.colors.background,
         },
         title: {
             fontSize: 24,

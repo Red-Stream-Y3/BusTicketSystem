@@ -23,6 +23,8 @@ const ThemeTextInput = forwardRef((props, ref) => {
         maxLength,
         onFocus,
         onFocusLoss,
+        secureTextEntry,
+        textContentType,
     } = props;
 
     const { theme } = getThemeContext();
@@ -97,8 +99,11 @@ const ThemeTextInput = forwardRef((props, ref) => {
                 multiline={multiline || false}
                 numberOfLines={numOfLines || 1}
                 maxLength={maxLength || null}
-                onChange={onChange}
+                onChangeText={onChange}
+                secureTextEntry={secureTextEntry || false}
                 style={styles.textBody}
+                aria-label={title}
+                textContentType={textContentType || null}
             />
             {icon ? (
                 <View>
