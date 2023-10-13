@@ -5,7 +5,7 @@ import Toast from "react-native-toast-message";
 export const AppContext = createContext();
 
 export const AppContextProvider = ({ children }) => {
-    const SERVER_URL = "http://localhost:9120";
+    const SERVER_URL = "https://busticketsystem-ukkxew3r5q-uc.a.run.app";
     const [USER, setUser] = useState(null);
     const [loadingUser, setLoadingUser] = useState(true);
 
@@ -65,7 +65,15 @@ export const AppContextProvider = ({ children }) => {
     }, []);
 
     return (
-        <AppContext.Provider value={{ SERVER_URL, USER, getUser, storeUser, removeUser }}>
+        <AppContext.Provider
+            value={{
+                SERVER_URL,
+                USER,
+                loadingUser,
+                getUser,
+                storeUser,
+                removeUser,
+            }}>
             {children}
         </AppContext.Provider>
     );
