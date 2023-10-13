@@ -22,19 +22,19 @@ router.get("/client_token", (req, res) => {
 });
 
 router.post("/createPaymentTransaction", async (req, res) => {
-    const { amount, nonce, deviceData } = req.body;
+    const { amount, nonce, deviceData, test } = req.body;
 
     try {
         //create a transaction
         const result = await gateway.transaction.sale({
             amount: amount,
-            paymentMethodNonce: nonce,
+            paymentMethodNonce: test ? 'fake-valid-nonce' : nonce,
             options: {
                 submitForSettlement: true,
             },
             deviceData: deviceData,
         });
-
+        console.log(result);
         res.status(200).json({
             isPaymentSuccessful: result.success,
             errorText: result.transaction?.processorResponseText || "",
