@@ -53,7 +53,7 @@ const LoginScreen = () => {
 
             setLoading(false);
         } catch (error) {
-            setError(error.response.data.error || error.message);
+            setError(error.response?.data?.error || error.message);
             setLoading(false);
         }
     };
