@@ -2,6 +2,11 @@ import mongoose from "mongoose";
 
 const userTripSchema = new mongoose.Schema(
     {
+        user: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            required: true,
+        },
         route: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "BusRoute",
@@ -47,6 +52,8 @@ const userTripSchema = new mongoose.Schema(
     },
     { timestamps: true }
 );
+
+userTripSchema.index({ user: 1, route: 1, createdAt: -1 });
 
 const UserTrip = mongoose.model("UserTrip", userTripSchema);
 

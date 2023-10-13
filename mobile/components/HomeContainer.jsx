@@ -14,6 +14,7 @@ import getThemeContext from "../context/ThemeContext";
 import { getAppContext } from "../context/AppContext";
 import QRCode from "react-native-qrcode-svg";
 import Animated from "react-native-reanimated";
+import { Entypo } from "@expo/vector-icons";
 
 const HomeContainer = ({ navigation }) => {
     const { theme } = getThemeContext();
@@ -146,16 +147,36 @@ const HomeContainer = ({ navigation }) => {
                             }>{`(Tap QR to get full screen)`}</Text>
                         <ThemeButton
                             title={"Sign Out"}
-                            variant={'outlined'}
+                            variant={"outlined"}
                             onPress={() => removeUser()}
                         />
                     </View>
                 </View>
 
-                <ThemeButton
-                    title={"Recharge Credits"}
-                    onPress={() => navigation.navigate("Recharge")}
-                />
+                <View style={styles.card}>
+                    <View style={styles.flexRowBetween}>
+                        <ThemeButton
+                            title={"New Trip"}
+                            textSize={14}
+                            onPress={() => navigation.navigate("Book")}>
+                            <Entypo
+                                name='ticket'
+                                size={24}
+                                color={theme.colors.primaryIcon}
+                            />
+                        </ThemeButton>
+                        <ThemeButton
+                            title={"Recharge Credits"}
+                            textSize={14}
+                            onPress={() => navigation.navigate("Recharge")}>
+                            <Entypo
+                                name='credit'
+                                size={24}
+                                color={theme.colors.primaryIcon}
+                            />
+                        </ThemeButton>
+                    </View>
+                </View>
 
                 <View style={styles.card}>
                     <Text style={styles.title}>Recent Trips</Text>
