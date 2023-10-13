@@ -1,6 +1,11 @@
 import mongoose from 'mongoose';
 
 const userTripSchema = new mongoose.Schema({
+    route: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'BusRoute',
+        required: true
+    },
     origin: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'BusStop',
