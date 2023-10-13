@@ -14,13 +14,14 @@
 
     braintree.dropin.create({
       authorization: 'sandbox_ykkc6b4z_sxd9nrwy2bwkr8m3', //the tokenization key from Braintree
-      container: '#dropin-container'
+      container: '#dropin-container',
+      dataCollector: true
     }, function (createErr, instance) {
       button.addEventListener('click', function () {
         button.textContent="PROCESSING PAYMENT";
         instance.requestPaymentMethod((requestPaymentMethodErr, payload) => {
           // Send payload to React Native to send to the server
-          window.ReactNativeWebView.postMessage(payload.nonce);
+          window.ReactNativeWebView.postMessage(payload);
         });
       });
     });
