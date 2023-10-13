@@ -1,19 +1,23 @@
 import mongoose from "mongoose";
 
-const busRouteSchema = new mongoose.Schema({
-    routeNumber: {
-        type: String,
-        required: true
+const busRouteSchema = new mongoose.Schema(
+    {
+        routeNumber: {
+            type: String,
+            required: true,
+        },
+        routeName: {
+            type: String,
+            required: true,
+        },
+        stops: {
+            type: [mongoose.Schema.Types.ObjectId],
+            ref: "BusStop",
+            required: true,
+        },
     },
-    routeName: {
-        type: String,
-        required: true
-    },
-    stops: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "BusStop"
-    }]
-});
+    { timestamps: true }
+);
 
 const BusRoute = mongoose.model("BusRoute", busRouteSchema);
 
