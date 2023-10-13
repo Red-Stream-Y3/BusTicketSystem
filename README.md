@@ -38,7 +38,7 @@ eg: total passengers, number of boarded, number of completed, number of declined
     -show a list of bus stops on screen according to destinations selected by users.
 
 
-customer app - mobile - passenger
+## customer app - mobile - passenger
 -register account ✅
 -login ✅
 -before departing
@@ -57,7 +57,7 @@ customer app - mobile - passenger
 -view balance ✅
 -view history
 
-admin app - web - manager
+## admin app - web - manager
 -add bus
 -add route
 -add bus stops to route
