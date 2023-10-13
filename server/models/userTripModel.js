@@ -1,42 +1,53 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-const userTripSchema = new mongoose.Schema({
-    route: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'BusRoute',
-        required: true
+const userTripSchema = new mongoose.Schema(
+    {
+        route: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "BusRoute",
+            required: true,
+        },
+        origin: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "BusStop",
+            required: true,
+        },
+        destination: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "BusStop",
+            required: true,
+        },
+        departureTime: {
+            type: Date,
+        },
+        arrivalTime: {
+            type: Date,
+        },
+        state: {
+            type: String,
+            enum: [
+                "scheduled",
+                "delayed",
+                "boarded",
+                "completed",
+                "cancelled",
+                "missed",
+            ],
+            default: "scheduled",
+            required: true,
+        },
+        bus: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Bus",
+        },
+        driver: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Driver",
+        },
     },
-    origin: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'BusStop',
-        required: true
-    },
-    destination: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'BusStop',
-        required: true
-    },
-    departureTime: {
-        type: Date,
-    },
-    arrivalTime: {
-        type: Date,
-    },
-    state: {
-        type: String,
-        enum: ['scheduled', 'delayed', 'boarded', 'completed', 'cancelled', 'missed'],
-        default: 'scheduled'
-    },
-    bus: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Bus',
-    },
-    driver: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Driver',
-    },
-});
+    { timestamps: true }
+);
 
-const Trip = mongoose.model('UserTrip', userTripSchema);
+const UserTrip = mongoose.model("UserTrip", userTripSchema);
 
 export default UserTrip;
