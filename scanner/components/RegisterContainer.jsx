@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
     ActivityIndicator,
     Dimensions,
+    ScrollView,
     StyleSheet,
     Text,
     View,
@@ -129,108 +130,113 @@ const RegisterContainer = ({
 
     return (
         <View style={styles.container}>
-            <View style={styles.header}>
-                <Feather
-                    name='x'
-                    size={24}
-                    color={theme.colors.icon}
-                    onPress={() => setOverlayOpen(false)}
+            <ScrollView style={{ width: "100%" }}>
+                <View style={styles.header}>
+                    <Feather
+                        name='x'
+                        size={24}
+                        color={theme.colors.icon}
+                        onPress={() => setOverlayOpen(false)}
+                    />
+                </View>
+                <ThemeTextInput
+                    title='Email*'
+                    placeholder='Email'
+                    value={email}
+                    onChange={(text) => setEmail(text)}
+                    keyboardType='email-address'
+                    textContentType='emailAddress'
                 />
-            </View>
-            <ThemeTextInput
-                title='Email*'
-                placeholder='Email'
-                value={email}
-                onChange={(text) => setEmail(text)}
-                keyboardType='email-address'
-                textContentType='emailAddress'
-            />
-            <ThemeTextInput
-                title='Username*'
-                placeholder='Username'
-                value={username}
-                onChange={(text) => setUsername(text)}
-                textContentType='username'
-            />
-            <ThemeTextInput
-                title='First Name'
-                placeholder='First Name'
-                value={firstName}
-                onChange={(text) => setFirstName(text)}
-                textContentType='givenName'
-            />
-            <ThemeTextInput
-                title='Last Name'
-                placeholder='Last Name'
-                value={lastName}
-                onChange={(text) => setLastName(text)}
-                textContentType='familyName'
-            />
+                <ThemeTextInput
+                    title='Username*'
+                    placeholder='Username'
+                    value={username}
+                    onChange={(text) => setUsername(text)}
+                    textContentType='username'
+                />
+                <ThemeTextInput
+                    title='First Name'
+                    placeholder='First Name'
+                    value={firstName}
+                    onChange={(text) => setFirstName(text)}
+                    textContentType='givenName'
+                />
+                <ThemeTextInput
+                    title='Last Name'
+                    placeholder='Last Name'
+                    value={lastName}
+                    onChange={(text) => setLastName(text)}
+                    textContentType='familyName'
+                />
 
-            <ThemeDropDownInput
-                value={userType}
-                setValue={(text) => setUserType(text)}
-                title='User Type*'
-                placeholder='Select User Type'
-                options={["inspector", "manager", "driver"]}
-            />
+                <ThemeDropDownInput
+                    value={userType}
+                    onChange={(text) => setUserType(text)}
+                    onPressItem={(item) => setUserType(item)}
+                    title='User Type*'
+                    placeholder='Select User Type'
+                    options={["inspector", "manager", "driver"]}
+                />
 
-            <ThemeTextInput
-                title='Phone'
-                keyboardType='phone-pad'
-                placeholder='Phone'
-                value={phone}
-                onChange={(text) => setPhone(text)}
-                textContentType='telephoneNumber'
-            />
-            <ThemeTextInput
-                title='Password*'
-                placeholder='Password'
-                value={password}
-                onChange={(text) => setPassword(text)}
-                icon={
-                    <Feather
-                        name={showPassword ? "eye-off" : "eye"}
-                        size={24}
-                        color={theme.colors.icon}
-                    />
-                }
-                onPressIcon={() => setShowPassword(!showPassword)}
-                secureTextEntry={!showPassword}
-                textContentType='newPassword'
-            />
-            <ThemeTextInput
-                title='Retype Password*'
-                placeholder='Retype Password'
-                value={retypePassword}
-                onChange={(text) => setRetypePassword(text)}
-                icon={
-                    <Feather
-                        name={showPassword ? "eye-off" : "eye"}
-                        size={24}
-                        color={theme.colors.icon}
-                    />
-                }
-                onPressIcon={() => setShowRetypePassword(!showRetypePassword)}
-                secureTextEntry={!showRetypePassword}
-                textContentType='newPassword'
-            />
-            <Text style={styles.hint}>* Required</Text>
-            {error ? (
-                <Animated.Text
-                    entering={FadeInUp}
-                    exiting={FadeOutUp}
-                    style={styles.error}>
-                    {error}
-                </Animated.Text>
-            ) : null}
-            <ThemeButton
-                title={!loading && "Register"}
-                onPress={handleRegister}>
-                {loading && (
-                    <ActivityIndicator color={theme.colors.buttonText} />
-                )}
-            </ThemeButton>
+                <ThemeTextInput
+                    title='Phone'
+                    keyboardType='phone-pad'
+                    placeholder='Phone'
+                    value={phone}
+                    onChange={(text) => setPhone(text)}
+                    textContentType='telephoneNumber'
+                />
+                <ThemeTextInput
+                    title='Password*'
+                    placeholder='Password'
+                    value={password}
+                    onChange={(text) => setPassword(text)}
+                    icon={
+                        <Feather
+                            name={showPassword ? "eye-off" : "eye"}
+                            size={24}
+                            color={theme.colors.icon}
+                        />
+                    }
+                    onPressIcon={() => setShowPassword(!showPassword)}
+                    secureTextEntry={!showPassword}
+                    textContentType='newPassword'
+                />
+                <ThemeTextInput
+                    title='Retype Password*'
+                    placeholder='Retype Password'
+                    value={retypePassword}
+                    onChange={(text) => setRetypePassword(text)}
+                    icon={
+                        <Feather
+                            name={showPassword ? "eye-off" : "eye"}
+                            size={24}
+                            color={theme.colors.icon}
+                        />
+                    }
+                    onPressIcon={() =>
+                        setShowRetypePassword(!showRetypePassword)
+                    }
+                    secureTextEntry={!showRetypePassword}
+                    textContentType='newPassword'
+                />
+                <Text style={styles.hint}>* Required</Text>
+                {error ? (
+                    <Animated.Text
+                        entering={FadeInUp}
+                        exiting={FadeOutUp}
+                        style={styles.error}>
+                        {error}
+                    </Animated.Text>
+                ) : null}
+                <ThemeButton
+                    title={!loading && "Register"}
+                    onPress={handleRegister}>
+                    {loading && (
+                        <ActivityIndicator color={theme.colors.buttonText} />
+                    )}
+                </ThemeButton>
+            </ScrollView>
         </View>
     );
 };

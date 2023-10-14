@@ -21,6 +21,7 @@ export const createBusJourney = asyncHandler(async (req, res) => {
 });
 
 export const updateBusJourney = asyncHandler(async (req, res) => {
+    console.log("updateBusJourney");
     const { boardedUser, state } = req.body;
     const { id } = req.params;
     const driver = req.user._id; //get the driver id from the token
@@ -96,6 +97,84 @@ export const deleteBusJourney = asyncHandler(async (req, res) => {
     } else {
         res.status(404);
         throw new Error("Bus Journey not found");
+    }
+});
+
+export const getBusJourneyByUser = asyncHandler(async (req, res) => {
+    const user = req.user._id;
+
+    console.log("User", user);
+    try {
+        const busJourneys = await BusJourney.aggregate([
+            {
+                $match: {
+                    driver: user,
+                },
+            },
+            {
+                $lookup: {
+                    from: "buses",
+                    localField: "bus",
+                    foreignField: "_id",
+                    as: "bus",
+                },
+            },
+            {
+                $lookup: {
+                    from: "busroutes",
+                    localField: "route",
+                    foreignField: "_id",
+                    as: "route",
+                },
+            },
+            {
+                $lookup: {
+                    from: "usertrips",
+                    localField: "boardedUsers",
+                    foreignField: "_id",
+                    as: "boardedUsers",
+                },
+            },
+            {
+                $unwind: "$bus",
+            },
+            {
+                $unwind: "$route",
+            },
+            {
+                $unwind: {
+                    path: "$boardedUsers",
+                    preserveNullAndEmptyArrays: true,
+                },
+            },
+            {
+                $project: {
+                    _id: 1,
+                    route: {
+                        _id: 1,
+                        routeNumber: 1,
+                        routeName: 1,
+                    },
+                    state: 1,
+                    bus: {
+                        _id: 1,
+                        busNumber: 1,
+                        busType: 1,
+                        busCapacity: 1,
+                    },
+                    departureTime: 1,
+                    arrivalTime: 1,
+                    boardedUsers: {
+                        _id: 1,
+                        state: 1,
+                    },
+                },
+            },
+        ]);
+
+        res.json(busJourneys);
+    } catch (error) {
+        res.status(405).json({ message: error.message });
     }
 });
 
