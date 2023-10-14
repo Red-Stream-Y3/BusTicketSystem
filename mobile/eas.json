@@ -9,7 +9,6 @@
         },
         "preview": {
             "android": {
-                "distribution": "internal",
                 "developmentClient": true
             }
         },
