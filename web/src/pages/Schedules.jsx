@@ -1,14 +1,28 @@
 import { useState, useEffect } from 'react';
-import { Loader } from '../components';
+import { Loader, Table } from '../components';
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
 
+import { getAllBusJourneys } from '../services/busJourneyService';
+import { Link } from 'react-router-dom';
+
 const Schedules = () => {
+    const [schedules, setSchedules] = useState([]);
+    const [staffSchedules, setStaffSchedules] = useState([]);
     const [value, setValue] = useState('');
     const [tableFilter, setTableFilter] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [scheduleTable, setScheduleTable] = useState(false);
 
     // const user = JSON.parse(localStorage.getItem('userInfo'));
+
+    useEffect(() => {
+        getAllBusJourneys().then((schedules) => {
+            setSchedules(schedules);
+            setLoading(false);
+            setScheduleTable(true);
+        });
+    }, []);
 
     const handleAccept = async (id, type) => {};
 
@@ -45,29 +59,55 @@ const Schedules = () => {
     };
 
     // format date function
-    const formatDate = (dateString) => {
+    function formatDate(dateString) {
         const date = new Date(dateString);
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
+        const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+        const formattedDate = date.toLocaleDateString('en-US', options);
+        const formattedTime = date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
 
-        return `${year}-${month}-${day}`;
-    };
+        return `${formattedDate} ${formattedTime} `;
+    }
 
-    const theadClass = 'py-3.5 text-sm font-semibold text-left rtl:text-right text-gray-500 dark:text-white';
+    const bHeaders = ['Route', 'Departure', 'Arrival', 'Bus', 'Driver', 'Passengers', 'Status'];
+    const bData = schedules.map((item) => ({
+        'Route Name': `${item.route.routeNumber} ${item.route.routeName}`,
+        'Departure Time': formatDate(item.departureTime),
+        'Arrival Time': formatDate(item.arrivalTime),
+        'Bus Number': item.bus.busNumber,
+        'Driver Name': item.driver.employeeName,
+        'Boarded Passengers': item.boardedUsers.length,
+        Status: item.state,
+    }));
 
     return (
-        <>
+        <div className="mt-16">
             {loading ? (
                 <Loader />
             ) : (
                 <>
-                    <div className="grid gap-4 md:gap-8 mt-8 pb-10 md:px-5 bg-gray-900 rounded-xl overflow-x-auto">
-                        <section className="container px-4 mx-auto">Schedules</section>
+                    <div className="flex justify-between items-center mb-6 mx-20">
+                        <h1 className="text-2xl font-semibold">Bus Schedules</h1>
+                        <div>
+                            <Link
+                                to="/busschedule/create"
+                                className="bg-primary hover:bg-secondary text-white font-bold py-2 px-4 rounded"
+                            >
+                                Create Schedule
+                            </Link>
+                        </div>
                     </div>
+                    {scheduleTable ? (
+                        <Table data={bData} pageEntries={5} tableHeaders={bHeaders} />
+                    ) : (
+                        <Table
+                            data={staffSchedules}
+                            pageEntries={5}
+                            tableHeaders={['Date', 'Time', 'Bus ID', 'Driver ID', 'Conductor ID', 'Route ID']}
+                        />
+                    )}
                 </>
             )}
-        </>
+        </div>
     );
 };
 
