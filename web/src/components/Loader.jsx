@@ -1,10 +1,7 @@
-import { FaSpinner } from 'react-icons/fa';
-
 const Loader = () => {
     return (
-        <div className="flex justify-center items-center h-screen">
-            <FaSpinner className="animate-spin text-2xl text-black" />
-            <span className="ml-4 text-primarylight">Loading...</span>
+        <div className="flex justify-center items-center h-96">
+            <div className="animate-spin rounded-full h-20 w-20 border-t-2 border-b-2 border-primary"></div>
         </div>
     );
 };

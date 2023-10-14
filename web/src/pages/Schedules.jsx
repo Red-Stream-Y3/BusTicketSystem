@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Loader, Table } from '../components';
+import { CreateButton, Loader, PageHeader, Table } from '../components';
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
 
@@ -9,8 +9,6 @@ import { Link } from 'react-router-dom';
 const Schedules = () => {
     const [schedules, setSchedules] = useState([]);
     const [staffSchedules, setStaffSchedules] = useState([]);
-    const [value, setValue] = useState('');
-    const [tableFilter, setTableFilter] = useState([]);
     const [loading, setLoading] = useState(true);
     const [scheduleTable, setScheduleTable] = useState(false);
 
@@ -81,21 +79,11 @@ const Schedules = () => {
 
     return (
         <div className="mt-16">
+            <PageHeader title="Bus Schedules" buttonText="Create Schedules" buttonLink="/create/buschedules" />
             {loading ? (
                 <Loader />
             ) : (
                 <>
-                    <div className="flex justify-between items-center mb-6 mx-20">
-                        <h1 className="text-2xl font-semibold">Bus Schedules</h1>
-                        <div>
-                            <Link
-                                to="/busschedule/create"
-                                className="bg-primary hover:bg-secondary text-white font-bold py-2 px-4 rounded"
-                            >
-                                Create Schedule
-                            </Link>
-                        </div>
-                    </div>
                     {scheduleTable ? (
                         <Table data={bData} pageEntries={5} tableHeaders={bHeaders} />
                     ) : (
