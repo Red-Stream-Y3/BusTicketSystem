@@ -30,20 +30,6 @@ const Navbar = () => {
         }
     };
 
-    // const navigation = [
-    //     {
-    //         name: 'Home',
-    //         link: '/home',
-    //         icon: <FaHome className="h-6 w-6 text-white" />,
-    //     },
-    // ];
-
-    // useEffect(() => {
-    //     if (user) {
-    //         setIsLogged(true);
-    //     }
-    // }, [user]);
-
     const toggleMenu = () => {
         setIsOpen(!isOpen);
         setIsSearchOpen(false);
@@ -67,7 +53,7 @@ const Navbar = () => {
     };
 
     return (
-        <nav className=" bg-primary">
+        <nav className=" bg-primary fixed top-0 w-full">
             <div className=" max-w-full mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between h-16">
                     <div className="flex items-center">
