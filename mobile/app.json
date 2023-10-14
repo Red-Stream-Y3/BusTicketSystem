@@ -33,6 +33,12 @@
         "projectId": "3a35077c-922e-4a19-8667-aa8c92cfb663"
       }
     },
-    "owner": "dinushkasam"
+    "owner": "dinushkasam",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/3a35077c-922e-4a19-8667-aa8c92cfb663"
+    }
   }
 }

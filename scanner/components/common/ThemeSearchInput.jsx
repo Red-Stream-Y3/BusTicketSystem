@@ -1,11 +1,18 @@
 import React, { useRef, useState } from "react";
-import { StyleSheet, View, Text, Pressable } from "react-native";
+import {
+    StyleSheet,
+    View,
+    Text,
+    Pressable,
+    Dimensions,
+    ActivityIndicator,
+} from "react-native";
 import Animated, { FadeInUp, FadeOutUp } from "react-native-reanimated";
 import ThemeTextInput from "./ThemeTextInput";
 import { AntDesign } from "@expo/vector-icons";
 import getThemeContext from "../../context/ThemeContext";
 
-const ThemeDropDownInput = ({
+const ThemeSearchInput = ({
     title,
     value,
     options,
@@ -38,6 +45,7 @@ const ThemeDropDownInput = ({
             position: absolute ? "absolute" : "relative",
             left: 0,
             right: 0,
+            maxHeight: Dimensions.get("window").height / 3,
             backgroundColor: theme.colors.surface,
             borderRadius: 5,
             borderWidth: 1,
@@ -59,24 +67,12 @@ const ThemeDropDownInput = ({
                 title={title}
                 ref={inputRef}
                 placeholder={placeholder}
-                value={value}
                 onChange={onChange}
+                value={value}
                 onFocusLoss={() => {
                     setShowOptions(false);
-                    inputRef.current.blur();
                 }}
                 onFocus={() => setShowOptions(true)}
-                onPressIcon={() => {
-                    setShowOptions(!showOptions);
-                    inputRef.current.focus();
-                }}
-                icon={
-                    <AntDesign
-                        name='down'
-                        size={24}
-                        color={theme.colors.icon}
-                    />
-                }
             />
             <View>
                 {showOptions && (
@@ -109,7 +105,9 @@ const ThemeDropDownInput = ({
                                             <Text
                                                 key={index}
                                                 style={styles.optionText}>
-                                                {option.name}
+                                                {option.routeNumber}
+                                                {" | "}
+                                                {option.routeName}
                                             </Text>
                                         </Pressable>
                                     ))}
@@ -122,4 +120,4 @@ const ThemeDropDownInput = ({
     );
 };
 
-export default ThemeDropDownInput;
+export default ThemeSearchInput;

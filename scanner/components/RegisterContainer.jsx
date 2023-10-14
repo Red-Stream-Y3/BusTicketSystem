@@ -15,7 +15,11 @@ import Animated, { FadeInUp, FadeOutUp } from "react-native-reanimated";
 import axios from "axios";
 import { getAppContext } from "../context/AppContext";
 
-const RegisterContainer = ({ setOverlayOpen, setLoginEmail, setLoginPassword }) => {
+const RegisterContainer = ({
+    setOverlayOpen,
+    setLoginEmail,
+    setLoginPassword,
+}) => {
     const { theme } = getThemeContext();
     const { SERVER_URL } = getAppContext();
     const [email, setEmail] = useState("");
@@ -33,7 +37,7 @@ const RegisterContainer = ({ setOverlayOpen, setLoginEmail, setLoginPassword }) 
 
     const handleRegister = async () => {
         setError(null);
-        
+
         if (
             email === "" ||
             username === "" ||
@@ -71,8 +75,15 @@ const RegisterContainer = ({ setOverlayOpen, setLoginEmail, setLoginPassword }) 
             }
             setLoading(false);
         } catch (error) {
-            console.log(error);
-            setError(error.response.data.error || error.message);
+            if (String(error.response.data.error).startsWith("E11000")) {
+                setError("Username or email already exists");
+            } else {
+                setError(
+                    error.response.data.message ||
+                        error.response.data.error ||
+                        error.message
+                );
+            }
             setLoading(false);
         }
     };
@@ -156,12 +167,12 @@ const RegisterContainer = ({ setOverlayOpen, setLoginEmail, setLoginPassword }) 
                 textContentType='familyName'
             />
 
-            <ThemeDropDownInput 
+            <ThemeDropDownInput
                 value={userType}
                 setValue={(text) => setUserType(text)}
                 title='User Type*'
                 placeholder='Select User Type'
-                options={['inspector', 'manager', 'driver']}
+                options={["inspector", "manager", "driver"]}
             />
 
             <ThemeTextInput
