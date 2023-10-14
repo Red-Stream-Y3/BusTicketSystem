@@ -1,16 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { View, TextInput, Button, StyleSheet, Text } from "react-native";
+import {
+    View,
+    TextInput,
+    Button,
+    StyleSheet,
+    Text,
+    ActivityIndicator,
+} from "react-native";
 import getThemeContext from "../context/ThemeContext";
 import ThemeSearchInput from "./common/ThemeSearchInput";
 import ThemeTextInput from "./common/ThemeTextInput";
 import ThemeDropDownInput from "./common/ThemeDropDownInput";
 import ThemeButton from "./common/ThemeButton";
 import { MaterialIcons } from "@expo/vector-icons";
-import { searchBusRoutes } from "../services/userTripServices";
+import { createUserTrip, searchBusRoutes } from "../services/userTripServices";
 import { getAppContext } from "../context/AppContext";
 import Toast from "react-native-toast-message";
 
-const NewTripContainer = () => {
+const NewTripContainer = ({ navigation }) => {
     const { theme } = getThemeContext();
     const { USER } = getAppContext();
 
@@ -29,7 +36,7 @@ const NewTripContainer = () => {
 
     const [fare, setFare] = useState(0);
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (route === "" || origin === "" || destination === "") {
             Toast.show({
                 type: "error",
@@ -53,17 +60,32 @@ const NewTripContainer = () => {
 
             const data = {
                 user: USER.id,
-                route: selectedRoute.routeNumber,
-                origin: selectedOrigin.name,
-                destination: selectedDestination.name,
+                route: selectedRoute._id,
+                origin: selectedOrigin._id,
+                destination: selectedDestination._id,
+                state: "scheduled",
                 fare: fare,
             };
+
+            const response = await createUserTrip(data, USER.token);
+
+            if (response._id) {
+                Toast.show({
+                    type: "success",
+                    text1: "Success",
+                    text2: "Trip added successfully",
+                });
+                navigation.goBack();
+            }
+            setSubmitting(false);
         } catch (error) {
+            console.log(error);
             Toast.show({
                 type: "error",
                 text1: "Error",
                 text2: error.message,
             });
+            setSubmitting(false);
         }
     };
 
@@ -134,9 +156,7 @@ const NewTripContainer = () => {
         );
 
         const distance = Math.abs(destinationIndex - originIndex);
-        const fare = distance * 50; //parseInt(selectedRoute.fare);
-
-        console.log(originIndex, destinationIndex, distance, fare);
+        const fare = distance * parseInt(selectedRoute.fareRate);
 
         setFare(fare);
     }, [origin, destination]);
@@ -176,12 +196,21 @@ const NewTripContainer = () => {
 
             <Text style={styles.title}>Calculated Fare : Rs.{fare}</Text>
 
-            <ThemeButton title='Add New Trip' onPress={handleSubmit}>
-                <MaterialIcons
-                    name='add'
-                    size={24}
-                    color={theme.colors.primaryIcon}
-                />
+            <ThemeButton
+                title={submitting ? "" : "Add New Trip"}
+                onPress={handleSubmit}>
+                {submitting ? (
+                    <ActivityIndicator
+                        size={24}
+                        color={theme.colors.primaryIcon}
+                    />
+                ) : (
+                    <MaterialIcons
+                        name='add'
+                        size={24}
+                        color={theme.colors.primaryIcon}
+                    />
+                )}
             </ThemeButton>
         </View>
     );
