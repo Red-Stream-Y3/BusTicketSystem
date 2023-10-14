@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import Bus from "./busModel.js";
 
 const busJourneySchema = new mongoose.Schema(
     {
@@ -52,9 +53,11 @@ busJourneySchema.index({ route: 1, departureTime: 1 }, { unique: true });
 
 //check if the bus is over crowded every time a user boards
 busJourneySchema.pre("save", async function (next) {
+    if (!this.isModified("boardedUsers")) {
+        next();
+    }
     const journey = this;
     const bus = await this.model("Bus").findById(journey.bus);
-
     if (journey.boardedUsers.length > bus.capacity) {
         journey.overCrowded = true;
         await journey.save();
@@ -64,24 +67,14 @@ busJourneySchema.pre("save", async function (next) {
 
 //save the departure time and arrival time when state is changed
 busJourneySchema.pre("save", async function (next) {
-    const journey = this;
-    if (journey.state === "departed") {
-        journey.departureTime = Date.now();
-    }
-    if (journey.state === "completed") {
-        journey.arrivalTime = Date.now();
-    }
-    next();
-});
-
-//save the departure time and arrival time when state is changed
-busJourneySchema.pre("save", async function (next) {
-    const journey = this;
-    if (journey.state === "departed") {
-        journey.departureTime = Date.now();
-    }
-    if (journey.state === "completed") {
-        journey.arrivalTime = Date.now();
+    if (this.isModified("state")) {
+        const journey = this;
+        if (journey.state === "departed") {
+            journey.departureTime = Date.now();
+        }
+        if (journey.state === "completed") {
+            journey.arrivalTime = Date.now();
+        }
     }
     next();
 });
