@@ -2,12 +2,11 @@ import asyncHandler from "express-async-handler";
 import Fare from "../models/fareModel.js";
 
 export const createFare = asyncHandler(async (req, res) => {
-  const { name, amount, route } = req.body;
+  const { fareName, fareAmount } = req.body;
   try {
     const fare = new Fare({
-      fareName: name,
-      fareAmount: amount,
-      fareRoute: route,
+      fareName,
+      fareAmount,
     });
     const createdFare = await fare.save();
     res.status(201).json(createdFare);
@@ -58,7 +57,6 @@ export const updateFareById = asyncHandler(async (req, res) => {
     if (fare) {
       fare.fareName = req.body.fareName || fare.fareName;
       fare.fareAmount = req.body.fareAmount || fare.fareAmount;
-      fare.fareRoute = req.body.fareRoute || fare.fareRoute;
       const updatedFare = await fare.save();
       res.json(updatedFare);
     } else {
@@ -71,9 +69,8 @@ export const updateFareById = asyncHandler(async (req, res) => {
 
 export const deleteFareById = asyncHandler(async (req, res) => {
   try {
-    const fare = await Fare.findById(req.params.id);
+    const fare = await Fare.findByIdAndDelete(req.params.id);
     if (fare) {
-      await fare.remove();
       res.json({ message: "Fare removed" });
     } else {
       res.status(404).json({ message: "Fare not found" });

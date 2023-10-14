@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { SideNavBar, Footer } from './components';
-import { Dashboard, Login, Register } from './pages';
+import { Login, Register, Dashboard, Employees, Buses, Fares } from './pages';
 import './App.css';
 
 function App() {
@@ -10,9 +10,12 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
             </Routes>
-            <SideNavBar />
+            {/* <SideNavBar /> */}
             <Routes>
-                <Route path="/" element={<Dashboard />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/employees" element={<Employees />} />
+                <Route path="/buses" element={<Buses />} />
+                <Route path="/fares" element={<Fares />} />
             </Routes>
             <Footer />
         </BrowserRouter>

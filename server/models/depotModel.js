@@ -10,10 +10,6 @@ const depotSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    depotManager: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Employee",
-    },
   },
   { timestamps: true }
 );

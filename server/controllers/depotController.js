@@ -62,9 +62,8 @@ export const updateDepotById = asyncHandler(async (req, res) => {
 
 export const deleteDepotById = asyncHandler(async (req, res) => {
   try {
-    const depot = await Depot.findById(req.params.id);
+    const depot = await Depot.findByIdAndDelete(req.params.id);
     if (depot) {
-      await depot.remove();
       res.json({ message: "Depot removed" });
     } else {
       res.status(404).json({ message: "Depot not found" });
