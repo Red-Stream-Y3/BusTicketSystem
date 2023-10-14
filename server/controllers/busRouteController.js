@@ -48,6 +48,12 @@ export const getBusRoutesBySearch = asyncHandler(async (req, res) => {
                     fareRate: 1,
                 },
             },
+            {
+                $sort: { routeNumber: 1 },
+            },
+            {
+                $limit: 10,
+            },
         ]).hint({ routeNumber: 1, routeName: 1 });
 
         res.status(200).json(busRoutes);
