@@ -32,6 +32,8 @@ const RegisterContainer = ({ setOverlayOpen, setLoginEmail, setLoginPassword }) 
     const [loading, setLoading] = useState(false);
 
     const handleRegister = async () => {
+        setError(null);
+        
         if (
             email === "" ||
             username === "" ||
@@ -157,7 +159,7 @@ const RegisterContainer = ({ setOverlayOpen, setLoginEmail, setLoginPassword }) 
             <ThemeDropDownInput 
                 value={userType}
                 setValue={(text) => setUserType(text)}
-                title='User Type'
+                title='User Type*'
                 placeholder='Select User Type'
                 options={['inspector', 'manager', 'driver']}
             />

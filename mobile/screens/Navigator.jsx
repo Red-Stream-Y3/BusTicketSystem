@@ -16,6 +16,8 @@ import { getAppContext } from "../context/AppContext";
 import SplashScreen from "./SplashScreen";
 import RechargeScreen from "./RechargeScreen";
 import QRScreen from "./QRScreen";
+import NewTripScreen from "./NewTripScreen";
+import HistoryScreen from "./HistoryScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -56,6 +58,22 @@ const Navigator = () => {
                                 component={QRScreen}
                                 options={{
                                     title: "QR Code",
+                                    animation: "slide_from_bottom",
+                                }}
+                            />
+                            <Stack.Screen
+                                name='Book'
+                                component={NewTripScreen}
+                                options={{
+                                    title: "New Trip",
+                                    animation: "slide_from_left",
+                                }}
+                            />
+                            <Stack.Screen
+                                name='History'
+                                component={HistoryScreen}
+                                options={{
+                                    title: "History",
                                     animation: "slide_from_bottom",
                                 }}
                             />
