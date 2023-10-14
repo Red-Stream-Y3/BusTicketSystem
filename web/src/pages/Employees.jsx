@@ -17,12 +17,7 @@ const Employees = () => {
 
     return (
         <div className="mt-16">
-            <PageHeader title="Employees" />
-            <div className="flex justify-between items-center px-6 py-4">
-                <Link to="/employees/create">
-                    <CreateButton buttonTitle="Create Employee" />
-                </Link>
-            </div>
+            <PageHeader title="Employees" buttonText="Create Employees" buttonLink="/employees/create" />
             {isLoading ? (
                 <div className="flex justify-center items-center h-96">
                     <div className="animate-spin rounded-full h-20 w-20 border-t-2 border-b-2 border-primary"></div>

@@ -17,7 +17,9 @@ export default {
                 darkbg: '#0d0c1d',
                 lightbg: '#f7fafc',
             },
-
+            margin: {
+                16: '4rem',
+            },
             width: {
                 30: '8.5rem',
                 50: '12.5rem',
