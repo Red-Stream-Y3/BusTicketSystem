@@ -22,11 +22,7 @@ const SideNavBar = () => {
 
     return (
         <>
-            <div className="flex flex-col h-screen w-72 bg-primary text-white">
-                <div className="flex items-center justify-between p-4">
-                    <div className="text-2xl font-bold">Bus Ticket System</div>
-                    <FaBars className="text-white cursor-pointer" onClick={toggleSideNavBar} />
-                </div>
+            <div className="flex flex-col h-screen w-72 bg-primary text-white justify-center items-center">
                 <div className="flex flex-col items-start">
                     {navItems.map((item, index) => (
                         <Link
