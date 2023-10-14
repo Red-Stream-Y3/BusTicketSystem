@@ -38,6 +38,15 @@ const registerUser = asyncHandler(async (req, res) => {
     const { username, firstName, lastName, email, password, phone, role } =
         req.body;
 
+    //validate password to include at least 1 number, 1 uppercase, 1 lowercase, and 1 special character
+    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
+    if (!passwordRegex.test(password)) {
+        res.status(400);
+        throw new Error(
+            "Password must be at least 8 characters and include at least 1 number, 1 uppercase, 1 lowercase, and 1 special character"
+        );
+    }
+
     try {
         const user = await User.create({
             username,
