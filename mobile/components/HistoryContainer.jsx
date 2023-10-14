@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
     View,
-    Text,
     FlatList,
     StyleSheet,
     RefreshControl,
@@ -9,15 +8,21 @@ import {
 } from "react-native";
 import getThemeContext from "../context/ThemeContext";
 import { getAppContext } from "../context/AppContext";
-import { getUserTrips } from "../services/userTripServices";
+import { cancelUserTrip, getUserTrips } from "../services/userTripServices";
 import Toast from "react-native-toast-message";
 import TripCard from "./common/TripCard";
+import ThemeOverlay from "./common/ThemeOverlay";
+import TripSummary from "./common/TripSummary";
+import { useNavigation } from "@react-navigation/native";
 
 const HistoryContainer = ({ data }) => {
     const { theme } = getThemeContext();
     const { USER } = getAppContext();
     const [history, setHistory] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [showSelected, setShowSelected] = useState(false);
+    const [selected, setSelected] = useState(null);
+    const navigation = useNavigation();
 
     const fetchHistory = async () => {
         try {
@@ -78,12 +83,58 @@ const HistoryContainer = ({ data }) => {
         },
     });
 
+    const handleItemClick = (item) => {
+        setSelected(item);
+        setShowSelected(true);
+    };
+
+    const handleModalBgPress = () => {
+        setShowSelected(false);
+    };
+
+    const handleQrClick = () => {
+        if (!selected) return;
+        setShowSelected(false);
+        navigation.navigate("QRscreen", { qrData: selected._id });
+    };
+
+    const handleDeleteClick = async () => {
+        if (!selected) return;
+        try {
+            const trip = await cancelUserTrip(selected._id, USER.token);
+
+            if (trip) {
+                Toast.show({
+                    type: "success",
+                    text1: "Success",
+                    text2: "Trip deleted successfully",
+                });
+                setShowSelected(false);
+                setSelected(null);
+                handleRefresh();
+            }
+        } catch (error) {
+            Toast.show({
+                type: "error",
+                text1: "Error",
+                text2: error.response?.data?.error || error.message,
+            });
+        }
+    };
+
     useEffect(() => {
         handleRefresh();
     }, []);
 
     return (
         <View style={styles.container}>
+            <ThemeOverlay visible={showSelected} onPressBg={handleModalBgPress}>
+                <TripSummary
+                    trip={selected}
+                    onClose={handleQrClick}
+                    onDelete={handleDeleteClick}
+                />
+            </ThemeOverlay>
             <FlatList
                 data={history}
                 refreshControl={
@@ -97,11 +148,9 @@ const HistoryContainer = ({ data }) => {
                 renderItem={({ item }) => (
                     <View style={styles.contentContainerStyle}>
                         <TripCard
-                            origin={item.origin.name}
-                            destination={item.destination.name}
-                            state={item.state}
-                            date={item.createdAt}
+                            trip={item}
                             width={Dimensions.get("window").width * 0.9}
+                            onPress={() => handleItemClick(item)}
                         />
                     </View>
                 )}
