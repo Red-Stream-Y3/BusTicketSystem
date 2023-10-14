@@ -19,3 +19,5 @@ const depotSchema = new mongoose.Schema(
 );
 
 const Depot = mongoose.model("Depot", depotSchema);
+
+export default Depot;

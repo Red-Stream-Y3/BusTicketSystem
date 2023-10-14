@@ -14,6 +14,9 @@ import busRoutes from "./routes/busRoutes.js";
 import busStopRoutes from "./routes/busStopRoutes.js";
 import busRouteRoutes from "./routes/busRouteRoutes.js";
 import userTripRoutes from "./routes/userTripRoutes.js";
+import employeeRoutes from "./routes/employeeRoutes.js";
+import depotRoutes from "./routes/depotRoutes.js";
+import fareRoutes from "./routes/fareRoutes.js";
 
 import { fileURLToPath } from "url";
 import { dirname } from "path";
@@ -42,6 +45,9 @@ app.use("/api/busstops", busStopRoutes);
 app.use("/api/busroutes", busRouteRoutes);
 app.use("/api/usertrips", userTripRoutes);
 app.use("/api/busjourneys", userTripRoutes);
+app.use("/api/employees", employeeRoutes);
+app.use("/api/depots", depotRoutes);
+app.use("/api/fares", fareRoutes);
 
 app.get("/braintree", (req, res) => {
   res.sendFile(path.join(__dirname, "braintree.html"));
