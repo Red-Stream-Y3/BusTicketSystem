@@ -74,6 +74,18 @@ busJourneySchema.pre("save", async function (next) {
     next();
 });
 
+//save the departure time and arrival time when state is changed
+busJourneySchema.pre("save", async function (next) {
+    const journey = this;
+    if (journey.state === "departed") {
+        journey.departureTime = Date.now();
+    }
+    if (journey.state === "completed") {
+        journey.arrivalTime = Date.now();
+    }
+    next();
+});
+
 const BusJourney = mongoose.model("BusJourney", busJourneySchema);
 
 export default BusJourney;
