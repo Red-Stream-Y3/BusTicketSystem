@@ -58,7 +58,8 @@ eg: total passengers, number of boarded, number of completed, number of declined
 - view balance ✅
 - view history ✅
 
-admin app - web - manager
+
+## admin app - web - manager
 - add bus
 - add route
 - add bus stops to route
