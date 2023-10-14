@@ -70,7 +70,8 @@ const TripSummary = ({ trip, width, onClose, onDelete }) => {
         textBold: {
             fontSize: 14,
             fontWeight: "bold",
-            color: theme.colors.text,
+            color: theme.colors.primaryText,
+            textTransform: "uppercase",
         },
         title: {
             fontSize: 16,

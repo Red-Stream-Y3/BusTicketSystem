@@ -25,8 +25,6 @@ const RechargeScreen = ({ navigation }) => {
                 }
             );
 
-            console.log(response.data);
-
             if (response.data.isPaymentSuccessful) {
                 Toast.show({
                     type: "success",
@@ -48,7 +46,6 @@ const RechargeScreen = ({ navigation }) => {
                 );
             }
         } catch (error) {
-            console.log(error);
             Toast.show({
                 type: "error",
                 text1: "Error",
