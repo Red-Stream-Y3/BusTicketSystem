@@ -1,7 +1,6 @@
 import asyncHandler from "express-async-handler";
 import BusJourney from "../models/busJourneyModel.js";
 import UserTrip from "../models/userTripModel.js";
-import mongoose from "mongoose";
 
 export const createBusJourney = asyncHandler(async (req, res) => {
     const { bus, route, state } = req.body;
@@ -25,6 +24,7 @@ export const updateBusJourney = asyncHandler(async (req, res) => {
     const { boardedUser, state } = req.body;
     const { id } = req.params;
     const driver = req.user._id; //get the driver id from the token
+
     try {
         const busJourney = await BusJourney.findById(id, {
             boardedUsers: 1,
@@ -51,6 +51,8 @@ export const updateBusJourney = asyncHandler(async (req, res) => {
             ) {
                 busJourney.boardedUsers.push(boardedUser);
                 userTrip.state = "boarded";
+                userTrip.bus = busJourney.bus;
+                userTrip.driver = driver;
             } else if (
                 userTrip.state === "boarded" &&
                 userTrip.state !== "cancelled"
@@ -102,8 +104,8 @@ export const deleteBusJourney = asyncHandler(async (req, res) => {
 
 export const getBusJourneyByUser = asyncHandler(async (req, res) => {
     const user = req.user._id;
+    const limit = parseInt(req.params.limit) || 10;
 
-    console.log("User", user);
     try {
         const busJourneys = await BusJourney.aggregate([
             {
@@ -142,12 +144,6 @@ export const getBusJourneyByUser = asyncHandler(async (req, res) => {
                 $unwind: "$route",
             },
             {
-                $unwind: {
-                    path: "$boardedUsers",
-                    preserveNullAndEmptyArrays: true,
-                },
-            },
-            {
                 $project: {
                     _id: 1,
                     route: {
@@ -168,7 +164,11 @@ export const getBusJourneyByUser = asyncHandler(async (req, res) => {
                         _id: 1,
                         state: 1,
                     },
+                    createdAt: 1,
                 },
+            },
+            {
+                $limit: limit,
             },
         ]);
 

@@ -17,6 +17,6 @@ router
     .get(getBusJourneyById)
     .put(protect, updateBusJourney)
     .delete(deleteBusJourney);
-router.route("/user/:id").get(protect, getBusJourneyByUser);
+router.route("/user/:limit").get(protect, getBusJourneyByUser);
 
 export default router;

@@ -2,14 +2,17 @@ import axios from "axios";
 
 const BASE = "https://bus-ticket-system-ukkxew3r5q-uc.a.run.app";
 
-export const getBusJourneys = async (token) => {
+export const getBusJourneys = async (limit, token) => {
     const config = {
         headers: {
             Authorization: `Bearer ${token}`,
         },
     };
 
-    const response = await axios.get(`${BASE}/api/busjourneys/user`, config);
+    const response = await axios.get(
+        `${BASE}/api/busjourneys/user/${limit}`,
+        config
+    );
 
     if (response.status !== 200) {
         throw new Error(
