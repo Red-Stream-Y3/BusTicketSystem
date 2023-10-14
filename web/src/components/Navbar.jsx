@@ -58,8 +58,8 @@ const Navbar = () => {
                 <div className="flex justify-between h-16">
                     <div className="flex items-center">
                         <Link to="/dashboard" className="flex-shrink-0 flex items-center">
-                            <BsBusFront className="h-8 w-8 text-white" />
-                            <span className="text-white font-extrabold ml-4 text-3xl">Bus Ticket System</span>
+                            <BsBusFront className="h-8 w-8 text-lightbg" />
+                            <span className="text-lightbg font-semibold ml-3 text-2xl">Bus Ticket System</span>
                         </Link>
                     </div>
 

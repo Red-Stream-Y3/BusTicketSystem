@@ -1,42 +1,64 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FaBars } from 'react-icons/fa';
+import PropTypes from 'prop-types';
+import {
+    BsFillHouseFill,
+    BsClockFill,
+    BsFillPersonFill,
+    BsFillBusFrontFill,
+    BsMapFill,
+    BsSignRailroadFill,
+    BsCurrencyDollar,
+    BsFillBarChartLineFill,
+} from 'react-icons/bs';
 
-const SideNavBar = () => {
-    const [isOpened, setIsOpened] = useState(false);
+const navLinks = [
+    { navTitle: 'Dashboard', navLink: '/dashboard', navIcon: BsFillHouseFill },
+    { navTitle: 'Schedules', navLink: '/schedules', navIcon: BsClockFill },
+    { navTitle: 'Employees', navLink: '/employees', navIcon: BsFillPersonFill },
+    { navTitle: 'Buses', navLink: '/buses', navIcon: BsFillBusFrontFill },
+    { navTitle: 'Bus Stops', navLink: '/stops', navIcon: BsMapFill },
+    { navTitle: 'Routes', navLink: '/routes', navIcon: BsSignRailroadFill },
+    { navTitle: 'Fares', navLink: '/fares', navIcon: BsCurrencyDollar },
+    { navTitle: 'Reports', navLink: '/reports', navIcon: BsFillBarChartLineFill },
+];
 
-    const toggleSideNavBar = () => {
-        setIsOpened(!isOpened);
+const SideNavBar = ({ isSidebarOpen }) => {
+    const [activeLink, setActiveLink] = useState('Dashboard');
+
+    const handleLinkClick = (link) => {
+        setActiveLink(link);
     };
 
-    const navItems = [
-        { name: 'Dashboard', href: '/dashboard' },
-        { name: 'Schedules', href: '/schedules' },
-        { name: 'Employees', href: '/employees' },
-        { name: 'Buses', href: '/buses' },
-        { name: 'Bus Stops', href: '/busstops' },
-        { name: 'Routes', href: '/routes' },
-        { name: 'Fares', href: '/fares' },
-        { name: 'Reports', href: '/reports' },
-    ];
-
     return (
-        <>
-            <div className="flex flex-col h-screen w-72 bg-primary text-white justify-center items-center">
-                <div className="flex flex-col items-start">
-                    {navItems.map((item, index) => (
+        <nav
+            className={`bg-quaternary w-64 flex-shrink-0 ${isSidebarOpen ? 'block' : 'hidden'} md:block`}
+            style={{ minHeight: '100vh', flexDirection: 'column' }}
+        >
+            <ul className="mt-16">
+                {navLinks.map((link, index) => (
+                    <li key={index} className="relative">
                         <Link
-                            key={index}
-                            to={item.href}
-                            className="text-lg py-5 w-full hover:text-tertiary hover:bg-quaternary p-2 rounded"
+                            to={link.navLink}
+                            className={`inline-flex items-center justify-center px-10 py-5 w-full text-md font-medium transition-colors duration-150 hover:text-quaternary hover:bg-tertiary ${
+                                activeLink === link.navTitle
+                                    ? 'text-quaternary bg-secondary'
+                                    : 'text-lightbg bg-quaternary'
+                            }`}
+                            onClick={() => handleLinkClick(link.navTitle)}
                         >
-                            {item.name}
+                            {React.createElement(link.navIcon, { className: 'mr-2 text-lg' })}
+                            {link.navTitle}
                         </Link>
-                    ))}
-                </div>
-            </div>
-        </>
+                    </li>
+                ))}
+            </ul>
+        </nav>
     );
+};
+
+SideNavBar.propTypes = {
+    isSidebarOpen: PropTypes.bool.isRequired,
 };
 
 export default SideNavBar;
