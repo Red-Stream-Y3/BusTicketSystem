@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Table } from '../components';
+import { Table, PageHeader, CreateButton } from '../components';
 import { getAllEmployees } from '../services/employeeService';
 import { getEmployeesByRole } from '../services/employeeService';
 
@@ -16,9 +16,13 @@ const Employees = () => {
     }, []);
 
     return (
-        <div>
-            <h1>Employees</h1>
-            <Link to="/employees/create">Create Employee</Link>
+        <div className="mt-16">
+            <PageHeader title="Employees" />
+            <div className="flex justify-between items-center px-6 py-4">
+                <Link to="/employees/create">
+                    <CreateButton buttonTitle="Create Employee" />
+                </Link>
+            </div>
             {isLoading ? (
                 <div className="flex justify-center items-center h-96">
                     <div className="animate-spin rounded-full h-20 w-20 border-t-2 border-b-2 border-primary"></div>
