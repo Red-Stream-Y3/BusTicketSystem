@@ -72,7 +72,11 @@ const RegisterContainer = ({
             if (String(error.response.data.error).startsWith("E11000")) {
                 setError("Username or email already exists");
             } else {
-                setError(error.response.data.error || error.message);
+                setError(
+                    error.response.data.message ||
+                        error.response.data.error ||
+                        error.message
+                );
             }
             setLoading(false);
         }
