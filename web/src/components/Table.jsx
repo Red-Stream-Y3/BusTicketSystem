@@ -16,7 +16,7 @@ const Table = ({ data, pageEntries, tableHeaders }) => {
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
     return (
-        <div className="bg-white shadow-md rounded-lg my-6 pb-4 overflow-x-auto mx-20">
+        <div className="bg-white shadow-md rounded-lg my-6 pb-4 overflow-x-auto mx-6">
             <table className="min-w-max w-full table-auto">
                 <thead className="bg-primary text-white uppercase text-sm leading-normal">
                     <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
