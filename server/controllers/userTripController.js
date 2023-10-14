@@ -99,6 +99,22 @@ export const getUserTrips = asyncHandler(async (req, res) => {
                 },
             },
             {
+                $lookup: {
+                    from: "buses",
+                    localField: "bus",
+                    foreignField: "_id",
+                    as: "bus",
+                },
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "driver",
+                    foreignField: "_id",
+                    as: "driver",
+                },
+            },
+            {
                 $unwind: "$origin",
             },
             {
@@ -106,6 +122,12 @@ export const getUserTrips = asyncHandler(async (req, res) => {
             },
             {
                 $unwind: "$route",
+            },
+            {
+                $unwind: "$bus",
+            },
+            {
+                $unwind: "$driver",
             },
             {
                 $project: {
@@ -130,8 +152,15 @@ export const getUserTrips = asyncHandler(async (req, res) => {
                     departureTime: 1,
                     arrivalTime: 1,
                     state: 1,
-                    bus: 1,
-                    driver: 1,
+                    bus: {
+                        _id: 1,
+                        busNumber: 1,
+                    },
+                    driver: {
+                        _id: 1,
+                        firstName: 1,
+                        LastName: 1,
+                    },
                     createdAt: 1,
                 },
             },
@@ -185,6 +214,22 @@ export const getUserTripById = asyncHandler(async (req, res) => {
                 },
             },
             {
+                $lookup: {
+                    from: "buses",
+                    localField: "bus",
+                    foreignField: "_id",
+                    as: "bus",
+                },
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "driver",
+                    foreignField: "_id",
+                    as: "driver",
+                },
+            },
+            {
                 $unwind: "$origin",
             },
             {
@@ -192,6 +237,12 @@ export const getUserTripById = asyncHandler(async (req, res) => {
             },
             {
                 $unwind: "$route",
+            },
+            {
+                $unwind: "$bus",
+            },
+            {
+                $unwind: "$driver",
             },
             {
                 $project: {
@@ -216,8 +267,15 @@ export const getUserTripById = asyncHandler(async (req, res) => {
                     departureTime: 1,
                     arrivalTime: 1,
                     state: 1,
-                    bus: 1,
-                    driver: 1,
+                    bus: {
+                        _id: 1,
+                        busNumber: 1,
+                    },
+                    driver: {
+                        _id: 1,
+                        firstName: 1,
+                        LastName: 1,
+                    },
                     createdAt: 1,
                 },
             },
@@ -231,7 +289,7 @@ export const getUserTripById = asyncHandler(async (req, res) => {
 export const updateUserTrip = asyncHandler(async (req, res) => {
     const user = req.user._id;
     const id = req.params.id;
-    const { state } = req.body;
+    const { state, bus, driver, arrivalTime, departureTime } = req.body;
 
     try {
         const trip = await UserTrip.findOne({
@@ -240,8 +298,13 @@ export const updateUserTrip = asyncHandler(async (req, res) => {
         });
 
         if (trip) {
-            trip.state = state || trip.state;
 
+            trip.state = state || trip.state;
+            trip.bus = bus || trip.bus;
+            trip.driver = driver || trip.driver;
+            trip.arrivalTime = arrivalTime || trip.arrivalTime;
+            trip.departureTime = departureTime || trip.departureTime;
+            
             const updatedTrip = await trip.save();
             res.json(updatedTrip);
         } else {
