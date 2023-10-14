@@ -80,17 +80,13 @@ export const createUserTrip = async (tripData, token) => {
     };
 
     const response = await axios.post(
-        `${BASE}/api/usertrips/`,
+        `${BASE}/api/usertrips`,
         tripData,
         config
     );
 
     if (response.status !== 201) {
-        throw new Error(
-            response.data.error.message ||
-                response.data.message ||
-                "Error creating user trip"
-        );
+        throw new Error(response.data.message || "Error creating user trip");
     }
     return response.data;
 };
