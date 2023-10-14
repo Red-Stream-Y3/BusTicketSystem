@@ -10,10 +10,6 @@ const fareSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    fareRoute: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "BusRoute",
-    },
   },
   { timestamps: true }
 );

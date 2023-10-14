@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Footer, Navbar } from './components';
-import { Dashboard, Employees, Home, Login, Register, Schedules } from './pages';
+import { Dashboard, Employees, Buses, Fares, Home, Login, Register, Schedules } from './pages';
+
 import './App.css';
 
 function App() {
@@ -11,7 +12,10 @@ function App() {
                 <Route path="/*" element={<Home />}>
                     <Route path="dashboard" element={<Dashboard />} />
                     <Route path="schedules" element={<Schedules />} />
-                    <Route path="employees" element={<Employees />} />
+                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/employees" element={<Employees />} />
+                    <Route path="/buses" element={<Buses />} />
+                    <Route path="/fares" element={<Fares />} />
                 </Route>
             </Routes>
             <Footer />
