@@ -17,3 +17,25 @@ export const createBusJourney = asyncHandler(async (req, res) => {
         res.status(405).json({ message: error.message });
     }
 });
+
+export const updateBusJourney = asyncHandler(async (req, res) => {
+    const { id, boardedUsers, state } = req.body;
+    const driver = req.user._id; //get the driver id from the token
+    try {
+        const busJourney = await BusJourney.findById(id);
+        if (busJourney) {
+            if (boardedUsers) {
+                busJourney.boardedUsers.push(boardedUsers);
+            }
+            if (state) {
+                busJourney.state = state;
+            }
+            const updatedBusJourney = await busJourney.save();
+            res.json(updatedBusJourney);
+        } else {
+            res.status(404).json({ message: "Bus Journey not found" });
+        }
+    } catch (error) {
+        res.status(405).json({ message: error.message });
+    }
+});

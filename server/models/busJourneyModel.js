@@ -37,7 +37,7 @@ const busJourneySchema = new mongoose.Schema(
         },
         driver: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Driver",
+            ref: "User",
             required: true,
         },
         overCrowded: {
@@ -58,6 +58,18 @@ busJourneySchema.pre("save", async function (next) {
     if (journey.boardedUsers.length > bus.capacity) {
         journey.overCrowded = true;
         await journey.save();
+    }
+    next();
+});
+
+//save the departure time and arrival time when state is changed
+busJourneySchema.pre("save", async function (next) {
+    const journey = this;
+    if (journey.state === "departed") {
+        journey.departureTime = Date.now();
+    }
+    if (journey.state === "completed") {
+        journey.arrivalTime = Date.now();
     }
     next();
 });
