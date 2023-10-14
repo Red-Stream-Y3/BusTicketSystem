@@ -15,18 +15,22 @@ import { getAppContext } from "../context/AppContext";
 import QRCode from "react-native-qrcode-svg";
 import Animated from "react-native-reanimated";
 import { Entypo } from "@expo/vector-icons";
-import { getUserTrips } from "../services/userTripServices";
+import { cancelUserTrip, getUserTrips } from "../services/userTripServices";
 import TripCard from "./common/TripCard";
+import TripSummary from "./common/TripSummary";
+import ThemeOverlay from "./common/ThemeOverlay";
 
 const HomeContainer = ({ navigation }) => {
     const { theme, toggleTheme } = getThemeContext();
     const { USER, credits, fetchCredits, removeUser } = getAppContext();
     const [recent, setRecent] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
+    const [showSelected, setShowSelected] = useState(false);
+    const [selected, setSelected] = useState(null);
 
     const fetchRecent = async () => {
         try {
-            const data = await getUserTrips(5, USER.token);
+            const data = await getUserTrips(4, USER.token);
             // console.log(data);
             setRecent(data);
         } catch (error) {
@@ -51,6 +55,7 @@ const HomeContainer = ({ navigation }) => {
         },
         cardRow: {
             flexDirection: "row",
+            alignItems: "center",
             backgroundColor: theme.colors.surface,
             marginVertical: 10,
             padding: 15,
@@ -90,10 +95,10 @@ const HomeContainer = ({ navigation }) => {
             padding: 10,
             backgroundColor: "#fff",
             borderRadius: 10,
-            height: 180,
-            width: 180,
+            height: 150,
+            width: 150,
         },
-        creditContainer: {
+        userContainer: {
             justifyContent: "center",
             alignItems: "flex-start",
             marginTop: 10,
@@ -114,6 +119,23 @@ const HomeContainer = ({ navigation }) => {
         itemContainer: {
             marginVertical: 5,
         },
+        creditContainer: {
+            justifyContent: "center",
+            alignItems: "center",
+            marginHorizontal: 10,
+        },
+        h1: {
+            fontSize: 24,
+            fontWeight: "bold",
+            color: theme.colors.text,
+            elevation: 5,
+        },
+        h2: {
+            fontSize: 14,
+            fontWeight: "bold",
+            color: theme.colors.text,
+            elevation: 5,
+        },
     });
 
     const handleRefresh = async () => {
@@ -128,8 +150,53 @@ const HomeContainer = ({ navigation }) => {
         fetchRecent();
     }, []);
 
+    const handleDeleteClick = async () => {
+        if (!selected) return;
+
+        try {
+            const trip = await cancelUserTrip(selected._id, USER.token);
+
+            if (trip) {
+                Toast.show({
+                    type: "success",
+                    text1: "Success",
+                    text2: "Trip cancelled successfully",
+                });
+                handleRefresh();
+                setShowSelected(false);
+            }
+        } catch (error) {
+            Toast.show({
+                type: "error",
+                text1: "Error",
+                text2: error.response?.data?.error || error.message,
+            });
+        }
+    };
+
+    const handleQrClick = () => {
+        if (!selected) return;
+        navigation.navigate("QRscreen", { qrData: selected._id });
+    };
+
+    const handleModalBgPress = () => {
+        setShowSelected(false);
+    };
+
+    const handleItemClick = (item) => {
+        setSelected(item);
+        setShowSelected(true);
+    };
+
     return (
         <>
+            <ThemeOverlay visible={showSelected} onPressBg={handleModalBgPress}>
+                <TripSummary
+                    trip={selected}
+                    onClose={handleQrClick}
+                    onDelete={handleDeleteClick}
+                />
+            </ThemeOverlay>
             <ScrollView
                 refreshControl={
                     <RefreshControl
@@ -140,48 +207,30 @@ const HomeContainer = ({ navigation }) => {
                 style={styles.container}
                 contentContainerStyle={{ alignItems: "center" }}>
                 <View style={styles.cardRow}>
-                    {/* TODO: remove this qr code */}
-                    <View>
-                        {USER._id ? (
-                            <Pressable
-                                android_ripple={styles.ripple}
-                                onPress={() =>
-                                    navigation.navigate("QRscreen", {
-                                        qrData: USER._id,
-                                    })
-                                }>
-                                <Animated.View
-                                    style={styles.qrCodeContainer}
-                                    sharedTransitionTag='qrcode'>
-                                    <QRCode size={150} value={USER._id} />
-                                </Animated.View>
-                            </Pressable>
-                        ) : (
-                            <Text style={styles.text}>Not logged in</Text>
-                        )}
+                    <View style={styles.creditContainer}>
+                        <Text style={styles.h1}>{credits}</Text>
+                        <Text style={styles.h2}>Credits</Text>
                     </View>
 
-                    <View style={styles.creditContainer}>
+                    <View style={styles.userContainer}>
                         <Text style={styles.title}>{USER.username}</Text>
                         <Text style={styles.text}>
                             {USER.firstName} {USER.lastName}
                         </Text>
                         <Text style={styles.text}>{USER.email}</Text>
-                        <Text style={styles.title}>Credits: {credits}</Text>
-                        <Text
-                            style={
-                                styles.text
-                            }>{`(Tap QR to get full screen)`}</Text>
-                        <ThemeButton
-                            title={"Sign Out"}
-                            variant={"outlined"}
-                            onPress={() => removeUser()}
-                        />
-                        <ThemeButton
-                            title={"Toggle Theme"}
-                            variant={"outlined"}
-                            onPress={() => toggleTheme()}
-                        />
+                        <View style={styles.flexRowCenter}>
+                            <ThemeButton
+                                title={"Sign Out"}
+                                variant={"outlined"}
+                                onPress={() => removeUser()}
+                            />
+                            {/* TODO: remove theme toggle button */}
+                            <ThemeButton
+                                title={"Toggle Theme"}
+                                variant={"outlined"}
+                                onPress={() => toggleTheme()}
+                            />
+                        </View>
                     </View>
                 </View>
 
@@ -233,12 +282,12 @@ const HomeContainer = ({ navigation }) => {
                             </Text>
                         ) : recent?.length > 0 ? (
                             recent.map((item) => (
-                                <View key={item._id} style={styles.itemContainer}>
+                                <View
+                                    key={item._id}
+                                    style={styles.itemContainer}>
                                     <TripCard
-                                        origin={item.origin.name}
-                                        destination={item.destination.name}
-                                        state={item.state}
-                                        date={item.createdAt}
+                                        trip={item}
+                                        onPress={() => handleItemClick(item)}
                                     />
                                 </View>
                             ))

@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Dimensions, Pressable } from "react-native";
 import getThemeContext from "../../context/ThemeContext";
 import { MaterialIcons } from "@expo/vector-icons";
 
-const TripCard = ({ origin, destination, state, date, onPress, width }) => {
+const TripCard = ({ trip, onPress, width }) => {
     const { theme } = getThemeContext();
 
     const styles = StyleSheet.create({
@@ -60,7 +60,7 @@ const TripCard = ({ origin, destination, state, date, onPress, width }) => {
                             size={20}
                             color={theme.colors.text}
                         />
-                        <Text style={styles.cardHeaderText}>{origin}</Text>
+                        <Text style={styles.cardHeaderText}>{trip.origin.name}</Text>
                     </View>
                     <View style={styles.flexRowCenter}>
                         <MaterialIcons
@@ -68,14 +68,14 @@ const TripCard = ({ origin, destination, state, date, onPress, width }) => {
                             size={20}
                             color={theme.colors.text}
                         />
-                        <Text style={styles.cardHeaderText}>{destination}</Text>
+                        <Text style={styles.cardHeaderText}>{trip.destination.name}</Text>
                     </View>
                 </View>
                 <View style={styles.cardBody}>
-                    <Text style={styles.cardBodyText}>{state}</Text>
+                    <Text style={styles.cardBodyText}>{trip.state}</Text>
                     <Text style={styles.cardBodyText}>
-                        {new Date(date).toLocaleDateString()}{" "}
-                        {new Date(date).toLocaleTimeString()}
+                        {new Date(trip.createdAt).toLocaleDateString()}{" "}
+                        {new Date(trip.createdAt).toLocaleTimeString()}
                     </Text>
                 </View>
             </Pressable>
