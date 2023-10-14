@@ -40,11 +40,27 @@ const busJourneySchema = new mongoose.Schema(
             ref: "Driver",
             required: true,
         },
+        overCrowded: {
+            type: Boolean,
+            default: false,
+        },
     },
     { timestamps: true }
 );
 
 busJourneySchema.index({ route: 1, departureTime: 1 }, { unique: true });
+
+//check if the bus is over crowded every time a user boards
+busJourneySchema.pre("save", async function (next) {
+    const journey = this;
+    const bus = await this.model("Bus").findById(journey.bus);
+
+    if (journey.boardedUsers.length > bus.capacity) {
+        journey.overCrowded = true;
+        await journey.save();
+    }
+    next();
+});
 
 const BusJourney = mongoose.model("BusJourney", busJourneySchema);
 
