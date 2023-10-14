@@ -16,7 +16,7 @@ const Table = ({ data, pageEntries, tableHeaders }) => {
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
     return (
-        <div className="bg-white shadow-md rounded-lg my-6 pb-4 overflow-x-auto mx-16">
+        <div className="bg-white shadow-md rounded-lg my-6 pb-4 overflow-x-auto mx-6">
             <table className="min-w-max w-full table-auto">
                 <thead className="bg-primary text-white uppercase text-sm leading-normal">
                     <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
@@ -31,7 +31,7 @@ const Table = ({ data, pageEntries, tableHeaders }) => {
                     {currentItems.map((item, index) => (
                         <tr key={index} className="border-b border-gray-200 hover:bg-gray-100">
                             {Object.values(item).map((value, index) => (
-                                <td key={index} className="py-3 px-6 text-center capitalize">
+                                <td key={index} className="py-3 px-6 text-center">
                                     {value}
                                 </td>
                             ))}
@@ -41,7 +41,7 @@ const Table = ({ data, pageEntries, tableHeaders }) => {
                     {Array.from({ length: emptyRows }, (_, index) => (
                         <tr key={index + currentItems.length} className="border-b border-gray-200 hover:bg-gray-100">
                             {tableHeaders.map((_, index) => (
-                                <td key={index} className="py-3 px-6 text-center capitalize">
+                                <td key={index} className="py-3 px-6 text-center">
                                     &#x2800;
                                 </td>
                             ))}
