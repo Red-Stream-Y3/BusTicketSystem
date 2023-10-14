@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import Bus from "./busModel.js";
 
 const busJourneySchema = new mongoose.Schema(
     {
@@ -17,7 +16,7 @@ const busJourneySchema = new mongoose.Schema(
         boardedUsers: [
             {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: "UserTrip",
+                ref: "User",
             },
         ],
         state: {
@@ -38,7 +37,7 @@ const busJourneySchema = new mongoose.Schema(
         },
         driver: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
+            ref: "Employee",
             required: true,
         },
         overCrowded: {
