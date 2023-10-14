@@ -41,22 +41,22 @@ A bus ticketing system developed for SLIIT Y3S2 CSSE module
     eg: total passengers, number of boarded, number of completed, number of declined
 -   show a list of bus stops on screen according to destinations selected by users.
 
-## customer app - mobile - passenger
+## customer app - mobile - passenger ✅
 
 -   register account ✅
 -   login ✅
--   before departing
-    -   create user trip
+-   before departing ✅
+    -   create user trip ✅
         -   select route ✅
         -   select origin ✅
         -   select destination ✅
         -   set state to scheduled ✅
         -   make payment ✅
--   on departure
-    -   show QR code to driver
-        -   generate QR for user trip
--   on arrival
-    -   show QR code to driver
+-   on departure ✅
+    -   show QR code to driver ✅
+        -   generate QR for user trip ✅
+-   on arrival ✅
+    -   show QR code to driver ✅
 -   recharge credit ✅
 -   view balance ✅
 -   view history ✅

@@ -13,6 +13,7 @@ export const createUserTrip = asyncHandler(async (req, res) => {
                 $match: {
                     user: new mongoose.Types.ObjectId(user),
                     paid: false,
+                    state: { $ne: "cancelled" },
                 },
             },
             {

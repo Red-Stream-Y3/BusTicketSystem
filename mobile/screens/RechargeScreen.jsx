@@ -37,6 +37,7 @@ const RechargeScreen = ({ navigation }) => {
                 await updateCredits(amount);
                 setShowOverlay(false);
                 setAmount("");
+                navigation.goBack();
             } else {
                 throw new Error(
                     response.errorText ||
@@ -105,7 +106,9 @@ const RechargeScreen = ({ navigation }) => {
             </ThemeOverlay>
 
             <View style={styles.card}>
-                <Text style={styles.label}>Available Balance: Rs.{credits}</Text>
+                <Text style={styles.label}>
+                    Available Balance: Rs.{credits}
+                </Text>
                 <ThemeTextInput
                     title='Amount to recharge'
                     placeholder='Enter amount'

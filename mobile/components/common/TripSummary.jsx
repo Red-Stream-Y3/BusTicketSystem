@@ -342,7 +342,7 @@ const TripSummary = ({ trip, width, onClose, onDelete }) => {
                                 <MaterialIcons
                                     name='cancel'
                                     size={20}
-                                    color={theme.colors.icon}
+                                    color={theme.colors.primaryIcon}
                                 />
                             </ThemeButton>
                         </View>

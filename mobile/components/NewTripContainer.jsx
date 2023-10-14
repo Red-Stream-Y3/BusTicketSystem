@@ -82,8 +82,10 @@ const NewTripContainer = ({ navigation }) => {
             console.log(error);
             Toast.show({
                 type: "error",
-                text1: "Error",
-                text2: error.message,
+                text1:
+                    error.response?.data?.message ||
+                    error.message ||
+                    "Something went wrong",
             });
             setSubmitting(false);
         }
@@ -134,6 +136,7 @@ const NewTripContainer = ({ navigation }) => {
             marginHorizontal: 10,
             padding: 20,
             borderRadius: 10,
+            elevation: 5,
         },
         title: {
             fontSize: 16,
