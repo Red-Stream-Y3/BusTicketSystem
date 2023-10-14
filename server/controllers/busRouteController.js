@@ -33,7 +33,29 @@ export const getBusRoutesBySearch = asyncHandler(async (req, res) => {
                     from: "busstops",
                     localField: "stops",
                     foreignField: "_id",
-                    as: "stops",
+                    as: "results",
+                },
+            },
+            {
+                $unwind: "$results",
+            },
+            {
+                $addFields: {
+                    sort: {
+                        $indexOfArray: ["$stops", "$results._id"],
+                    },
+                },
+            },
+            {
+                $sort: { _id: 1, sort: 1 },
+            },
+            {
+                $group: {
+                    _id: "$_id",
+                    routeNumber: { $first: "$routeNumber" },
+                    routeName: { $first: "$routeName" },
+                    stops: { $push: "$results" },
+                    fareRate: { $first: "$fareRate" },
                 },
             },
             {

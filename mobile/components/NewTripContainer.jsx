@@ -134,7 +134,7 @@ const NewTripContainer = () => {
         );
 
         const distance = Math.abs(destinationIndex - originIndex);
-        const fare = distance * parseInt(selectedRoute.fare);
+        const fare = distance * 50; //parseInt(selectedRoute.fare);
 
         console.log(originIndex, destinationIndex, distance, fare);
 
