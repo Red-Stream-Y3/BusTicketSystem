@@ -13,6 +13,7 @@ export const createUserTrip = asyncHandler(async (req, res) => {
                 $match: {
                     user: new mongoose.Types.ObjectId(user),
                     paid: false,
+                    state: { $ne: "cancelled" },
                 },
             },
             {
@@ -43,8 +44,11 @@ export const createUserTrip = asyncHandler(async (req, res) => {
             },
         ]);
 
-        if ((unpaidTrips[0]?.totalFare + parseInt(fare)) > userCredits[0]?.credits) {
-            res.status(405);
+        if (
+            unpaidTrips[0]?.totalFare + parseInt(fare) >
+            userCredits[0]?.credits
+        ) {
+            res.status(404);
             throw new Error(
                 "Insufficient credits. You have too many unpaid trips."
             );
@@ -61,7 +65,7 @@ export const createUserTrip = asyncHandler(async (req, res) => {
         const createdTrip = await trip.save();
         res.status(201).json(createdTrip);
     } catch (error) {
-        res.status(405).json({ message: error.message });
+        res.status(404).json({ message: error.message });
     }
 });
 
@@ -310,13 +314,12 @@ export const updateUserTrip = asyncHandler(async (req, res) => {
         });
 
         if (trip) {
-
             trip.state = state || trip.state;
             trip.bus = bus || trip.bus;
             trip.driver = driver || trip.driver;
             trip.arrivalTime = arrivalTime || trip.arrivalTime;
             trip.departureTime = departureTime || trip.departureTime;
-            
+
             const updatedTrip = await trip.save();
             res.json(updatedTrip);
         } else {

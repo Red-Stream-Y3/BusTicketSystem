@@ -19,7 +19,7 @@ const NewTripScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <NewTripContainer />
+            <NewTripContainer navigation={navigation} />
         </View>
     );
 };
