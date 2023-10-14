@@ -46,7 +46,6 @@ app.use('/api/buses', busRoutes);
 app.use('/api/busstops', busStopRoutes);
 app.use('/api/busroutes', busRouteRoutes);
 app.use('/api/usertrips', userTripRoutes);
-app.use('/api/busjourneys', userTripRoutes);
 app.use('/api/employees', employeeRoutes);
 app.use('/api/depots', depotRoutes);
 app.use('/api/fares', fareRoutes);

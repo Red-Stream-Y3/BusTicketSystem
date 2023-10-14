@@ -16,7 +16,7 @@ const busJourneySchema = new mongoose.Schema(
     boardedUsers: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'UserTrip',
+        ref: 'User',
       },
     ],
     state: {
@@ -31,7 +31,7 @@ const busJourneySchema = new mongoose.Schema(
     },
     driver: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Driver',
+      ref: 'Employee',
       required: true,
     },
     overCrowded: {
