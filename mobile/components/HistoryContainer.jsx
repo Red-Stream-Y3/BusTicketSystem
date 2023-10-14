@@ -11,6 +11,7 @@ import getThemeContext from "../context/ThemeContext";
 import { getAppContext } from "../context/AppContext";
 import { getUserTrips } from "../services/userTripServices";
 import Toast from "react-native-toast-message";
+import TripCard from "./common/TripCard";
 
 const HistoryContainer = ({ data }) => {
     const { theme } = getThemeContext();
@@ -73,6 +74,7 @@ const HistoryContainer = ({ data }) => {
         contentContainerStyle: {
             alignItems: "center",
             width: Dimensions.get("window").width,
+            marginVertical: 5,
         },
     });
 
@@ -94,12 +96,13 @@ const HistoryContainer = ({ data }) => {
                 keyExtractor={(item) => item._id}
                 renderItem={({ item }) => (
                     <View style={styles.contentContainerStyle}>
-                        <View style={styles.itemStyle}>
-                            <Text style={styles.text}>
-                                {item.origin.name} to {item.destination.name}
-                            </Text>
-                            <Text style={styles.subtitle}>{item.state}</Text>
-                        </View>
+                        <TripCard
+                            origin={item.origin.name}
+                            destination={item.destination.name}
+                            state={item.state}
+                            date={item.createdAt}
+                            width={Dimensions.get("window").width * 0.9}
+                        />
                     </View>
                 )}
             />

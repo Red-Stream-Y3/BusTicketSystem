@@ -16,9 +16,10 @@ import QRCode from "react-native-qrcode-svg";
 import Animated from "react-native-reanimated";
 import { Entypo } from "@expo/vector-icons";
 import { getUserTrips } from "../services/userTripServices";
+import TripCard from "./common/TripCard";
 
 const HomeContainer = ({ navigation }) => {
-    const { theme } = getThemeContext();
+    const { theme, toggleTheme } = getThemeContext();
     const { USER, credits, fetchCredits, removeUser } = getAppContext();
     const [recent, setRecent] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
@@ -40,8 +41,6 @@ const HomeContainer = ({ navigation }) => {
     const styles = StyleSheet.create({
         container: {
             backgroundColor: theme.colors.background,
-            marginHorizontal: 10,
-            padding: 10,
         },
         card: {
             backgroundColor: theme.colors.surface,
@@ -90,6 +89,9 @@ const HomeContainer = ({ navigation }) => {
             alignItems: "center",
             padding: 10,
             backgroundColor: "#fff",
+            borderRadius: 10,
+            height: 180,
+            width: 180,
         },
         creditContainer: {
             justifyContent: "center",
@@ -100,14 +102,6 @@ const HomeContainer = ({ navigation }) => {
             borderStartWidth: 1,
             borderColor: theme.colors.primary,
         },
-        itemStyle: {
-            paddingVertical: 5,
-            paddingHorizontal: 10,
-            borderWidth: theme.mode==='dark' ? 1 : 0,
-            borderColor: "#666",
-            borderRadius: 5,
-            width: Dimensions.get("window").width * 0.8,
-        },
         hr: {
             borderBottomWidth: 1,
             borderBottomColor: "#666",
@@ -116,6 +110,9 @@ const HomeContainer = ({ navigation }) => {
         },
         ripple: {
             color: "rgba(0,0,0,0.2)",
+        },
+        itemContainer: {
+            marginVertical: 5,
         },
     });
 
@@ -143,11 +140,16 @@ const HomeContainer = ({ navigation }) => {
                 style={styles.container}
                 contentContainerStyle={{ alignItems: "center" }}>
                 <View style={styles.cardRow}>
+                    {/* TODO: remove this qr code */}
                     <View>
                         {USER._id ? (
                             <Pressable
                                 android_ripple={styles.ripple}
-                                onPress={() => navigation.navigate("QRscreen")}>
+                                onPress={() =>
+                                    navigation.navigate("QRscreen", {
+                                        qrData: USER._id,
+                                    })
+                                }>
                                 <Animated.View
                                     style={styles.qrCodeContainer}
                                     sharedTransitionTag='qrcode'>
@@ -174,6 +176,11 @@ const HomeContainer = ({ navigation }) => {
                             title={"Sign Out"}
                             variant={"outlined"}
                             onPress={() => removeUser()}
+                        />
+                        <ThemeButton
+                            title={"Toggle Theme"}
+                            variant={"outlined"}
+                            onPress={() => toggleTheme()}
                         />
                     </View>
                 </View>
@@ -220,22 +227,19 @@ const HomeContainer = ({ navigation }) => {
                     </View>
                     <View style={styles.hr} />
                     <View style={styles.center}>
-                        {refreshing && (
-                            <ActivityIndicator
-                                size={40}
-                                color={theme.colors.primary}
-                            />
-                        )}
-                        {!refreshing && recent?.length > 0 ? (
+                        {refreshing ? (
+                            <Text style={styles.text}>
+                                Loading recent trips...
+                            </Text>
+                        ) : recent?.length > 0 ? (
                             recent.map((item) => (
-                                <View key={item._id} style={styles.itemStyle}>
-                                    <Text style={styles.text}>
-                                        From {item.origin.name} to{" "}
-                                        {item.destination.name}
-                                    </Text>
-                                    <Text style={styles.subtitle}>
-                                        {item.state}
-                                    </Text>
+                                <View key={item._id} style={styles.itemContainer}>
+                                    <TripCard
+                                        origin={item.origin.name}
+                                        destination={item.destination.name}
+                                        state={item.state}
+                                        date={item.createdAt}
+                                    />
                                 </View>
                             ))
                         ) : (
