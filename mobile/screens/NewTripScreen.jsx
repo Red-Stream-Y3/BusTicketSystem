@@ -1,14 +1,16 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Dimensions, StyleSheet, Text, View } from "react-native";
 import getThemeContext from "../context/ThemeContext";
+import { NewTripContainer } from "../components";
 
 const NewTripScreen = ({ navigation }) => {
     const { theme } = getThemeContext();
 
     const styles = StyleSheet.create({
         container: {
+            flex: 1,
             backgroundColor: theme.colors.background,
-            marginHorizontal: 10,
             padding: 10,
+            justifyContent: "center",
         },
         text: {
             color: theme.colors.text,
@@ -17,7 +19,7 @@ const NewTripScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.text}>New Trip Screen</Text>
+            <NewTripContainer />
         </View>
     );
 };

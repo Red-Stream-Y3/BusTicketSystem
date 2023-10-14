@@ -9,19 +9,20 @@ const ThemeButton = ({
     variant,
     textSize,
     borderRadius,
+    color,
 }) => {
     const { theme } = getThemeContext();
 
     const styles = StyleSheet.create({
         filled: {
-            backgroundColor: theme.colors.primary,
+            backgroundColor: color || theme.colors.primary,
             overflow: "hidden",
             borderRadius: borderRadius || 5,
             elevation: 3,
             margin: 5,
         },
         outlined: {
-            borderColor: theme.colors.primary,
+            borderColor: color || theme.colors.primary,
             borderWidth: 1,
             overflow: "hidden",
             borderRadius: borderRadius || 5,

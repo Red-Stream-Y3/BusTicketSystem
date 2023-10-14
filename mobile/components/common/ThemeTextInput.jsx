@@ -2,15 +2,13 @@ import { StyleSheet, TextInput, View, Text, Pressable } from "react-native";
 import getThemeContext from "../../context/ThemeContext";
 import { forwardRef } from "react";
 
-
 const ThemeTextInput = forwardRef((props, ref) => {
-
     const {
-        title, 
+        title,
         value,
         textColor,
-        onPressIcon, 
-        onChange, 
+        onPressIcon,
+        onChange,
         icon,
         placeholder,
         textSize,
@@ -49,10 +47,10 @@ const ThemeTextInput = forwardRef((props, ref) => {
             color: textColor || disabled ? "#888" : theme.colors.text,
             fontSize: textSize || 16,
             width: "100%",
-            flex:1,
+            flex: 1,
             textAlignVertical: multiline ? "top" : "center",
             fontWeight: "normal",
-            paddingVertical:10,
+            paddingVertical: 10,
             paddingHorizontal: 10,
             zIndex: 1,
             backgroundColor: theme.colors.surface,
@@ -60,7 +58,7 @@ const ThemeTextInput = forwardRef((props, ref) => {
         input: {
             backgroundColor: theme.colors.surface,
             borderRadius: 5,
-            marginTop: title? 15 : 5,
+            marginTop: title ? 15 : 5,
             marginBottom: 5,
             width: width || "100%",
             borderWidth: 1,
@@ -69,24 +67,19 @@ const ThemeTextInput = forwardRef((props, ref) => {
             justifyContent: "space-between",
             alignItems: "center",
         },
-        pressableRipple: { 
+        pressableRipple: {
             color: theme.colors.ripple,
             borderless: true,
             radius: 40,
         },
         pressableContainer: {
-            padding:10,
+            padding: 10,
         },
     });
 
     return (
         <View style={styles.input}>
-            {title && (
-                <Text
-                    style={styles.textTitle}>
-                    {title}
-                </Text>
-            )}
+            {title && <Text style={styles.textTitle}>{title}</Text>}
             <TextInput
                 ref={ref}
                 value={value}
@@ -95,7 +88,7 @@ const ThemeTextInput = forwardRef((props, ref) => {
                 placeholder={placeholder}
                 placeholderTextColor={disabled ? "#888" : theme.colors.text}
                 keyboardType={keyboardType || null}
-                editable={(editable===false ? false : true) && !disabled}
+                editable={(editable === false ? false : true) && !disabled}
                 multiline={multiline || false}
                 numberOfLines={numOfLines || 1}
                 maxLength={maxLength || null}
@@ -108,9 +101,11 @@ const ThemeTextInput = forwardRef((props, ref) => {
             {icon ? (
                 <View>
                     <Pressable
-                        android_ripple={disabled ? null : styles.pressableRipple}
+                        android_ripple={
+                            disabled ? null : styles.pressableRipple
+                        }
                         style={styles.pressableContainer}
-                        onPress={!disabled ? onPressIcon : ()=>{}}>
+                        onPress={!disabled ? onPressIcon : () => {}}>
                         {icon}
                     </Pressable>
                 </View>
