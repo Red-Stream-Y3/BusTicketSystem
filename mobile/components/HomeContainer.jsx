@@ -176,6 +176,7 @@ const HomeContainer = ({ navigation }) => {
 
     const handleQrClick = () => {
         if (!selected) return;
+        setShowSelected(false);
         navigation.navigate("QRscreen", { qrData: selected._id });
     };
 

@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "BusTicket",
-    "slug": "BusTicket",
-    "version": "1.1.0",
+    "name": "Bus Ticket System",
+    "slug": "bus-ticket-system",
+    "version": "1.2.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -21,11 +21,18 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.dinushkasam.busticketsystem"
     },
     "web": {
       "favicon": "./assets/favicon.png",
       "name": "Bus Ticket System"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "3a35077c-922e-4a19-8667-aa8c92cfb663"
+      }
+    },
+    "owner": "dinushkasam"
   }
 }

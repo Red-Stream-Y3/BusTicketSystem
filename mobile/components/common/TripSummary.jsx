@@ -70,7 +70,8 @@ const TripSummary = ({ trip, width, onClose, onDelete }) => {
         textBold: {
             fontSize: 14,
             fontWeight: "bold",
-            color: theme.colors.text,
+            color: theme.colors.primaryText,
+            textTransform: "uppercase",
         },
         title: {
             fontSize: 16,
@@ -342,7 +343,7 @@ const TripSummary = ({ trip, width, onClose, onDelete }) => {
                                 <MaterialIcons
                                     name='cancel'
                                     size={20}
-                                    color={theme.colors.icon}
+                                    color={theme.colors.primaryIcon}
                                 />
                             </ThemeButton>
                         </View>

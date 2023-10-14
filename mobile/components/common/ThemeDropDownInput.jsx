@@ -5,7 +5,17 @@ import ThemeTextInput from "./ThemeTextInput";
 import { AntDesign } from "@expo/vector-icons";
 import getThemeContext from "../../context/ThemeContext";
 
-const ThemeDropDownInput = ({ title, value, options, onChange, setValue, placeholder, absolute }) => {
+const ThemeDropDownInput = ({
+    title,
+    value,
+    options,
+    onChange,
+    setValue,
+    placeholder,
+    absolute,
+    loading,
+    onPressitem,
+}) => {
     const { theme } = getThemeContext();
     const [showOptions, setShowOptions] = useState(false);
     const inputRef = useRef();
@@ -19,16 +29,16 @@ const ThemeDropDownInput = ({ title, value, options, onChange, setValue, placeho
             fontSize: 16,
             fontWeight: "bold",
         },
-        option: {
+        optionText: {
             padding: 8,
             fontSize: 16,
-            color: "#333",
+            color: theme.colors.text,
         },
         optionContainer: {
             position: absolute ? "absolute" : "relative",
             left: 0,
             right: 0,
-            backgroundColor: "#fff",
+            backgroundColor: theme.colors.surface,
             borderRadius: 5,
             borderWidth: 1,
             borderColor: "#ccc",
@@ -38,8 +48,7 @@ const ThemeDropDownInput = ({ title, value, options, onChange, setValue, placeho
     });
 
     const handleOptionClick = (option) => {
-        if (onChange) onChange(option);
-        setValue(option);
+        onPressitem(option);
         inputRef.current.blur();
         setShowOptions(false);
     };
@@ -50,20 +59,20 @@ const ThemeDropDownInput = ({ title, value, options, onChange, setValue, placeho
                 title={title}
                 ref={inputRef}
                 placeholder={placeholder}
-                value={options.includes(value) ? value : null}
+                value={value}
+                onChange={onChange}
                 onFocusLoss={() => {
                     setShowOptions(false);
                     inputRef.current.blur();
                 }}
                 onFocus={() => setShowOptions(true)}
-                editable={false}
                 onPressIcon={() => {
                     setShowOptions(!showOptions);
                     inputRef.current.focus();
                 }}
                 icon={
                     <AntDesign
-                        name="down"
+                        name='down'
                         size={24}
                         color={theme.colors.icon}
                     />
@@ -71,24 +80,44 @@ const ThemeDropDownInput = ({ title, value, options, onChange, setValue, placeho
             />
             <View>
                 {showOptions && (
-                <Animated.View
-                    entering={FadeInUp}
-                    exiting={FadeOutUp}
-                    style={styles.optionContainer}>
-                    {options.map((option, index) => (
-                        <Pressable
-                            key={index}
-                            android_ripple={{ color: theme.colors.ripple }}
-                            onPress={() => handleOptionClick(option)}>
-                            <Text key={index} style={styles.option}>
-                                {option}
+                    <Animated.View
+                        entering={FadeInUp}
+                        exiting={FadeOutUp}
+                        style={styles.optionContainer}>
+                        {!loading && (!options || options?.length === 0) && (
+                            <Text style={styles.optionText}>
+                                No options found
                             </Text>
-                        </Pressable>
-                    ))}
-                </Animated.View>
-            )}
+                        )}
+                        {loading ? (
+                            <ActivityIndicator
+                                size={30}
+                                color={theme.colors.primary}
+                            />
+                        ) : (
+                            <>
+                                {options &&
+                                    options?.map((option, index) => (
+                                        <Pressable
+                                            key={index}
+                                            android_ripple={{
+                                                color: theme.colors.ripple,
+                                            }}
+                                            onPress={() =>
+                                                handleOptionClick(option)
+                                            }>
+                                            <Text
+                                                key={index}
+                                                style={styles.optionText}>
+                                                {option.name}
+                                            </Text>
+                                        </Pressable>
+                                    ))}
+                            </>
+                        )}
+                    </Animated.View>
+                )}
             </View>
-            
         </View>
     );
 };

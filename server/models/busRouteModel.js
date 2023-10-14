@@ -15,9 +15,16 @@ const busRouteSchema = new mongoose.Schema(
             ref: "BusStop",
             required: true,
         },
+        fareRate: {
+            type: Number,
+            required: true,
+            default: 0,
+        },
     },
     { timestamps: true }
 );
+
+busRouteSchema.index({ routeNumber: 1, routeName: 1 }, { unique: true });
 
 const BusRoute = mongoose.model("BusRoute", busRouteSchema);
 
