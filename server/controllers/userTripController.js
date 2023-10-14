@@ -124,10 +124,16 @@ export const getUserTrips = asyncHandler(async (req, res) => {
                 $unwind: "$route",
             },
             {
-                $unwind: "$bus",
+                $unwind: {
+                    path: "$bus",
+                    preserveNullAndEmptyArrays: true,
+                },
             },
             {
-                $unwind: "$driver",
+                $unwind: {
+                    path: "$driver",
+                    preserveNullAndEmptyArrays: true,
+                },
             },
             {
                 $project: {
@@ -159,7 +165,7 @@ export const getUserTrips = asyncHandler(async (req, res) => {
                     driver: {
                         _id: 1,
                         firstName: 1,
-                        LastName: 1,
+                        lastName: 1,
                     },
                     createdAt: 1,
                 },
@@ -239,10 +245,16 @@ export const getUserTripById = asyncHandler(async (req, res) => {
                 $unwind: "$route",
             },
             {
-                $unwind: "$bus",
+                $unwind: {
+                    path: "$bus",
+                    preserveNullAndEmptyArrays: true,
+                },
             },
             {
-                $unwind: "$driver",
+                $unwind: {
+                    path: "$driver",
+                    preserveNullAndEmptyArrays: true,
+                },
             },
             {
                 $project: {
@@ -274,7 +286,7 @@ export const getUserTripById = asyncHandler(async (req, res) => {
                     driver: {
                         _id: 1,
                         firstName: 1,
-                        LastName: 1,
+                        lastName: 1,
                     },
                     createdAt: 1,
                 },
