@@ -1,21 +1,22 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { SideNavBar, Footer } from './components';
-import { Login, Register, Dashboard, Employees, Buses, Fares } from './pages';
+import { Footer, Navbar } from './components';
+import { Dashboard, Employees, Buses, Fares, Home, Login, Register, Schedules } from './pages';
+
 import './App.css';
 
 function App() {
     return (
         <BrowserRouter>
+            <Navbar />
             <Routes>
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-            </Routes>
-            {/* <SideNavBar /> */}
-            <Routes>
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/employees" element={<Employees />} />
-                <Route path="/buses" element={<Buses />} />
-                <Route path="/fares" element={<Fares />} />
+                <Route path="/*" element={<Home />}>
+                    <Route path="dashboard" element={<Dashboard />} />
+                    <Route path="schedules" element={<Schedules />} />
+                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/employees" element={<Employees />} />
+                    <Route path="/buses" element={<Buses />} />
+                    <Route path="/fares" element={<Fares />} />
+                </Route>
             </Routes>
             <Footer />
         </BrowserRouter>
