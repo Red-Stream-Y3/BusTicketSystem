@@ -53,7 +53,7 @@ const Navbar = () => {
     };
 
     return (
-        <nav className="top-0 fixed bg-primary w-full">
+        <nav className="top-0 fixed bg-primary w-full z-50">
             <div className=" max-w-full mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between h-16">
                     <div className="flex items-center">

@@ -53,7 +53,7 @@ const CreateEmployee = () => {
 
     return (
         <div className="mt-16">
-            <PageHeader title="Create Employee" />
+            <PageHeader title="Create Employee" isHiddenButton={true} />
             <div className="flex justify-center items-center">
                 <div className="mt-5">
                     <Form
