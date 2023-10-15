@@ -37,7 +37,7 @@ const SideNavBar = ({ isSidebarOpen }) => {
                         <Link
                             to={link.navLink}
                             className={`inline-flex items-center justify-center px-10 py-5 w-full text-md font-medium transition-colors duration-150 hover:text-quaternary hover:bg-secondary ${
-                                location.pathname === link.navLink.toLocaleLowerCase()
+                                location.pathname === '/admin/' + link.navLink.toLocaleLowerCase()
                                     ? 'text-quaternary bg-tertiary'
                                     : 'text-lightbg bg-primary'
                             }`}

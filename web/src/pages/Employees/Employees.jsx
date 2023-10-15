@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { Table, PageHeader, Loader } from '../components';
-import { getAllEmployees, deleteEmployee } from '../services/employeeService';
+import { Table, PageHeader, Loader } from '../../components';
+import { getAllEmployees, deleteEmployee } from '../../services/employeeService';
 import Swal from 'sweetalert2';
 
 const Employees = () => {
@@ -36,6 +35,7 @@ const Employees = () => {
                     showConfirmButton: false,
                     timer: 2000,
                 });
+                window.location.reload();
             }
         });
     };
