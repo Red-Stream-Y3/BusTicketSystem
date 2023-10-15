@@ -20,6 +20,7 @@ import {
     AddRoute,
     UpdateRoute,
     AddStop,
+    UpdateStop,
 } from './pages';
 
 import './App.css';
@@ -43,6 +44,7 @@ function App() {
                     <Route path="buses/:id" element={<UpdateBus />} />
                     <Route path="stops" element={<Stops />} />
                     <Route path="stops/create" element={<AddStop />} />
+                    <Route path="stops/:id" element={<UpdateStop />} />
                     <Route path="routes" element={<BusRoutes />} />
                     <Route path="routes/create" element={<AddRoute />} />
                     <Route path="routes/:id" element={<UpdateRoute />} />
