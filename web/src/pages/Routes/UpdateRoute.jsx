@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Loader, PageHeader } from '../../components';
+import { getAllBusStops } from '../../services/busStopService';
 import { getBusRouteById, updateBusRouteById } from '../../services/busRouteService';
+import Swal from 'sweetalert2';
 
 const UpdateRoute = () => {
     const navigate = useNavigate();
-    const { id } = useParams(); // Get the route ID from the URL parameter.
+    const { id } = useParams();
 
     const [isLoading, setIsLoading] = useState(false);
-    const [isError, setIsError] = useState(false);
-    const [isSuccess, setIsSuccess] = useState(false);
 
     const [busRoute, setBusRoute] = useState({
         routeNumber: '',
@@ -17,9 +17,16 @@ const UpdateRoute = () => {
         stops: [],
     });
 
+    const [busStops, setBusStops] = useState([]);
+
+    useEffect(() => {
+        getAllBusStops().then((busStops) => {
+            setBusStops(busStops);
+        });
+    }, []);
+
     useEffect(() => {
         setIsLoading(true);
-        setIsError(false);
 
         getBusRouteById(id)
             .then((route) => {
@@ -27,7 +34,6 @@ const UpdateRoute = () => {
                 setIsLoading(false);
             })
             .catch((error) => {
-                setIsError(true);
                 setIsLoading(false);
                 console.error('Error fetching route details:', error);
             });
@@ -35,19 +41,58 @@ const UpdateRoute = () => {
 
     const handleSubmit = async () => {
         setIsLoading(true);
-        setIsError(false);
-        setIsSuccess(false);
 
         try {
             await updateBusRouteById(id, busRoute);
-            setIsSuccess(true);
             navigate('/admin/routes');
         } catch (error) {
-            setIsError(true);
             console.error('Error updating route details:', error);
         }
 
         setIsLoading(false);
+    };
+
+    const confirmSubmit = () => {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You are updating a bus route!',
+            icon: 'warning',
+            color: '#f8f9fa',
+            background: '#1F2937',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Update',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                handleSubmit();
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Bus route updated successfully',
+                    color: '#f8f9fa',
+                    background: '#1F2937',
+                    showConfirmButton: false,
+                    timer: 2000,
+                });
+            }
+        });
+    };
+
+    const handleAddStop = () => {
+        const updatedStops = [...busRoute.stops, ''];
+        setBusRoute({ ...busRoute, stops: updatedStops });
+    };
+
+    const handleRemoveStop = (index) => {
+        const updatedStops = [...busRoute.stops];
+        updatedStops.splice(index, 1);
+        setBusRoute({ ...busRoute, stops: updatedStops });
+    };
+
+    const handleChangeStop = (index, value) => {
+        const updatedStops = [...busRoute.stops];
+        updatedStops[index] = value;
+        setBusRoute({ ...busRoute, stops: updatedStops });
     };
 
     return (
@@ -56,14 +101,10 @@ const UpdateRoute = () => {
                 <Loader />
             ) : (
                 <>
-                    <PageHeader title="Edit Route" isHiddenButton={true} />
+                    <PageHeader title="Update Route" isHiddenButton={true} />
                     <div className="flex justify-center items-center">
                         <div className="mt-5">
-                            <form
-                                onSubmit={handleSubmit}
-                                className="bg-gray-100 p-10 rounded shadow-lg"
-                                style={{ width: '600px' }}
-                            >
+                            <form className="bg-gray-100 p-10 rounded shadow-lg" style={{ width: '600px' }}>
                                 <div className="mb-4">
                                     <label className="block text-md text-start mb-2 font-medium text-quaternary">
                                         Route Number
@@ -90,7 +131,46 @@ const UpdateRoute = () => {
                                         required
                                     />
                                 </div>
-                                {/* Add stops editing fields here */}
+                                <div className="my-4 flex justify-between items-center">
+                                    <label className="block text-md text-start mb-2 font-medium text-quaternary">
+                                        Bus Stops
+                                    </label>
+                                    <button
+                                        type="button"
+                                        onClick={handleAddStop}
+                                        className="px-2 py-1 bg-primary text-white rounded hover:bg-secondary"
+                                    >
+                                        <i className="fa-solid fa-plus"></i>
+                                    </button>
+                                </div>
+                                {busRoute.stops.map((stop, index) => (
+                                    <div key={index} className="flex items-center mt-1">
+                                        <select
+                                            name={`stop-${index}`}
+                                            value={stop}
+                                            onChange={(e) => handleChangeStop(index, e.target.value)}
+                                            className="p-2 w-full border rounded-md"
+                                        >
+                                            <option value="" className="text-quaternary">
+                                                Select...
+                                            </option>
+                                            {busStops.map((busStop) => (
+                                                <option key={busStop._id} value={busStop._id}>
+                                                    {busStop.name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        {busRoute.stops.length > 1 && (
+                                            <button
+                                                type="button"
+                                                onClick={() => handleRemoveStop(index)}
+                                                className="ml-2 px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                                            >
+                                                <i className="fa-solid fa-circle-minus"></i>
+                                            </button>
+                                        )}
+                                    </div>
+                                ))}
                                 <div className="flex justify-end space-x-2 mt-10">
                                     <button
                                         type="button"
@@ -100,8 +180,9 @@ const UpdateRoute = () => {
                                         Cancel
                                     </button>
                                     <button
-                                        type="submit"
+                                        type="button"
                                         className="px-4 py-2 rounded bg-primary text-white hover:bg-secondary"
+                                        onClick={confirmSubmit}
                                     >
                                         Save
                                     </button>
