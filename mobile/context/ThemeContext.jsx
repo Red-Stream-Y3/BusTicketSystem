@@ -61,7 +61,12 @@ export const ThemeProvider = ({ children }) => {
         }
     }, [systemTheme]);
 
-    const toggleTheme = () => {
+    const toggleTheme = (theme) => {
+        if (theme) {
+            setTheme(theme === "light" ? LIGHT_THEME : DARK_THEME);
+            return;
+        }
+
         setTheme((prevTheme) =>
             prevTheme.mode === "light" ? DARK_THEME : LIGHT_THEME
         );
