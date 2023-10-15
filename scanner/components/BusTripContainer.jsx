@@ -13,6 +13,7 @@ import ThemeOverlay from "./common/ThemeOverlay";
 import {
     cancelBusJourney,
     endBusJourney,
+    getBusJourneyById,
     updateBusJourney,
 } from "../services/busJourneyServices";
 import { Ionicons } from "@expo/vector-icons";
@@ -20,6 +21,7 @@ import { getAppContext } from "../context/AppContext";
 import ThemeButton from "./common/ThemeButton";
 import Toast from "react-native-toast-message";
 import { useNavigation } from "@react-navigation/native";
+import TripSummary from "./common/TripSummary";
 
 const BusTripContainer = ({ trip }) => {
     const { theme } = getThemeContext();
@@ -38,6 +40,24 @@ const BusTripContainer = ({ trip }) => {
     const OVERLAY_TIMEOUT = 3000;
 
     const navigation = useNavigation();
+
+    const handleRefresh = async () => {
+        try {
+            setLoading(true);
+
+            const response = await getBusJourneyById(trip._id, USER.token);
+
+            setTrip(response);
+            setLoading(false);
+        } catch (error) {
+            Toast.show({
+                type: "error",
+                text1: "Error",
+                text2: error.response?.data?.message || error.message,
+            });
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
         const totalPassengers = trip?.boardedUsers?.length;
@@ -63,6 +83,8 @@ const BusTripContainer = ({ trip }) => {
             crowd,
         });
     }, [trip]);
+
+    useEffect(() => {}, []);
 
     const styles = StyleSheet.create({
         container: {
@@ -346,36 +368,40 @@ const BusTripContainer = ({ trip }) => {
                 </View>
             </ThemeOverlay>
 
-            <ScrollView
-                keyboardShouldPersistTaps='handled'
-                style={styles.scrollContainer}
-                contentContainerStyle={styles.scrollContentContainer}>
-                <View style={styles.topContainer}>
-                    <View>
-                        <Text style={styles.text}>
-                            Total Passengers: {stats.totalPassengers}
-                        </Text>
-                        <Text style={styles.text}>
-                            Currently Boarded: {stats.totalBoarded}
-                        </Text>
-                        <Text style={styles.text}>{stats.crowd}</Text>
+            {trip?.state === "departed" ? (
+                <ScrollView
+                    keyboardShouldPersistTaps='handled'
+                    style={styles.scrollContainer}
+                    contentContainerStyle={styles.scrollContentContainer}>
+                    <View style={styles.topContainer}>
+                        <View>
+                            <Text style={styles.text}>
+                                Total Passengers: {stats.totalPassengers}
+                            </Text>
+                            <Text style={styles.text}>
+                                Currently Boarded: {stats.totalBoarded}
+                            </Text>
+                            <Text style={styles.text}>{stats.crowd}</Text>
+                        </View>
+                        <ThemeButton
+                            title='End Trip'
+                            onPress={handleEndTripPress}
+                            textSize={16}>
+                            <Ionicons
+                                name='checkmark-done'
+                                size={24}
+                                color={theme.colors.primaryIcon}
+                            />
+                        </ThemeButton>
                     </View>
-                    <ThemeButton
-                        title='End Trip'
-                        onPress={handleEndTripPress}
-                        textSize={16}>
-                        <Ionicons
-                            name='checkmark-done'
-                            size={24}
-                            color={theme.colors.primaryIcon}
-                        />
-                    </ThemeButton>
-                </View>
 
-                <View style={styles.scannerContainer}>
-                    <ScannerContainer onCodeScanned={onCodeScanned} />
-                </View>
-            </ScrollView>
+                    <View style={styles.scannerContainer}>
+                        <ScannerContainer onCodeScanned={onCodeScanned} />
+                    </View>
+                </ScrollView>
+            ) : (
+                <TripSummary trip={trip} />
+            )}
         </View>
     );
 };
