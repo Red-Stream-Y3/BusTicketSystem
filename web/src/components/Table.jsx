@@ -97,7 +97,7 @@ const Table = ({ data, pageEntries, tableHeaders, onDelete, isActionButtonsHidde
                     {Array.from({ length: emptyRows }, (_, index) => (
                         <tr key={index + currentItems.length} className="border-b border-gray-200 hover:bg-gray-100">
                             {tableHeaders.map((_, index) => (
-                                <td key={index} className="py-3 px-6 text-center">
+                                <td key={index} className="py-5 px-6 text-center">
                                     &#x2800;
                                 </td>
                             ))}
