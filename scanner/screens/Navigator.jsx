@@ -14,6 +14,7 @@ import getThemeContext from "../context/ThemeContext";
 import LoginScreen from "./LoginScreen";
 import { getAppContext } from "../context/AppContext";
 import SplashScreen from "./SplashScreen";
+import NewBusJourneyScreen from "./NewBusJourneyScreen";
 
 const Stack = createStackNavigator();
 
@@ -32,13 +33,22 @@ const Navigator = () => {
                 <StatusBar style='auto' />
                 <Stack.Navigator>
                     {!USER?.token ? (
-                        <Stack.Screen name='Login' component={LoginScreen} options={{title:"Sign in"}} />
+                        <Stack.Screen
+                            name='Login'
+                            component={LoginScreen}
+                            options={{ title: "Sign in" }}
+                        />
                     ) : (
                         <>
                             <Stack.Screen name='Home' component={HomeScreen} />
                             <Stack.Screen
                                 name='Scanner'
                                 component={ScannerScreen}
+                            />
+                            <Stack.Screen
+                                name='NewTrip'
+                                component={NewBusJourneyScreen}
+                                options={{ title: "New Trip" }}
                             />
                         </>
                     )}

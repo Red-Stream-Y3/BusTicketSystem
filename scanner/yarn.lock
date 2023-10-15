@@ -1717,10 +1717,10 @@
     mkdirp "^1.0.4"
     rimraf "^3.0.2"
 
-"@react-native-async-storage/async-storage@^1.19.3":
-  version "1.19.3"
-  resolved "https://registry.yarnpkg.com/@react-native-async-storage/async-storage/-/async-storage-1.19.3.tgz#ad5fe3ed0a82d4624aa4500321c1e09c02daeb46"
-  integrity sha512-CwGfoHCWdPOTPS+2fW6YRE1fFBpT9++ahLEroX5hkgwyoQ+TkmjOaUxixdEIoVua9Pz5EF2pGOIJzqOTMWfBlA==
+"@react-native-async-storage/async-storage@1.18.2":
+  version "1.18.2"
+  resolved "https://registry.yarnpkg.com/@react-native-async-storage/async-storage/-/async-storage-1.18.2.tgz#ec8fd487a0b6c9500b43ece4b8779d1561f12e91"
+  integrity sha512-dM8AfdoeIxlh+zqgr0o5+vCTPQ0Ru1mrPzONZMsr7ufp5h+6WgNxQNza7t0r5qQ6b04AJqTlBNixTWZxqP649Q==
   dependencies:
     merge-options "^3.0.4"
 
@@ -4094,12 +4094,12 @@ expo-asset@~8.10.1:
     path-browserify "^1.0.0"
     url-parse "^1.5.9"
 
-expo-barcode-scanner@^12.7.0:
-  version "12.7.0"
-  resolved "https://registry.yarnpkg.com/expo-barcode-scanner/-/expo-barcode-scanner-12.7.0.tgz#c96bdf12e53468eab78c45533abd9e0ebe6ac23c"
-  integrity sha512-HTy5mRHRtOM/3xrVXN9wUBIQGXLdvqGgHkrSxgvJzqLQBjafq+uEiUxTPRyvNofWt3gMZXcy8ZqqW7gaD3xXDg==
+expo-barcode-scanner@~12.5.3:
+  version "12.5.3"
+  resolved "https://registry.yarnpkg.com/expo-barcode-scanner/-/expo-barcode-scanner-12.5.3.tgz#10a12aec48e7c017a7b025a3b01fb06166939573"
+  integrity sha512-aIeTiOUzPdngTIhZHhM1mOMx9CPtmYEtEkK8pAgyua3NiAKgsUN8z8bpiQWuZTrxSaqkU8fG1zGOk9E4VnNwyA==
   dependencies:
-    expo-image-loader "~4.4.0"
+    expo-image-loader "~4.3.0"
 
 expo-constants@~14.4.2:
   version "14.4.2"
@@ -4123,10 +4123,10 @@ expo-font@~11.4.0:
   dependencies:
     fontfaceobserver "^2.1.0"
 
-expo-image-loader@~4.4.0:
-  version "4.4.0"
-  resolved "https://registry.yarnpkg.com/expo-image-loader/-/expo-image-loader-4.4.0.tgz#35909516311aa60fa4bf35aa6eb7624d7f7f788d"
-  integrity sha512-dq88tiRB8aB1U+O/oJI7IY4VU9Nu2iDjEwR8QDfLtD4xWd5lNGoyic5Vh7911E1qNJFqNMSVIVzOD5l1SQ3A6g==
+expo-image-loader@~4.3.0:
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/expo-image-loader/-/expo-image-loader-4.3.0.tgz#d897b4d4f1838faa8291c36f00b99c2b36a6ac5c"
+  integrity sha512-2kqJIO+oYM8J3GbvTUHLqTSpt1dLpOn/X0eB4U4RTuzz/faj8l/TyQELsMBLlGAkweNUuG9LqznbaBz+WuSFEw==
 
 expo-keep-awake@~12.3.0:
   version "12.3.0"
@@ -7132,10 +7132,10 @@ react-is@^17.0.1:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-17.0.2.tgz#e691d4a8e9c789365655539ab372762b0efb54f0"
   integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
 
-react-native-gesture-handler@^2.13.1:
-  version "2.13.1"
-  resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-2.13.1.tgz#bad89caacd62c4560b9953b02f85f37ee42d5d4c"
-  integrity sha512-hW454X7sjuiBN+lobqw63pmT3boAmTl5OP6zQLq83iEe4T6PcHZ9lxzgCrebtgmutY8cJfq9rM2dOUVh9WBcww==
+react-native-gesture-handler@~2.12.0:
+  version "2.12.1"
+  resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-2.12.1.tgz#f11a99fb95169810c6886fad5efa01a17fd81660"
+  integrity sha512-deqh36bw82CFUV9EC4tTo2PP1i9HfCOORGS3Zmv71UYhEZEHkzZv18IZNPB+2Awzj45vLIidZxGYGFxHlDSQ5A==
   dependencies:
     "@egjs/hammerjs" "^2.0.17"
     hoist-non-react-statics "^3.3.0"
@@ -7174,10 +7174,10 @@ react-native-screens@~3.22.0:
     react-freeze "^1.0.0"
     warn-once "^0.1.0"
 
-react-native-svg@^13.14.0:
-  version "13.14.0"
-  resolved "https://registry.yarnpkg.com/react-native-svg/-/react-native-svg-13.14.0.tgz#879930cfe10e877e51ebb77dfcc2cd65fc6b0d21"
-  integrity sha512-27ZnxUkHgWICimhuj6MuqBkISN53lVvgWJB7pIypjXysAyM+nqgQBPh4vXg+7MbqLBoYvR4PiBgKfwwGAqVxHg==
+react-native-svg@13.9.0:
+  version "13.9.0"
+  resolved "https://registry.yarnpkg.com/react-native-svg/-/react-native-svg-13.9.0.tgz#8df8a690dd00362601f074dec5d3a86dd0f99c7f"
+  integrity sha512-Ey18POH0dA0ob/QiwCBVrxIiwflhYuw0P0hBlOHeY4J5cdbs8ngdKHeWC/Kt9+ryP6fNoEQ1PUgPYw2Bs/rp5Q==
   dependencies:
     css-select "^5.1.0"
     css-tree "^1.1.3"

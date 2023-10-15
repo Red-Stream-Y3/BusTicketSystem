@@ -15,7 +15,6 @@ import {
 import { Feather } from "@expo/vector-icons";
 import axios from "axios";
 import getThemeContext from "../context/ThemeContext";
-import Toast from "react-native-toast-message";
 import { getAppContext } from "../context/AppContext";
 import Animated, { FadeInUp, FadeOutUp } from "react-native-reanimated";
 

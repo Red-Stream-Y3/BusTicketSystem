@@ -3,11 +3,22 @@ import React, { useState } from 'react';
 const Table = ({ data, pageEntries, tableHeaders }) => {
     console.log(data);
     const [currentPage, setCurrentPage] = useState(1);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [selectedDate, setSelectedDate] = useState(null);
     const itemsPerPage = pageEntries;
 
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
+    const currentItems = data
+        .filter((item) =>
+            Object.values(item).some((value) => value.toString().toLowerCase().includes(searchQuery.toLowerCase())),
+        )
+        .filter((item) => {
+            if (!selectedDate) return true;
+            const itemDate = new Date(item.date).setHours(0, 0, 0, 0);
+            return itemDate === selectedDate.getTime();
+        })
+        .slice(indexOfFirstItem, indexOfLastItem);
 
     // Calculate the number of empty rows to fill the table
     const emptyRows = itemsPerPage - currentItems.length;
@@ -16,8 +27,38 @@ const Table = ({ data, pageEntries, tableHeaders }) => {
 
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+    const handleSearch = (e) => {
+        setSearchQuery(e.target.value);
+        setCurrentPage(1);
+    };
+
+    const handleDateChange = (e) => {
+        const selected = new Date(e.target.value);
+        if (isNaN(selected.getTime())) {
+            setSelectedDate(null);
+        } else {
+            setSelectedDate(new Date(selected.setHours(0, 0, 0, 0)));
+        }
+        setCurrentPage(1);
+    };
+
     return (
         <div className="bg-white shadow-md rounded-lg my-6 pb-4 overflow-x-auto mx-6">
+            <div className="flex justify-between p-4">
+                <div className="rounded-md bg-gray-100 p-2 w-1/3">
+                    <input
+                        type="text"
+                        placeholder="Search"
+                        value={searchQuery}
+                        onChange={handleSearch}
+                        className="bg-transparent outline-none w-full"
+                    />
+                </div>
+                {/* <div className="flex items-center rounded-md bg-gray-100 p-2 w-1/3 justify-end">
+                    <input type="date" onChange={handleDateChange} className="bg-transparent outline-none w-full" />
+                </div> */}
+            </div>
+
             <table className="min-w-max w-full table-auto">
                 <thead className="bg-primary text-white uppercase text-sm leading-normal">
                     <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
