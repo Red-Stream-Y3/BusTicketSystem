@@ -71,7 +71,7 @@ const Table = ({ data, pageEntries, tableHeaders, onDelete, isActionButtonsHidde
                         {!isActionButtonsHidden && <th className="py-3 px-6 text-center">Actions</th>}
                     </tr>
                 </thead>
-                <tbody className="text-gray-600 text-sm font-light">
+                <tbody className="text-gray-600 text-sm font-light capitalize">
                     {currentItems.map((item, index) => (
                         <tr key={index} className="border-b border-gray-200 hover:bg-gray-100">
                             {Object.values(item).map((value, index) => (
