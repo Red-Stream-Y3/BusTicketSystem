@@ -63,7 +63,18 @@ export const updateBusJourney = asyncHandler(async (req, res) => {
         }
         if (state) {
             busJourney.state = state;
+
+            if (state === "completed" || state === "cancelled") {
+                busJourney.boardedUsers.forEach(async (userTripId) => {
+                    const userTrip = await UserTrip.findById(userTripId);
+                    if (userTrip.state !== "completed") {
+                        userTrip.state = "cancelled";
+                    }
+                    await userTrip.save();
+                });
+            }
         }
+
         const updatedBusJourney = await busJourney.save();
         res.json(updatedBusJourney);
     } catch (error) {
