@@ -1,4 +1,11 @@
-import { View, Text, StyleSheet, Dimensions } from "react-native";
+import {
+    View,
+    Text,
+    StyleSheet,
+    Dimensions,
+    KeyboardAvoidingView,
+    Platform,
+} from "react-native";
 import getThemeContext from "../context/ThemeContext";
 import { ThemeButton, ThemeOverlay, ThemeTextInput } from "../components";
 import { useState } from "react";
@@ -93,7 +100,9 @@ const RechargeScreen = ({ navigation }) => {
     });
 
     return (
-        <View style={styles.container}>
+        <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={styles.container}>
             <ThemeOverlay visible={showOverlay} onPressBg={() => {}}>
                 <BraintreePaymentWebview
                     onNonceReceived={handlePayment}
@@ -115,7 +124,7 @@ const RechargeScreen = ({ navigation }) => {
                 />
                 <ThemeButton title={"Confirm"} onPress={handleConfirm} />
             </View>
-        </View>
+        </KeyboardAvoidingView>
     );
 };
 

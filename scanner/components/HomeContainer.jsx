@@ -152,7 +152,9 @@ const HomeContainer = ({ navigation }) => {
     }, []);
 
     const handleItemClick = (item) => {
-        navigation.navigate("BusTrip", { trip: item });
+        navigation.navigate("BusTrip", {
+            trip: item,
+        });
     };
 
     return (

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Form, PageHeader } from '../components';
-import { updateEmployee, getEmployeeById } from '../services/employeeService';
-import { getAllDepots } from '../services/depotService';
+import { Form, PageHeader } from '../../components';
+import { updateEmployee, getEmployeeById } from '../../services/employeeService';
+import { getAllDepots } from '../../services/depotService';
 import { useParams, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 

@@ -141,6 +141,11 @@ const TripSummary = ({ trip, width }) => {
             color: theme.colors.primaryText,
             textTransform: "uppercase",
         },
+        textWarning: {
+            fontSize: 14,
+            fontWeight: "bold",
+            color: theme.colors.text,
+        },
         title: {
             fontSize: 16,
             color: theme.colors.text,
@@ -304,7 +309,7 @@ const TripSummary = ({ trip, width }) => {
                             {deleteConfirm && (
                                 <Animated.Text
                                     entering={FadeInDown}
-                                    style={styles.textBold}>
+                                    style={styles.textWarning}>
                                     Are you sure you want to cancel this trip?
                                 </Animated.Text>
                             )}

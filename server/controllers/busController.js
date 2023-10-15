@@ -2,27 +2,42 @@ import asyncHandler from "express-async-handler";
 import Bus from "../models/busModel.js";
 
 export const createBus = asyncHandler(async (req, res) => {
-    const { busNumber, capacity, type } = req.body;
-    try {
-        const bus = new Bus({
-            busNumber,
-            busCapacity: capacity,
-            busType: type || "Non-AC",
-        });
-        const createdBus = await bus.save();
-        res.status(201).json(createdBus);
-    } catch (error) {
-        res.status(400).json({ message: error.message });
-    }
+  const { busNumber, busCapacity, busType, busRoute } = req.body;
+  try {
+    const bus = new Bus({
+      busNumber,
+      busCapacity,
+      busType,
+      busRoute,
+    });
+    const createdBus = await bus.save();
+    res.status(201).json(createdBus);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
 });
 
 export const getAllBuses = asyncHandler(async (req, res) => {
-    try {
-        const buses = await Bus.find({});
-        res.json(buses);
-    } catch (error) {
-        res.status(404).json({ message: error.message });
-    }
+  // only _id, busNumber, busCapacity, busType, busRouteNumber, busRouteName
+  try {
+    const buses = await Bus.find({}).populate(
+      "busRoute",
+      "routeNumber routeName"
+    );
+    const busesIdNumberCapacityTypeRouteNumberRouteName = buses.map((bus) => {
+      return {
+        _id: bus._id,
+        busNumber: bus.busNumber,
+        busCapacity: bus.busCapacity,
+        busType: bus.busType,
+        busRouteNumber: bus.busRoute ? bus.busRoute.routeNumber : null,
+        busRouteName: bus.busRoute ? bus.busRoute.routeName : null,
+      };
+    });
+    res.json(busesIdNumberCapacityTypeRouteNumberRouteName);
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
 });
 
 export const getBusById = asyncHandler(async (req, res) => {

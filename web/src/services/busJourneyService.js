@@ -11,6 +11,24 @@ export const createBusJourney = async (busJourney) => {
     }
 };
 
+export const scheduleBusJourney = async (busJourney) => {
+    try {
+        const response = await axios.post(`${API_URL}/schedule`, busJourney);
+        return response.data;
+    } catch (error) {
+        return error;
+    }
+};
+
+export const updateScheduleJourney = async (id, busJourney) => {
+    try {
+        const response = await axios.put(`${API_URL}/schedule/${id}`, busJourney);
+        return response.data;
+    } catch (error) {
+        return error;
+    }
+};
+
 export const getAllBusJourneys = async () => {
     try {
         const response = await axios.get(API_URL);

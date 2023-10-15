@@ -20,10 +20,13 @@ import { Ionicons } from "@expo/vector-icons";
 import { getAppContext } from "../context/AppContext";
 import ThemeButton from "./common/ThemeButton";
 import Toast from "react-native-toast-message";
-import { useNavigation } from "@react-navigation/native";
 import TripSummary from "./common/TripSummary";
+import { Audio } from "expo-av";
 
-const BusTripContainer = ({ trip }) => {
+const Success = require("../assets/sounds/success.mp3");
+const Error = require("../assets/sounds/fail.mp3");
+
+const BusTripContainer = ({ navigation, trip }) => {
     const { theme } = getThemeContext();
     const { USER } = getAppContext();
     const [showOverlay, setShowOverlay] = useState(false);
@@ -32,6 +35,8 @@ const BusTripContainer = ({ trip }) => {
     const [submittingComplete, setSubmittingComplete] = useState(false);
     const [submittingCancel, setSubmittingCancel] = useState(false);
     const [overlayData, setOverlayData] = useState({});
+    const [capacity, setCapacity] = useState(trip?.bus?.busCapacity);
+    const [boarded, setBoarded] = useState(trip?.boardedUsers);
     const [stats, setStats] = useState({
         totalPassengers: 0,
         totalBoarded: 0,
@@ -39,7 +44,44 @@ const BusTripContainer = ({ trip }) => {
     });
     const OVERLAY_TIMEOUT = 3000;
 
-    const navigation = useNavigation();
+    const [successSound, setSuccessSound] = useState(null);
+    const [errorSound, setErrorSound] = useState(null);
+
+    const loadSuccessSound = async () => {
+        const { sound } = await Audio.Sound.createAsync(Success);
+        setSuccessSound(sound);
+    };
+
+    const loadErrorSound = async () => {
+        const { sound } = await Audio.Sound.createAsync(Error);
+        setErrorSound(sound);
+    };
+
+    const playSuccessSound = async () => {
+        try {
+            await successSound.replayAsync();
+        } catch (error) {
+            console.log("error playing success sound ==>", error);
+        }
+    };
+
+    const playErrorSound = async () => {
+        try {
+            await errorSound.replayAsync();
+        } catch (error) {
+            console.log("error playing error sound ==>", error);
+        }
+    };
+
+    useEffect(() => {
+        loadSuccessSound();
+        loadErrorSound();
+
+        return () => {
+            successSound?.unloadAsync();
+            errorSound?.unloadAsync();
+        };
+    }, []);
 
     const handleRefresh = async () => {
         try {
@@ -47,7 +89,8 @@ const BusTripContainer = ({ trip }) => {
 
             const response = await getBusJourneyById(trip._id, USER.token);
 
-            setTrip(response);
+            setCapacity(response.bus.busCapacity);
+            setBoarded(response.boardedUsers);
             setLoading(false);
         } catch (error) {
             Toast.show({
@@ -60,18 +103,28 @@ const BusTripContainer = ({ trip }) => {
     };
 
     useEffect(() => {
-        const totalPassengers = trip?.boardedUsers?.length;
-        const totalBoarded = trip?.boardedUsers?.filter(
+        if (!trip?.bus?.busCapacity) {
+            handleRefresh();
+        }
+    }, []);
+
+    useEffect(() => {
+        const totalPassengers = boarded?.length;
+        const totalBoarded = boarded?.filter(
             (passenger) => passenger.state === "boarded"
         )?.length;
 
         let crowd = "";
 
-        if (trip?.bus?.busCapacity !== null && totalBoarded !== null) {
-            if (totalBoarded >= trip?.bus?.busCapacity) {
+        if (
+            capacity !== null &&
+            capacity !== undefined &&
+            totalBoarded !== null
+        ) {
+            if (totalBoarded >= capacity) {
                 crowd = "Currently overcrowded";
             } else {
-                crowd = trip?.bus?.busCapacity - totalBoarded + " seats left";
+                crowd = capacity - totalBoarded + " seats left";
             }
         } else {
             crowd = "No bus capacity set";
@@ -83,8 +136,6 @@ const BusTripContainer = ({ trip }) => {
             crowd,
         });
     }, [trip]);
-
-    useEffect(() => {}, []);
 
     const styles = StyleSheet.create({
         container: {
@@ -197,17 +248,13 @@ const BusTripContainer = ({ trip }) => {
                 iconColor: theme.colors.primary,
             });
 
-            //TODO: start success sound
-
+            await playSuccessSound();
             setLoading(false);
             setTimeout(() => {
-                //TODO: stop success sound
-
                 setShowOverlay(false);
             }, OVERLAY_TIMEOUT);
         } catch (error) {
-            //TODO: start error sound
-
+            await playErrorSound();
             setLoading(false);
             setOverlayData({
                 title: "Error",
@@ -216,8 +263,6 @@ const BusTripContainer = ({ trip }) => {
                 iconColor: theme.colors.error,
             });
             setTimeout(() => {
-                //TODO: stop error sound
-
                 setShowOverlay(false);
             }, OVERLAY_TIMEOUT);
         }

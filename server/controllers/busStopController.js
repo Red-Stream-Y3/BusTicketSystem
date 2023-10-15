@@ -41,9 +41,8 @@ export const updateBusStop = asyncHandler(async (req, res) => {
 });
 
 export const deleteBusStop = asyncHandler(async (req, res) => {
-  const busStop = await BusStop.findById(req.params.id);
+  const busStop = await BusStop.findByIdAndDelete(req.params.id);
   if (busStop) {
-    await busStop.remove();
     res.json({ message: 'Bus stop removed' });
   } else {
     res.status(404);

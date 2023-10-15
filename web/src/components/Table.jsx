@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import CreateButton from './CreateButton';
 import { Link } from 'react-router-dom';
 
-const Table = ({ data, pageEntries, tableHeaders, onDelete, isActionButtonsHidden }) => {
+const Table = ({ data, pageEntries, tableHeaders, onDelete, isActionButtonsHidden, edit }) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedDate, setSelectedDate] = useState(null);
     const itemsPerPage = pageEntries;
+    const filteredTableHeaders = tableHeaders.filter((header) => header !== '_id');
 
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -63,7 +64,7 @@ const Table = ({ data, pageEntries, tableHeaders, onDelete, isActionButtonsHidde
             <table className="min-w-max w-full table-auto">
                 <thead className="bg-primary text-white uppercase text-sm leading-normal">
                     <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
-                        {tableHeaders.map((header, index) => (
+                        {filteredTableHeaders.map((header, index) => (
                             <th key={index} className="py-3 px-6 text-center">
                                 {header}
                             </th>
@@ -74,17 +75,28 @@ const Table = ({ data, pageEntries, tableHeaders, onDelete, isActionButtonsHidde
                 <tbody className="text-gray-600 text-sm font-light capitalize">
                     {currentItems.map((item, index) => (
                         <tr key={index} className="border-b border-gray-200 hover:bg-gray-100">
-                            {Object.values(item).map((value, index) => (
-                                <td key={index} className="py-3 px-6 text-center">
-                                    {value}
-                                </td>
-                            ))}
+                            {Object.keys(item).map((key) => {
+                                if (key !== '_id') {
+                                    return (
+                                        <td key={key} className="py-3 px-6 text-center">
+                                            {item[key]}
+                                        </td>
+                                    );
+                                }
+                                return null;
+                            })}
                             {!isActionButtonsHidden && (
                                 <td className="py-3 px-6 text-center">
                                     <div className="flex justify-center items-center space-x-2">
-                                        <Link to={`${item._id}`}>
-                                            <CreateButton buttonTitle="Edit" />
-                                        </Link>
+                                        {edit ? (
+                                            <Link to={`${edit}/${item._id}`}>
+                                                <CreateButton buttonTitle="Edit" />
+                                            </Link>
+                                        ) : (
+                                            <Link to={`${item._id}`}>
+                                                <CreateButton buttonTitle="Edit" />
+                                            </Link>
+                                        )}
                                         <div onClick={onDelete ? () => onDelete(item._id) : null}>
                                             <CreateButton buttonTitle="Delete" />
                                         </div>
@@ -97,7 +109,7 @@ const Table = ({ data, pageEntries, tableHeaders, onDelete, isActionButtonsHidde
                     {Array.from({ length: emptyRows }, (_, index) => (
                         <tr key={index + currentItems.length} className="border-b border-gray-200 hover:bg-gray-100">
                             {tableHeaders.map((_, index) => (
-                                <td key={index} className="py-3 px-6 text-center">
+                                <td key={index} className="py-5 px-6 text-center">
                                     &#x2800;
                                 </td>
                             ))}

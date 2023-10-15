@@ -2,11 +2,10 @@ import asyncHandler from 'express-async-handler';
 import StaffSchedule from '../models/staffScheduleModel.js';
 
 export const createStaffSchedule = asyncHandler(async (req, res) => {
-  const { staff, date, shiftStart, shiftEnd } = req.body;
+  const { staff, shiftStart, shiftEnd } = req.body;
   try {
     const staffSchedule = new StaffSchedule({
       staff,
-      date,
       shiftStart,
       shiftEnd,
     });
@@ -38,12 +37,11 @@ export const getStaffScheduleById = asyncHandler(async (req, res) => {
 });
 
 export const updateStaffSchedule = asyncHandler(async (req, res) => {
-  const { staff, date, shiftStart, shiftEnd } = req.body;
+  const { staff, shiftStart, shiftEnd } = req.body;
   try {
     const staffSchedule = await StaffSchedule.findById(req.params.id);
     if (staffSchedule) {
       staffSchedule.staff = staff;
-      staffSchedule.date = date;
       staffSchedule.shiftStart = shiftStart;
       staffSchedule.shiftEnd = shiftEnd;
 
@@ -60,9 +58,8 @@ export const updateStaffSchedule = asyncHandler(async (req, res) => {
 
 export const deleteStaffSchedule = asyncHandler(async (req, res) => {
   try {
-    const staffSchedule = await StaffSchedule.findById(req.params.id);
+    const staffSchedule = await StaffSchedule.findByIdAndDelete(req.params.id);
     if (staffSchedule) {
-      await staffSchedule.remove();
       res.json({ message: 'Staff schedule removed' });
     } else {
       res.status(404);
