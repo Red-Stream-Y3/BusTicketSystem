@@ -49,7 +49,7 @@ const busJourneySchema = new mongoose.Schema(
 );
 
 busJourneySchema.index(
-    { route: 1, driver: 1, departureTime: 1 },
+    { route: 1, driver: 1, departureTime: 1, createdAt: -1 },
     { unique: true }
 );
 
