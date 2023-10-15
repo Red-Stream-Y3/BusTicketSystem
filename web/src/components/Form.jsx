@@ -1,15 +1,24 @@
 import React, { useState, useEffect } from 'react';
 
 const Form = ({ fields, initialData, onSubmit }) => {
-    const [formData, setFormData] = useState(initialData || {});
+    const [formData, setFormData] = useState(initialData);
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+    useEffect(() => {
+        setFormData(initialData);
+    }, [initialData]);
+
+    const handleChange = (event) => {
+        const { name, value } = event.target;
+        console.log(name, value);
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            [name]: value,
+        }));
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+    const handleSubmit = (event) => {
+        console.log(formData);
+        event.preventDefault();
         onSubmit(formData);
     };
 
@@ -17,25 +26,19 @@ const Form = ({ fields, initialData, onSubmit }) => {
         setFormData(initialData);
     };
 
-    useEffect(() => {
-        if (initialData) {
-            setFormData(initialData);
-        }
-    }, [initialData]);
-
     return (
-        <div className="flex justify-center items-center">
-            <form className="bg-gray-100 p-10 rounded shadow-lg" onSubmit={handleSubmit} style={{ width: '600px' }}>
+        <div className="flex justify-center items-center bg-gray-100 rounded-lg">
+            <form className=" p-10 rounded shadow-lg" onSubmit={handleSubmit} style={{ width: '600px' }}>
                 {fields.map((field) => {
-                    const { name, type, options } = field;
+                    const { key, label, type, options } = field;
                     return (
-                        <div key={name} className="mb-4">
-                            <label className="block text-md text-start mb-2 font-medium text-quaternary">{name}</label>
+                        <div key={key} className="mb-4">
+                            <label className="block text-md text-start mb-2 font-medium text-quaternary">{label}</label>
                             {type === 'text' && (
                                 <input
                                     type="text"
-                                    name={name}
-                                    value={formData[name] || ''}
+                                    name={key}
+                                    value={formData[key] || ''}
                                     className="mt-1 p-2 w-full border rounded-md"
                                     onChange={handleChange}
                                     required
@@ -47,9 +50,9 @@ const Form = ({ fields, initialData, onSubmit }) => {
                                     <div key={option.value} className="flex items-center mt-1">
                                         <input
                                             type="radio"
-                                            name={name}
+                                            name={key}
                                             value={option.value}
-                                            checked={formData[name] === option.value}
+                                            checked={formData[key] === option.value}
                                             className="mr-2"
                                             onChange={handleChange}
                                             required
@@ -59,8 +62,8 @@ const Form = ({ fields, initialData, onSubmit }) => {
                                 ))}
                             {type === 'select' && (
                                 <select
-                                    name={name}
-                                    value={formData[name] || ''}
+                                    name={key}
+                                    value={formData[key] || ''}
                                     className="mt-1 p-2 w-full border rounded-md"
                                     onChange={handleChange}
                                 >
@@ -68,7 +71,7 @@ const Form = ({ fields, initialData, onSubmit }) => {
                                         Select...
                                     </option>
                                     {options.map((option) => (
-                                        <option key={option.id} value={option.id} required className="">
+                                        <option key={option.value} value={option.value} className="text-quaternary">
                                             {option.name}
                                         </option>
                                     ))}
