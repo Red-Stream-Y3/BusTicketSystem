@@ -30,14 +30,18 @@ const CreateEmployee = () => {
         setIsLoading(true);
         setIsError(false);
         setIsSuccess(false);
-
         try {
             await createEmployee(employee);
             setIsSuccess(true);
+            setEmployee({
+                employeeId: '',
+                employeeName: '',
+                employeeRole: '',
+                depotId: '',
+            });
         } catch (error) {
             setIsError(true);
         }
-
         setIsLoading(false);
     };
 
@@ -58,10 +62,10 @@ const CreateEmployee = () => {
                 <div className="mt-5">
                     <Form
                         fields={[
-                            { name: 'Employee ID', type: 'text' },
-                            { name: 'Employee Name', type: 'text' },
-                            { name: 'Employee Role', type: 'select', options: employeeOptions },
-                            { name: 'Depot Name', type: 'select', options: depotOptions },
+                            { key: 'employeeId', label: 'Employee ID', type: 'text' },
+                            { key: 'employeeName', label: 'Employee Name', type: 'text' },
+                            { key: 'employeeRole', label: 'Employee Role', type: 'select', options: employeeOptions },
+                            { key: 'employeeDepot', label: 'Depot', type: 'select', options: depotOptions },
                         ]}
                         initialData={employee}
                         onSubmit={handleSubmit}
