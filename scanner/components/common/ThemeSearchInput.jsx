@@ -17,7 +17,7 @@ const ThemeSearchInput = ({
     value,
     options,
     onChange,
-    setValue,
+    disabled,
     placeholder,
     absolute,
     loading,
@@ -57,8 +57,8 @@ const ThemeSearchInput = ({
 
     const handleOptionClick = (option) => {
         onPressitem(option);
-        inputRef.current.blur();
         setShowOptions(false);
+        // inputRef.current.blur();
     };
 
     return (
@@ -66,11 +66,12 @@ const ThemeSearchInput = ({
             <ThemeTextInput
                 title={title}
                 ref={inputRef}
+                disabled={disabled}
                 placeholder={placeholder}
                 onChange={onChange}
                 value={value}
                 onFocusLoss={() => {
-                    setShowOptions(false);
+                    // setShowOptions(false);
                 }}
                 onFocus={() => setShowOptions(true)}
             />
@@ -105,9 +106,7 @@ const ThemeSearchInput = ({
                                             <Text
                                                 key={index}
                                                 style={styles.optionText}>
-                                                {option.routeNumber}
-                                                {" | "}
-                                                {option.routeName}
+                                                {option}
                                             </Text>
                                         </Pressable>
                                     ))}
