@@ -14,7 +14,6 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 import HomeScreen from "./HomeScreen";
-import ScannerScreen from "./ScannerScreen";
 import getThemeContext from "../context/ThemeContext";
 import LoginScreen from "./LoginScreen";
 import { getAppContext } from "../context/AppContext";
@@ -22,6 +21,8 @@ import SplashScreen from "./SplashScreen";
 import NewBusJourneyScreen from "./NewBusJourneyScreen";
 import ThemeOverlay from "../components/common/ThemeOverlay";
 import { ThemeButton } from "../components";
+import BusTripScreen from "./BusTripScreen";
+import HistoryScreen from "./HistoryScreen";
 
 const Stack = createStackNavigator();
 
@@ -29,7 +30,7 @@ const Navigator = () => {
     const { theme, toggleTheme } = getThemeContext();
     const { USER, loadingUser, removeUser } = getAppContext();
     const [showOverlay, setShowOverlay] = useState(false);
-    const [themeSwitch, setThemeSwitch] = useState(theme.mode === "dark");
+    const [themeSwitch, setThemeSwitch] = useState(false);
 
     useEffect(() => {
         if (theme.mode === "dark") {
@@ -171,13 +172,18 @@ const Navigator = () => {
                                 }}
                             />
                             <Stack.Screen
-                                name='Scanner'
-                                component={ScannerScreen}
-                            />
-                            <Stack.Screen
                                 name='NewTrip'
                                 component={NewBusJourneyScreen}
                                 options={{ title: "New Trip" }}
+                            />
+                            <Stack.Screen
+                                name='BusTrip'
+                                component={BusTripScreen}
+                                options={{ title: "Trip" }}
+                            />
+                            <Stack.Screen
+                                name='History'
+                                component={HistoryScreen}
                             />
                         </>
                     )}

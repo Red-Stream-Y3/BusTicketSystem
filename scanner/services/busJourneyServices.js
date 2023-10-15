@@ -44,7 +44,26 @@ export const createBusJourney = async (busJourney, token) => {
     return response.data;
 };
 
-export const updateBusJourney = async (busJourney, token) => {};
+export const updateBusJourney = async (busJourney, token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    };
+    const response = await axios.put(
+        `${BASE}/api/busjourneys/${busJourney._id}`,
+        busJourney,
+        config
+    );
+
+    if (response.status !== 200) {
+        throw new Error(
+            response.error.response.data.message || response.error.message
+        );
+    }
+
+    return response.data;
+};
 
 export const getBusBySearch = async (searchterm, token) => {
     const config = {
@@ -64,5 +83,52 @@ export const getBusBySearch = async (searchterm, token) => {
         );
     }
 
+    return response.data;
+};
+
+export const getRouteBySearch = async (searchterm, token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    };
+
+    const response = await axios.get(
+        `${BASE}/api/busroutes/search/${searchterm}`,
+        config
+    );
+
+    if (response.status !== 200) {
+        throw new Error(
+            response.data.error.message ||
+                response.data.message ||
+                "Error searching bus routes"
+        );
+    }
+    return response.data;
+};
+
+export const endBusJourney = async (id, token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    };
+
+    const response = await axios.put(
+        `${BASE}/api/busjourneys/${id}`,
+        {
+            state: "completed",
+        },
+        config
+    );
+
+    if (response.status !== 200) {
+        throw new Error(
+            response.data.error.message ||
+                response.data.message ||
+                "Error ending bus journey"
+        );
+    }
     return response.data;
 };
