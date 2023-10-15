@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
-import { CreateButton, Loader, PageHeader, Table } from '../../components';
-import { toast } from 'react-toastify';
+import { Loader, PageHeader, Table } from '../../components';
 import Swal from 'sweetalert2';
 
-import { getAllBusJourneys } from '../../services/busJourneyService';
-import { getAllStaffSchedules } from '../../services/staffScheduleService';
+import { getAllBusJourneys, deleteBusJourneyById } from '../../services/busJourneyService';
+import { getAllStaffSchedules, deleteStaffScheduleById } from '../../services/staffScheduleService';
 
 const Schedules = () => {
     const [schedules, setSchedules] = useState([]);
@@ -32,13 +31,25 @@ const Schedules = () => {
 
     const handleAccept = async (id, type) => {};
 
-    const handleDelete = async (id, type) => {
-        if (type === 'bus') {
-        } else {
+    const handleDelete = async (id) => {
+        try {
+            await deleteBusJourneyById(id);
+            setSchedules(schedules.filter((schedule) => schedule._id !== id));
+        } catch (error) {
+            console.error('Error deleting schedule: ', error);
         }
     };
 
-    const confirmDelete = (id, type) => {
+    const handleOnDelete = async (id) => {
+        try {
+            await deleteStaffScheduleById(id);
+            setStaffSchedules(staffSchedules.filter((schedule) => schedule._id !== id));
+        } catch (error) {
+            console.error('Error deleting schedule: ', error);
+        }
+    };
+
+    const confirmDelete = (id) => {
         Swal.fire({
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
@@ -51,10 +62,36 @@ const Schedules = () => {
             confirmButtonText: 'Yes, remove it!',
         }).then((result) => {
             if (result.isConfirmed) {
-                handleDelete(id, type);
+                handleDelete(id);
                 Swal.fire({
                     icon: 'success',
-                    title: `${type} removed successfully`,
+                    title: `Schedule removed successfully`,
+                    color: '#f8f9fa',
+                    background: '#1F2937',
+                    showConfirmButton: false,
+                    timer: 2000,
+                });
+            }
+        });
+    };
+    const confirmDel = (id) => {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            color: '#f8f9fa',
+            background: '#1F2937',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, remove it!',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                handleOnDelete(id);
+                console.log(id);
+                Swal.fire({
+                    icon: 'success',
+                    title: `Schedule removed successfully`,
                     color: '#f8f9fa',
                     background: '#1F2937',
                     showConfirmButton: false,
@@ -76,9 +113,10 @@ const Schedules = () => {
 
     const bHeaders = ['Route', 'Departure', 'Arrival', 'Bus', 'Driver', 'Passengers', 'Status'];
     const bData = schedules.map((item) => ({
+        _id: item._id,
         'Route Name': `${item.route.routeNumber} ${item.route.routeName}`,
-        'Departure Time': formatDate(item.departureTime),
-        'Arrival Time': formatDate(item.arrivalTime),
+        'Departure Time': item.departureTime ? formatDate(item.departureTime) : 'Not departed',
+        'Arrival Time': item.arrivalTime ? formatDate(item.arrivalTime) : 'Not arrived',
         'Bus Number': item.bus.busNumber,
         'Driver Name': item.driver.employeeName,
         'Boarded Passengers': item.boardedUsers.length,
@@ -87,8 +125,9 @@ const Schedules = () => {
 
     const staffHeaders = ['Name', 'Role', 'Shift Start', 'Shift End'];
     const staffData = staffSchedules.map((item) => ({
-        // 'Employee Name': item.staff.employeeName,
-        // Role: item.staff.employeeRole,
+        _id: item._id,
+        'Employee Name': item.staff.employeeName,
+        Role: item.staff.employeeRole,
         'Shift Start': formatDate(item.shiftStart),
         'Shift End': formatDate(item.shiftEnd),
     }));
@@ -101,8 +140,8 @@ const Schedules = () => {
                 <>
                     {scheduleTable ? (
                         <>
-                            <PageHeader title="Bus Schedules" buttonText="Schedule" buttonLink="create/bus-schedules" />
-                            <Table data={bData} pageEntries={5} tableHeaders={bHeaders} />
+                            <PageHeader title="Bus Schedules" buttonText="Schedule" buttonLink="bus-schedules" />
+                            <Table data={bData} pageEntries={6} tableHeaders={bHeaders} onDelete={confirmDelete} />
                             <div className="mt-6 sm:flex sm:items-center sm:justify-between px-5">
                                 <div className="text-sm text-gray-500 dark:text-gray-400 mt-6" />
                                 <div className="flex items-center mt-4 gap-x-4 sm:mt-0">
@@ -121,9 +160,15 @@ const Schedules = () => {
                             <PageHeader
                                 title="Staff Schedules"
                                 buttonText="Staff Schedule"
-                                buttonLink="/create/staff-schedules"
+                                buttonLink="/admin/schedules/staff"
                             />
-                            <Table data={staffData} pageEntries={5} tableHeaders={staffHeaders} />
+                            <Table
+                                data={staffData}
+                                pageEntries={6}
+                                tableHeaders={staffHeaders}
+                                onDelete={confirmDel}
+                                edit={'staff'}
+                            />
                             <div className="mt-6 sm:flex sm:items-center sm:justify-between px-5">
                                 <div className="text-sm text-gray-500 dark:text-gray-400 mt-6" />
                                 <div className="flex items-center mt-4 gap-x-4 sm:mt-0">
