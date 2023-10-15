@@ -60,9 +60,8 @@ export const updateStaffSchedule = asyncHandler(async (req, res) => {
 
 export const deleteStaffSchedule = asyncHandler(async (req, res) => {
   try {
-    const staffSchedule = await StaffSchedule.findById(req.params.id);
+    const staffSchedule = await StaffSchedule.findByIdAndDelete(req.params.id);
     if (staffSchedule) {
-      await staffSchedule.remove();
       res.json({ message: 'Staff schedule removed' });
     } else {
       res.status(404);

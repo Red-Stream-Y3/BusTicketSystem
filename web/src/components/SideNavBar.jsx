@@ -36,14 +36,14 @@ const SideNavBar = ({ isSidebarOpen }) => {
                     <li key={index} className="relative">
                         <Link
                             to={link.navLink}
-                            className={`inline-flex items-center justify-center px-10 py-5 w-full text-md font-medium transition-colors duration-150 hover:text-quaternary hover:bg-secondary ${
+                            className={`inline-flex items-center justify-start px-10 py-5 w-full text-md font-medium transition-colors duration-150 hover:text-quaternary hover:bg-secondary ${
                                 location.pathname === '/admin/' + link.navLink.toLocaleLowerCase()
                                     ? 'text-quaternary bg-tertiary'
                                     : 'text-lightbg bg-primary'
                             }`}
                         >
                             {React.createElement(link.navIcon, { className: 'mr-2 text-lg' })}
-                            {link.navTitle}
+                            <span className="pl-5">{link.navTitle}</span>
                         </Link>
                         <hr className="border-gray-500" />
                     </li>
