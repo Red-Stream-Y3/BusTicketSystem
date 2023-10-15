@@ -1,6 +1,7 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Dimensions } from "react-native";
 import getThemeContext from "../context/ThemeContext";
+import BusTripContainer from "../components/BusTripContainer";
 
 const BusTripScreen = ({ navigation, route }) => {
     const { theme } = getThemeContext();
@@ -13,22 +14,11 @@ const BusTripScreen = ({ navigation, route }) => {
             alignItems: "center",
             backgroundColor: theme.colors.background,
         },
-        logo: {
-            width: 150,
-            height: 150,
-            resizeMode: "contain",
-        },
-        title: {
-            fontSize: 24,
-            fontWeight: "bold",
-            marginTop: 20,
-            color: theme.colors.text,
-        },
     });
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>{trip?._id}</Text>
+            <BusTripContainer navigation={navigation} trip={trip} />
         </View>
     );
 };

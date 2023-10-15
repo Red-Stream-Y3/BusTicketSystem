@@ -20,7 +20,6 @@ export const createBusJourney = asyncHandler(async (req, res) => {
 });
 
 export const updateBusJourney = asyncHandler(async (req, res) => {
-    console.log("updateBusJourney");
     const { boardedUser, state } = req.body;
     const { id } = req.params;
     const driver = req.user._id; //get the driver id from the token

@@ -14,7 +14,6 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 import HomeScreen from "./HomeScreen";
-import ScannerScreen from "./ScannerScreen";
 import getThemeContext from "../context/ThemeContext";
 import LoginScreen from "./LoginScreen";
 import { getAppContext } from "../context/AppContext";
@@ -31,7 +30,7 @@ const Navigator = () => {
     const { theme, toggleTheme } = getThemeContext();
     const { USER, loadingUser, removeUser } = getAppContext();
     const [showOverlay, setShowOverlay] = useState(false);
-    const [themeSwitch, setThemeSwitch] = useState(theme.mode === "dark");
+    const [themeSwitch, setThemeSwitch] = useState(false);
 
     useEffect(() => {
         if (theme.mode === "dark") {
@@ -171,10 +170,6 @@ const Navigator = () => {
                                     ),
                                     headerRight: () => getHeaderRight(),
                                 }}
-                            />
-                            <Stack.Screen
-                                name='Scanner'
-                                component={ScannerScreen}
                             />
                             <Stack.Screen
                                 name='NewTrip'

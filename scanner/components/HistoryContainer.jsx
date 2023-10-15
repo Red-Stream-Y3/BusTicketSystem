@@ -10,6 +10,7 @@ import getThemeContext from "../context/ThemeContext";
 import { getAppContext } from "../context/AppContext";
 import Toast from "react-native-toast-message";
 import TripCard from "./common/TripCard";
+import { getBusJourneys } from "../services/busJourneyServices";
 
 const HistoryContainer = ({ navigation }) => {
     const { theme } = getThemeContext();
@@ -19,9 +20,8 @@ const HistoryContainer = ({ navigation }) => {
 
     const fetchHistory = async () => {
         try {
-            // const data = await getUserTrips(30, USER.token);
-            // console.log(data);
-            // setHistory(data);
+            const data = await getBusJourneys(30, USER.token);
+            setHistory(data);
         } catch (error) {
             Toast.show({
                 type: "error",
@@ -77,8 +77,7 @@ const HistoryContainer = ({ navigation }) => {
     });
 
     const handleItemClick = (item) => {
-        setSelected(item);
-        setShowSelected(true);
+        navigation.navigate("BusTrip", { trip: item });
     };
 
     useEffect(() => {
