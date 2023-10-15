@@ -147,7 +147,6 @@ const HomeContainer = ({ navigation }) => {
 
     useEffect(() => {
         handleRefresh();
-        fetchRecent();
     }, []);
 
     const handleDeleteClick = async () => {

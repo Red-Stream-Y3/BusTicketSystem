@@ -16,7 +16,7 @@ const busJourneySchema = new mongoose.Schema(
         boardedUsers: [
             {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: "User",
+                ref: "UserTrip",
             },
         ],
         state: {
@@ -37,7 +37,7 @@ const busJourneySchema = new mongoose.Schema(
         },
         driver: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Employee",
+            ref: "User",
             required: true,
         },
         overCrowded: {
@@ -48,7 +48,10 @@ const busJourneySchema = new mongoose.Schema(
     { timestamps: true }
 );
 
-busJourneySchema.index({ route: 1, departureTime: 1 }, { unique: true });
+busJourneySchema.index(
+    { route: 1, driver: 1, departureTime: 1 },
+    { unique: true }
+);
 
 //check if the bus is over crowded every time a user boards
 busJourneySchema.pre("save", async function (next) {

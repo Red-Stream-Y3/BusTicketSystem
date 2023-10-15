@@ -11,10 +11,9 @@ A bus ticketing system developed for SLIIT Y3S2 CSSE module
         -   select route
         -   select bus
         -   auto set driver as current user
-        -   set departure time
         -   set state to scheduled
 -   on departure
-    -   set departure time
+    -   set departure time ✅
     -   set bus journey state to departed
 -   during journey
     -   scan user QR when passenger boards
@@ -32,7 +31,7 @@ A bus ticketing system developed for SLIIT Y3S2 CSSE module
         -   update user trip state to completed
         -   update user arrival time
 -   on arrival
-    -   set arrival time
+    -   set arrival time ✅
     -   set bus journey state to arrived
 
 \*notes

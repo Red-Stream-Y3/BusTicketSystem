@@ -10,11 +10,10 @@ const ThemeDropDownInput = ({
     value,
     options,
     onChange,
-    setValue,
     placeholder,
     absolute,
     loading,
-    onPressitem,
+    onPressItem,
 }) => {
     const { theme } = getThemeContext();
     const [showOptions, setShowOptions] = useState(false);
@@ -40,16 +39,17 @@ const ThemeDropDownInput = ({
             right: 0,
             backgroundColor: theme.colors.surface,
             borderRadius: 5,
-            borderWidth: 1,
-            borderColor: "#ccc",
+            borderWidth: theme.mode === "dark" ? 1 : 0,
+            borderColor: theme.mode === "dark" ? "#ccc" : null,
             zIndex: 50,
             elevation: 5,
         },
+        option: {},
     });
 
     const handleOptionClick = (option) => {
-        onPressitem(option);
-        inputRef.current.blur();
+        onPressItem(option);
+        //inputRef.current.blur();
         setShowOptions(false);
     };
 
@@ -63,12 +63,10 @@ const ThemeDropDownInput = ({
                 onChange={onChange}
                 onFocusLoss={() => {
                     setShowOptions(false);
-                    inputRef.current.blur();
                 }}
                 onFocus={() => setShowOptions(true)}
                 onPressIcon={() => {
                     setShowOptions(!showOptions);
-                    inputRef.current.focus();
                 }}
                 icon={
                     <AntDesign
@@ -103,13 +101,12 @@ const ThemeDropDownInput = ({
                                             android_ripple={{
                                                 color: theme.colors.ripple,
                                             }}
+                                            style={styles.option}
                                             onPress={() =>
                                                 handleOptionClick(option)
                                             }>
-                                            <Text
-                                                key={index}
-                                                style={styles.optionText}>
-                                                {option.name}
+                                            <Text style={styles.optionText}>
+                                                {option}
                                             </Text>
                                         </Pressable>
                                     ))}

@@ -5,6 +5,7 @@ import {
     getBusJourneyById,
     updateBusJourney,
     deleteBusJourney,
+    getBusJourneyByUser,
 } from "../controllers/busJourneyController.js";
 import { protect } from "../middleware/authMiddleware.js";
 
@@ -16,5 +17,6 @@ router
     .get(getBusJourneyById)
     .put(protect, updateBusJourney)
     .delete(deleteBusJourney);
+router.route("/user/:limit").get(protect, getBusJourneyByUser);
 
 export default router;
