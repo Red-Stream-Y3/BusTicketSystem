@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Table, PageHeader, Loader } from '../components';
-import { getAllBuses, deleteBusById } from '../services/busService';
+import { Table, PageHeader, Loader } from '../../components';
+import { getAllBuses, deleteBusById } from '../../services/busService';
 import Swal from 'sweetalert2';
 
 const Buses = () => {

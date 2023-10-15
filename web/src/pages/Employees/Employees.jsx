@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Table, PageHeader, Loader } from '../components';
-import { getAllEmployees, deleteEmployee } from '../services/employeeService';
+import { Table, PageHeader, Loader } from '../../components';
+import { getAllEmployees, deleteEmployee } from '../../services/employeeService';
 import Swal from 'sweetalert2';
 
 const Employees = () => {
