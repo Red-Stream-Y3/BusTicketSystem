@@ -27,7 +27,7 @@ const Home = () => {
             {!isAccess ? (
                 <Loader />
             ) : (
-                <div className="flex overflow-hidden">
+                <div className="flex overflow-hidden fixed w-full h-full">
                     {/* Sidebar */}
                     <SideNavBar isSidebarOpen={isSidebarOpen} />
 
