@@ -63,6 +63,7 @@ export const ThemeProvider = ({ children }) => {
                 );
                 return true;
             }
+            return false;
         } catch (error) {
             return false;
         }

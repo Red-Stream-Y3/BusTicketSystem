@@ -20,7 +20,6 @@ const HomeContainer = ({ navigation }) => {
     const { USER } = getAppContext();
     const [recent, setRecent] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
-    const [selected, setSelected] = useState(null);
     const [currentTime, setCurrentTime] = useState(
         new Date().toLocaleTimeString()
     );
@@ -153,9 +152,8 @@ const HomeContainer = ({ navigation }) => {
     }, []);
 
     const handleItemClick = (item) => {
-        setSelected(item);
         navigation.navigate("BusTrip", {
-            trip: selected,
+            trip: item,
         });
     };
 

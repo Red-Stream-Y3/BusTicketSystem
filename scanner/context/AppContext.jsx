@@ -9,7 +9,7 @@ export const AppContextProvider = ({ children }) => {
     const SERVER_URL = "https://bus-ticket-system-ukkxew3r5q-uc.a.run.app";
     const [USER, setUser] = useState(null);
     const [loadingUser, setLoadingUser] = useState(true);
-    const APP_NAME = "Bus Ticket System";
+    const APP_NAME = "Bus Ticket Scanner";
 
     const getUser = async () => {
         setLoadingUser(true);
