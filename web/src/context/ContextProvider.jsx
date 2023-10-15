@@ -31,7 +31,7 @@ export const ContextProvider = ({ children }) => {
 
     useEffect(() => {
         //set server url in local storage
-        localStorage.setItem('server', server);
+        localStorage.setItem('Server', server);
 
         // Get user info from local storage
         const userInfoFromStorage = localStorage.getItem('userInfo')

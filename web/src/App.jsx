@@ -15,6 +15,12 @@ import {
     Login,
     Register,
     Schedules,
+    Stops,
+    BusRoutes,
+    AddRoute,
+    UpdateRoute,
+    AddStop,
+    UpdateStop,
 } from './pages';
 
 import './App.css';
@@ -24,7 +30,10 @@ function App() {
         <BrowserRouter>
             <Navbar />
             <Routes>
-                <Route path="/*" element={<Home />}>
+                <Route path="/" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+
+                <Route path="/admin/*" element={<Home />}>
                     <Route path="dashboard" element={<Dashboard />} />
                     <Route path="schedules" element={<Schedules />} />
                     <Route path="employees" element={<Employees />} />
@@ -33,6 +42,12 @@ function App() {
                     <Route path="buses" element={<Buses />} />
                     <Route path="buses/create" element={<CreateBus />} />
                     <Route path="buses/:id" element={<UpdateBus />} />
+                    <Route path="stops" element={<Stops />} />
+                    <Route path="stops/create" element={<AddStop />} />
+                    <Route path="stops/:id" element={<UpdateStop />} />
+                    <Route path="routes" element={<BusRoutes />} />
+                    <Route path="routes/create" element={<AddRoute />} />
+                    <Route path="routes/:id" element={<UpdateRoute />} />
                     <Route path="fares" element={<Fares />} />
                     <Route path="fares/create" element={<CreateFare />} />
                     <Route path="fares/:id" element={<UpdateFare />} />

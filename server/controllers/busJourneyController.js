@@ -91,10 +91,9 @@ export const getBusJourneyById = asyncHandler(async (req, res) => {
 });
 
 export const deleteBusJourney = asyncHandler(async (req, res) => {
-    const busJourney = await BusJourney.findById(req.params.id);
+    const busJourney = await BusJourney.findByIdAndDelete(req.params.id);
 
     if (busJourney) {
-        await busJourney.remove();
         res.json({ message: "Bus Journey removed" });
     } else {
         res.status(404);

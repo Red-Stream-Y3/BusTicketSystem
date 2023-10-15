@@ -1,24 +1,23 @@
 import { useState, useEffect } from 'react';
-import { CreateButton, Loader, PageHeader, Table } from '../components';
+import { Loader, PageHeader, Table } from '../../components';
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
+import { getAllBusStops } from '../../services/busStopService';
 
-import { getAllBusJourneys } from '../services/busJourneyService';
-import { Link } from 'react-router-dom';
-
-const Schedules = () => {
-    const [schedules, setSchedules] = useState([]);
-    const [staffSchedules, setStaffSchedules] = useState([]);
+const BusStops = () => {
+    const [busStops, setBusStops] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [scheduleTable, setScheduleTable] = useState(false);
 
-    // const user = JSON.parse(localStorage.getItem('userInfo'));
+    const user = JSON.parse(localStorage.getItem('userInfo'));
+
+    if (!user) {
+        window.location.href = 'http://127.0.0.1:5173/';
+    }
 
     useEffect(() => {
-        getAllBusJourneys().then((schedules) => {
-            setSchedules(schedules);
+        getAllBusStops().then((busStops) => {
+            setBusStops(busStops);
             setLoading(false);
-            setScheduleTable(true);
         });
     }, []);
 
@@ -65,38 +64,32 @@ const Schedules = () => {
 
         return `${formattedDate} ${formattedTime} `;
     }
-
-    const bHeaders = ['Route', 'Departure', 'Arrival', 'Bus', 'Driver', 'Passengers', 'Status'];
-    const bData = schedules.map((item) => ({
-        'Route Name': `${item.route.routeNumber} ${item.route.routeName}`,
-        'Departure Time': formatDate(item.departureTime),
-        'Arrival Time': formatDate(item.arrivalTime),
-        'Bus Number': item.bus.busNumber,
-        'Driver Name': item.driver.employeeName,
-        'Boarded Passengers': item.boardedUsers.length,
-        Status: item.state,
+    const stopsHeaders = ['Name', 'Latitude', 'Longitude'];
+    const stopsData = busStops.map((item) => ({
+        _id: item._id,
+        name: item.name,
+        latitude: item.location.coordinates[0],
+        longitude: item.location.coordinates[1],
     }));
 
     return (
-        <div className="mt-16">
-            <PageHeader title="Bus Schedules" buttonText="Create Schedules" buttonLink="/create/buschedules" />
+        <div className="my-16">
             {loading ? (
                 <Loader />
             ) : (
                 <>
-                    {scheduleTable ? (
-                        <Table data={bData} pageEntries={5} tableHeaders={bHeaders} />
-                    ) : (
-                        <Table
-                            data={staffSchedules}
-                            pageEntries={5}
-                            tableHeaders={['Date', 'Time', 'Bus ID', 'Driver ID', 'Conductor ID', 'Route ID']}
-                        />
-                    )}
+                    <PageHeader title="Bus Stops" buttonText="Add Bus Stop" buttonLink="create" />
+                    <Table
+                        data={stopsData}
+                        pageEntries={5}
+                        tableHeaders={stopsHeaders}
+                        onDelete={confirmDelete}
+                        isActionButtonsHidden={false}
+                    />
                 </>
             )}
         </div>
     );
 };
 
-export default Schedules;
+export default BusStops;

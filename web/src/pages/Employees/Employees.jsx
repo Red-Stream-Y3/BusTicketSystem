@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { Table, PageHeader, Loader } from '../components';
-import { getAllEmployees, deleteEmployee } from '../services/employeeService';
+import { Table, PageHeader, Loader } from '../../components';
+import { getAllEmployees, deleteEmployee } from '../../services/employeeService';
 import Swal from 'sweetalert2';
 
 const Employees = () => {
@@ -36,6 +35,7 @@ const Employees = () => {
                     showConfirmButton: false,
                     timer: 2000,
                 });
+                window.location.reload();
             }
         });
     };
@@ -49,14 +49,14 @@ const Employees = () => {
 
     return (
         <div className="mt-16">
-            <PageHeader title="Employees" buttonText="Create Employees" buttonLink="/employees/create" />
+            <PageHeader title="Employees" buttonText="Create Employees" buttonLink="create" />
             {isLoading ? (
                 <Loader />
             ) : (
                 <Table
                     data={employees}
                     pageEntries={5}
-                    tableHeaders={['Object ID', 'Employee ID', 'Name', 'Role', 'Depot']}
+                    tableHeaders={['Employee ID', 'Name', 'Role', 'Depot']}
                     onDelete={confirmDelete}
                     isActionButtonsHidden={false}
                 />

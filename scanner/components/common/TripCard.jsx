@@ -20,8 +20,7 @@ const TripCard = ({ trip, onPress, width }) => {
             paddingHorizontal: 10,
         },
         cardHeader: {
-            flexDirection: "row",
-            justifyContent: "space-between",
+            justifyContent: "flex-start",
             marginBottom: 10,
         },
         cardHeaderText: {
@@ -37,9 +36,9 @@ const TripCard = ({ trip, onPress, width }) => {
             fontSize: 14,
             color: theme.colors.text,
         },
-        flexRowCenter: {
+        flexRowStart: {
             flexDirection: "row",
-            justifyContent: "center",
+            justifyContent: "flex-start",
             alignItems: "center",
         },
         ripple: {
@@ -54,7 +53,7 @@ const TripCard = ({ trip, onPress, width }) => {
                 style={styles.pressableContainer}
                 onPress={onPress ? onPress : () => {}}>
                 <View style={styles.cardHeader}>
-                    <View style={styles.flexRowCenter}>
+                    <View style={styles.flexRowStart}>
                         <MaterialIcons
                             name='location-on'
                             size={20}
@@ -64,7 +63,7 @@ const TripCard = ({ trip, onPress, width }) => {
                             {trip.route?.routeNumber} | {trip.route?.routeName}
                         </Text>
                     </View>
-                    <View style={styles.flexRowCenter}>
+                    <View style={styles.flexRowStart}>
                         <MaterialIcons
                             name='directions-bus'
                             size={20}

@@ -13,14 +13,14 @@ import {
 } from 'react-icons/bs';
 
 const navLinks = [
-    { navTitle: 'Dashboard', navLink: '/dashboard', navIcon: BsFillHouseFill },
-    { navTitle: 'Schedules', navLink: '/schedules', navIcon: BsClockFill },
-    { navTitle: 'Employees', navLink: '/employees', navIcon: BsFillPersonFill },
-    { navTitle: 'Buses', navLink: '/buses', navIcon: BsFillBusFrontFill },
-    { navTitle: 'Bus Stops', navLink: '/stops', navIcon: BsMapFill },
-    { navTitle: 'Routes', navLink: '/routes', navIcon: BsSignRailroadFill },
-    { navTitle: 'Fares', navLink: '/fares', navIcon: BsCurrencyDollar },
-    { navTitle: 'Reports', navLink: '/reports', navIcon: BsFillBarChartLineFill },
+    { navTitle: 'Dashboard', navLink: 'dashboard', navIcon: BsFillHouseFill },
+    { navTitle: 'Schedules', navLink: 'schedules', navIcon: BsClockFill },
+    { navTitle: 'Employees', navLink: 'employees', navIcon: BsFillPersonFill },
+    { navTitle: 'Buses', navLink: 'buses', navIcon: BsFillBusFrontFill },
+    { navTitle: 'Bus Stops', navLink: 'stops', navIcon: BsMapFill },
+    { navTitle: 'Routes', navLink: 'routes', navIcon: BsSignRailroadFill },
+    { navTitle: 'Fares', navLink: 'fares', navIcon: BsCurrencyDollar },
+    { navTitle: 'Reports', navLink: 'reports', navIcon: BsFillBarChartLineFill },
 ];
 
 const SideNavBar = ({ isSidebarOpen }) => {
@@ -36,14 +36,14 @@ const SideNavBar = ({ isSidebarOpen }) => {
                     <li key={index} className="relative">
                         <Link
                             to={link.navLink}
-                            className={`inline-flex items-center justify-center px-10 py-5 w-full text-md font-medium transition-colors duration-150 hover:text-quaternary hover:bg-secondary ${
-                                location.pathname === link.navLink.toLocaleLowerCase()
+                            className={`inline-flex items-center justify-start px-10 py-5 w-full text-md font-medium transition-colors duration-150 hover:text-quaternary hover:bg-secondary ${
+                                location.pathname === '/admin/' + link.navLink.toLocaleLowerCase()
                                     ? 'text-quaternary bg-tertiary'
                                     : 'text-lightbg bg-primary'
                             }`}
                         >
                             {React.createElement(link.navIcon, { className: 'mr-2 text-lg' })}
-                            {link.navTitle}
+                            <span className="pl-5">{link.navTitle}</span>
                         </Link>
                         <hr className="border-gray-500" />
                     </li>

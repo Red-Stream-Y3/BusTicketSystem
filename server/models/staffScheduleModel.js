@@ -4,7 +4,7 @@ const staffScheduleSchema = new mongoose.Schema(
   {
     staff: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: 'Employee',
       required: true,
     },
     date: {
