@@ -3,13 +3,14 @@ import { Form, PageHeader } from '../../components';
 import { createBus } from '../../services/busService';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import { getAllBusRoutes } from '../../services/busRouteService';
 
 const CreateBus = () => {
     const navigate = useNavigate();
     const [bus, setBus] = useState({
-        licensePlate: '',
-        type: '',
-        capacity: '',
+        busNumber: '',
+        busType: '',
+        busCapacity: '',
         routeId: '',
     });
 
@@ -23,18 +24,16 @@ const CreateBus = () => {
         fetchRoutes();
     }, []);
 
-    console.log(routes);
-
     const handleSubmit = async (bus) => {
         try {
             await createBus(bus);
             setBus({
-                licensePlate: '',
-                type: '',
-                capacity: '',
+                busNumber: '',
+                busType: '',
+                busCapacity: '',
                 routeId: '',
             });
-            navigate('/buses');
+            navigate('/admin/buses');
         } catch (error) {
             throw error;
         }
@@ -67,14 +66,18 @@ const CreateBus = () => {
     };
 
     const routeOptions = routes.map((route) => ({ name: route.routeName, value: route._id }));
+    const typeOptions = [
+        { name: 'AC', value: 'AC' },
+        { name: 'Non-AC', value: 'Non-AC' },
+    ];
 
     return (
-        <div className="mt-16">
-            <PageHeader title="Create Bus" />
+        <div className="my-16">
+            <PageHeader title="Create Bus" isHiddenButton={true} />
             <Form
                 fields={[
                     { key: 'busNumber', label: 'License Plate', type: 'text' },
-                    { key: 'busType', label: 'Type', type: 'text' },
+                    { key: 'busType', label: 'Type', type: 'select', options: typeOptions },
                     { key: 'busCapacity', label: 'Capacity', type: 'text' },
                     {
                         key: 'busRoute',
@@ -83,6 +86,7 @@ const CreateBus = () => {
                         options: routeOptions,
                     },
                 ]}
+                initialData={bus}
                 onSubmit={confirmSubmit}
             />
         </div>

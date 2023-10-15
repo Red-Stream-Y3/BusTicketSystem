@@ -33,7 +33,7 @@ const CreateEmployee = () => {
                 employeeRole: '',
                 depotId: '',
             });
-            navigate('/employees');
+            navigate('/admin/employees');
         } catch (error) {
             throw error;
         }

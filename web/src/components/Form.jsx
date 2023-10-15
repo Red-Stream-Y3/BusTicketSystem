@@ -9,7 +9,6 @@ const Form = ({ fields, initialData, onSubmit }) => {
 
     const handleChange = (event) => {
         const { name, value } = event.target;
-        console.log(name, value);
         setFormData((prevFormData) => ({
             ...prevFormData,
             [name]: value,
@@ -17,7 +16,6 @@ const Form = ({ fields, initialData, onSubmit }) => {
     };
 
     const handleSubmit = (event) => {
-        console.log(formData);
         event.preventDefault();
         onSubmit(formData);
     };

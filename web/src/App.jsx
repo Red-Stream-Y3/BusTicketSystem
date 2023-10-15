@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Footer, Navbar } from './components';
 import {
     Dashboard,
+    Reports,
     Employees,
     CreateEmployee,
     UpdateEmployee,
@@ -51,6 +52,7 @@ function App() {
                     <Route path="fares" element={<Fares />} />
                     <Route path="fares/create" element={<CreateFare />} />
                     <Route path="fares/:id" element={<UpdateFare />} />
+                    <Route path="reports" element={<Reports />} />
                 </Route>
             </Routes>
             <Footer />

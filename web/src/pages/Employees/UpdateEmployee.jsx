@@ -36,7 +36,7 @@ const UpdateEmployee = () => {
         try {
             await updateEmployee(id, employee);
             setEmployee(employee);
-            navigate('/employees');
+            navigate('/admin/employees');
         } catch (error) {
             throw error;
         }
