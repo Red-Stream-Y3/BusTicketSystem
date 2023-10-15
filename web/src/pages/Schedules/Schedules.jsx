@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-import { CreateButton, Loader, PageHeader, Table } from '../components';
+import { CreateButton, Loader, PageHeader, Table } from '../../components';
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
 
-import { getAllBusJourneys } from '../services/busJourneyService';
-import { getAllStaffSchedules } from '../services/staffScheduleService';
+import { getAllBusJourneys } from '../../services/busJourneyService';
+import { getAllStaffSchedules } from '../../services/staffScheduleService';
 
 const Schedules = () => {
     const [schedules, setSchedules] = useState([]);
@@ -13,6 +13,10 @@ const Schedules = () => {
     const [scheduleTable, setScheduleTable] = useState(false);
 
     const user = JSON.parse(localStorage.getItem('userInfo'));
+
+    if (!user) {
+        window.location.href = 'http://127.0.0.1:5173/';
+    }
 
     useEffect(() => {
         getAllBusJourneys().then((schedules) => {
@@ -83,8 +87,8 @@ const Schedules = () => {
 
     const staffHeaders = ['Name', 'Role', 'Shift Start', 'Shift End'];
     const staffData = staffSchedules.map((item) => ({
-        'Employee Name': item.staff.employeeName,
-        Role: item.staff.employeeRole,
+        // 'Employee Name': item.staff.employeeName,
+        // Role: item.staff.employeeRole,
         'Shift Start': formatDate(item.shiftStart),
         'Shift End': formatDate(item.shiftEnd),
     }));

@@ -8,7 +8,11 @@ const BusStops = () => {
     const [busStops, setBusStops] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    // const user = JSON.parse(localStorage.getItem('userInfo'));
+    const user = JSON.parse(localStorage.getItem('userInfo'));
+
+    if (!user) {
+        window.location.href = 'http://127.0.0.1:5173/';
+    }
 
     useEffect(() => {
         getAllBusStops().then((busStops) => {
@@ -60,22 +64,28 @@ const BusStops = () => {
 
         return `${formattedDate} ${formattedTime} `;
     }
-    const stopsHeaders = ['Name', 'Location', 'Shift Start', 'Shift End'];
+    const stopsHeaders = ['Name', 'Latitude', 'Longitude'];
     const stopsData = busStops.map((item) => ({
-        'Employee Name': item.staff.employeeName,
-        Role: item.staff.employeeRole,
-        'Shift Start': formatDate(item.shiftStart),
-        'Shift End': formatDate(item.shiftEnd),
+        _id: item._id,
+        name: item.name,
+        latitude: item.location.coordinates[0],
+        longitude: item.location.coordinates[1],
     }));
 
     return (
-        <div className="mt-16">
+        <div className="my-16">
             {loading ? (
                 <Loader />
             ) : (
                 <>
-                    <PageHeader title="Bus STops" buttonText="Bus Stop" buttonLink="create" />
-                    <Table data={stopsData} pageEntries={5} tableHeaders={stopsHeaders} />
+                    <PageHeader title="Bus Stops" buttonText="Add Bus Stop" buttonLink="create" />
+                    <Table
+                        data={stopsData}
+                        pageEntries={5}
+                        tableHeaders={stopsHeaders}
+                        onDelete={confirmDelete}
+                        isActionButtonsHidden={false}
+                    />
                 </>
             )}
         </div>
