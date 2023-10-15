@@ -1,8 +1,8 @@
 {
     "expo": {
-        "name": "BusTicket",
-        "slug": "BusTicket",
-        "version": "1.1.0",
+        "name": "Bus Ticket Scanner",
+        "slug": "bus-ticket-scanner",
+        "version": "1.2.0",
         "orientation": "portrait",
         "icon": "./assets/icon.png",
         "userInterfaceStyle": "automatic",

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import {
-    View,
+    KeyboardAvoidingView,
     Text,
     StyleSheet,
     Platform,
@@ -92,7 +92,9 @@ const LoginScreen = () => {
     });
 
     return (
-        <View style={styles.container}>
+        <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={styles.container}>
             <ThemeOverlay
                 visible={showRegister}
                 onPressBg={() => handleModalBgPress}>
@@ -151,7 +153,7 @@ const LoginScreen = () => {
                 onPress={handleRegister}
                 variant={"clear"}
             />
-        </View>
+        </KeyboardAvoidingView>
     );
 };
 

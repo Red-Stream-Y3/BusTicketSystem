@@ -1,5 +1,6 @@
 import axios from "axios";
 const BASE = "https://bus-ticket-system-ukkxew3r5q-uc.a.run.app";
+const FARE_ID = "652aa3db13470991d964f167";
 
 export const getUserTrips = async (limit, token) => {
     const config = {
@@ -87,6 +88,21 @@ export const createUserTrip = async (tripData, token) => {
 
     if (response.status !== 201) {
         throw new Error(response.data.message || "Error creating user trip");
+    }
+    return response.data;
+};
+
+export const getFareRates = async (token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    };
+
+    const response = await axios.get(`${BASE}/api/fares/${FARE_ID}`, config);
+
+    if (response.status !== 200) {
+        throw new Error(response.data.message || "Error getting fare rates");
     }
     return response.data;
 };

@@ -7,10 +7,6 @@ const staffScheduleSchema = new mongoose.Schema(
       ref: 'Employee',
       required: true,
     },
-    date: {
-      type: Date,
-      required: true,
-    },
     shiftStart: {
       type: String,
       required: true,
