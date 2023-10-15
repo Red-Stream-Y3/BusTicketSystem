@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
+import CreateButton from './CreateButton';
+import { Link } from 'react-router-dom';
 
-const Table = ({ data, pageEntries, tableHeaders }) => {
-    console.log(data);
+const Table = ({ data, pageEntries, tableHeaders, onDelete, isActionButtonsHidden }) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedDate, setSelectedDate] = useState(null);
@@ -67,6 +68,7 @@ const Table = ({ data, pageEntries, tableHeaders }) => {
                                 {header}
                             </th>
                         ))}
+                        {!isActionButtonsHidden && <th className="py-3 px-6 text-center">Actions</th>}
                     </tr>
                 </thead>
                 <tbody className="text-gray-600 text-sm font-light">
@@ -77,6 +79,18 @@ const Table = ({ data, pageEntries, tableHeaders }) => {
                                     {value}
                                 </td>
                             ))}
+                            {!isActionButtonsHidden && (
+                                <td className="py-3 px-6 text-center">
+                                    <div className="flex justify-center items-center space-x-2">
+                                        <Link to={`${item._id}`}>
+                                            <CreateButton buttonTitle="Edit" />
+                                        </Link>
+                                        <div onClick={onDelete ? () => onDelete(item._id) : null}>
+                                            <CreateButton buttonTitle="Delete" />
+                                        </div>
+                                    </div>
+                                </td>
+                            )}
                         </tr>
                     ))}
 

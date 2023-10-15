@@ -9,6 +9,7 @@ const Form = ({ fields, initialData, onSubmit }) => {
 
     const handleChange = (event) => {
         const { name, value } = event.target;
+        console.log(name, value);
         setFormData((prevFormData) => ({
             ...prevFormData,
             [name]: value,
@@ -26,7 +27,7 @@ const Form = ({ fields, initialData, onSubmit }) => {
     };
 
     return (
-        <div className="flex justify-center items-center">
+        <div className="flex justify-center items-center bg-gray-100 rounded-lg">
             <form className=" p-10 rounded shadow-lg" onSubmit={handleSubmit} style={{ width: '600px' }}>
                 {fields.map((field) => {
                     const { key, label, type, options } = field;

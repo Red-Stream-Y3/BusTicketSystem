@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
     BsFillHouseFill,
@@ -24,15 +24,11 @@ const navLinks = [
 ];
 
 const SideNavBar = ({ isSidebarOpen }) => {
-    const [activeLink, setActiveLink] = useState('Dashboard');
-
-    const handleLinkClick = (link) => {
-        setActiveLink(link);
-    };
+    const location = useLocation();
 
     return (
         <nav
-            className={`bg-quaternary w-64 flex-shrink-0 ${isSidebarOpen ? 'block' : 'hidden'} md:block`}
+            className={`bg-primary w-64 flex-shrink-0 ${isSidebarOpen ? 'block' : 'hidden'} md:block`}
             style={{ minHeight: '100vh', flexDirection: 'column' }}
         >
             <ul className="mt-16">
@@ -40,16 +36,16 @@ const SideNavBar = ({ isSidebarOpen }) => {
                     <li key={index} className="relative">
                         <Link
                             to={link.navLink}
-                            className={`inline-flex items-center justify-center px-10 py-5 w-full text-md font-medium transition-colors duration-150 hover:text-quaternary hover:bg-tertiary ${
-                                activeLink === link.navTitle
-                                    ? 'text-quaternary bg-secondary'
-                                    : 'text-lightbg bg-quaternary'
+                            className={`inline-flex items-center justify-center px-10 py-5 w-full text-md font-medium transition-colors duration-150 hover:text-quaternary hover:bg-secondary ${
+                                location.pathname === link.navLink.toLocaleLowerCase()
+                                    ? 'text-quaternary bg-tertiary'
+                                    : 'text-lightbg bg-primary'
                             }`}
-                            onClick={() => handleLinkClick(link.navTitle)}
                         >
                             {React.createElement(link.navIcon, { className: 'mr-2 text-lg' })}
                             {link.navTitle}
                         </Link>
+                        <hr className="border-gray-500" />
                     </li>
                 ))}
             </ul>

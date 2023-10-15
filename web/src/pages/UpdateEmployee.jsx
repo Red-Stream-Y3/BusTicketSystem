@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Form, PageHeader } from '../components';
-import { createEmployee } from '../services/employeeService';
+import { updateEmployee, getEmployeeById } from '../services/employeeService';
 import { getAllDepots } from '../services/depotService';
-import { useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
-const CreateEmployee = () => {
+const UpdateEmployee = () => {
+    const { id } = useParams();
     const navigate = useNavigate();
     const [employee, setEmployee] = useState({
         employeeId: '',
@@ -13,7 +14,6 @@ const CreateEmployee = () => {
         employeeRole: '',
         depotId: '',
     });
-
     const [depots, setDepots] = useState([]);
 
     useEffect(() => {
@@ -24,15 +24,18 @@ const CreateEmployee = () => {
         fetchDepots();
     }, []);
 
+    useEffect(() => {
+        const fetchEmployee = async () => {
+            const employee = await getEmployeeById(id);
+            setEmployee(employee);
+        };
+        fetchEmployee();
+    }, [id]);
+
     const handleSubmit = async (employee) => {
         try {
-            await createEmployee(employee);
-            setEmployee({
-                employeeId: '',
-                employeeName: '',
-                employeeRole: '',
-                depotId: '',
-            });
+            await updateEmployee(id, employee);
+            setEmployee(employee);
             navigate('/employees');
         } catch (error) {
             throw error;
@@ -42,20 +45,20 @@ const CreateEmployee = () => {
     const confirmSubmit = (employee) => {
         Swal.fire({
             title: 'Are you sure?',
-            text: 'You are creating an employee!',
+            text: 'You are updating an employee!',
             icon: 'warning',
             color: '#f8f9fa',
             background: '#1F2937',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Create',
+            confirmButtonText: 'Update',
         }).then((result) => {
             if (result.isConfirmed) {
                 handleSubmit(employee);
                 Swal.fire({
                     icon: 'success',
-                    title: 'Employee created successfully',
+                    title: 'Employee updated successfully',
                     color: '#f8f9fa',
                     background: '#1F2937',
                     showConfirmButton: false,
@@ -77,7 +80,7 @@ const CreateEmployee = () => {
 
     return (
         <div className="mt-16">
-            <PageHeader title="Create Employee" isHiddenButton={true} />
+            <PageHeader title="Update Employee" isHiddenButton={true} />
             <div className="flex justify-center items-center">
                 <div className="mt-5">
                     <Form
@@ -96,4 +99,4 @@ const CreateEmployee = () => {
     );
 };
 
-export default CreateEmployee;
+export default UpdateEmployee;
