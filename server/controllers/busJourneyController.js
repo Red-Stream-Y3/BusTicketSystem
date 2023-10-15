@@ -44,6 +44,21 @@ export const updateBusJourney = asyncHandler(async (req, res) => {
                 throw new Error("User Trip not found");
             }
 
+            if (userTrip.state === "cancelled") {
+                res.status(400);
+                throw new Error("User Trip is cancelled");
+            }
+
+            if (userTrip.state === "completed") {
+                res.status(400);
+                throw new Error("User Trip is completed");
+            }
+
+            if (userTrip.route.toString() !== busJourney.route.toString()) {
+                res.status(400);
+                throw new Error("User Trip is not for this route");
+            }
+
             if (
                 busJourney.boardedUsers.length === 0 ||
                 !busJourney.boardedUsers.includes(boardedUser)

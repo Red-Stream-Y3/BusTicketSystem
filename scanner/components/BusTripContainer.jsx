@@ -10,10 +10,16 @@ import {
 import getThemeContext from "../context/ThemeContext";
 import ScannerContainer from "./ScannerContainer";
 import ThemeOverlay from "./common/ThemeOverlay";
-import { updateBusJourney } from "../services/busJourneyServices";
+import {
+    cancelBusJourney,
+    endBusJourney,
+    updateBusJourney,
+} from "../services/busJourneyServices";
 import { Ionicons } from "@expo/vector-icons";
 import { getAppContext } from "../context/AppContext";
 import ThemeButton from "./common/ThemeButton";
+import Toast from "react-native-toast-message";
+import { useNavigation } from "@react-navigation/native";
 
 const BusTripContainer = ({ trip }) => {
     const { theme } = getThemeContext();
@@ -21,6 +27,8 @@ const BusTripContainer = ({ trip }) => {
     const [showOverlay, setShowOverlay] = useState(false);
     const [showDeleteOverlay, setShowDeleteOverlay] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [submittingComplete, setSubmittingComplete] = useState(false);
+    const [submittingCancel, setSubmittingCancel] = useState(false);
     const [overlayData, setOverlayData] = useState({});
     const [stats, setStats] = useState({
         totalPassengers: 0,
@@ -28,6 +36,8 @@ const BusTripContainer = ({ trip }) => {
         crowd: "",
     });
     const OVERLAY_TIMEOUT = 3000;
+
+    const navigation = useNavigation();
 
     useEffect(() => {
         const totalPassengers = trip?.boardedUsers?.length;
@@ -137,6 +147,12 @@ const BusTripContainer = ({ trip }) => {
             color: theme.colors.text,
             marginBottom: 10,
         },
+        hr: {
+            borderBottomWidth: 1,
+            borderBottomColor: "#666",
+            width: "100%",
+            marginBottom: 5,
+        },
     });
 
     const onCodeScanned = async (data) => {
@@ -185,13 +201,57 @@ const BusTripContainer = ({ trip }) => {
         }
     };
 
-    const handleEndTripPress = () => {
+    const handleEndTripPress = async () => {
         if (!showDeleteOverlay) {
             setShowDeleteOverlay(true);
             return;
         }
 
-        setShowDeleteOverlay(false);
+        setSubmittingComplete(true);
+
+        try {
+            const response = await endBusJourney(trip._id, USER.token);
+            console.log("end trip response ==>", response);
+            setSubmittingComplete(false);
+            Toast.show({
+                type: "success",
+                text1: "Success",
+                text2: "Trip ended successfully",
+            });
+            setShowDeleteOverlay(false);
+
+            navigation.goBack();
+        } catch (error) {
+            Toast.show({
+                type: "error",
+                text1: "Error",
+                text2: error.response?.data?.message || error.message,
+            });
+        }
+    };
+
+    const handleCancelTripPress = async () => {
+        setSubmittingCancel(true);
+
+        try {
+            const response = await cancelBusJourney(trip._id, USER.token);
+            console.log("cancel trip response ==>", response);
+            setSubmittingCancel(false);
+            Toast.show({
+                type: "success",
+                text1: "Success",
+                text2: "Trip cancelled successfully",
+            });
+            setShowDeleteOverlay(false);
+
+            navigation.goBack();
+        } catch (error) {
+            Toast.show({
+                type: "error",
+                text1: "Error",
+                text2: error.response?.data?.message || error.message,
+            });
+        }
     };
 
     return (
@@ -232,7 +292,7 @@ const BusTripContainer = ({ trip }) => {
                     </Text>
                     <Text style={styles.text}>
                         Note* Any passengers that have not been scanned out will
-                        be marked as absent.
+                        be marked as absent and be refunded.
                     </Text>
                     <View style={styles.flexRowEnd}>
                         <ThemeButton
@@ -242,8 +302,44 @@ const BusTripContainer = ({ trip }) => {
                             textSize={16}
                         />
                         <ThemeButton
-                            title='Yes'
+                            title={
+                                submittingComplete ? (
+                                    <ActivityIndicator
+                                        color={theme.colors.primaryIcon}
+                                        size={30}
+                                    />
+                                ) : (
+                                    "Yes"
+                                )
+                            }
                             onPress={() => handleEndTripPress()}
+                            textSize={16}
+                        />
+                    </View>
+
+                    <View style={styles.hr} />
+
+                    <Text style={styles.subtitle}>
+                        Do you want to cancel this trip?
+                    </Text>
+                    <Text style={styles.text}>
+                        Note* Any passengers that have not been scanned out will
+                        be refunded.
+                    </Text>
+                    <View style={styles.flexRowEnd}>
+                        <ThemeButton
+                            title={
+                                submittingCancel ? (
+                                    <ActivityIndicator
+                                        color={theme.colors.primaryIcon}
+                                        size={30}
+                                    />
+                                ) : (
+                                    "Cancel This Trip"
+                                )
+                            }
+                            color={theme.colors.error}
+                            onPress={() => handleCancelTripPress()}
                             textSize={16}
                         />
                     </View>

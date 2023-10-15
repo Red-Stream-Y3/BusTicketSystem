@@ -132,3 +132,28 @@ export const endBusJourney = async (id, token) => {
     }
     return response.data;
 };
+
+export const cancelBusJourney = async (id, token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    };
+
+    const response = await axios.put(
+        `${BASE}/api/busjourneys/${id}`,
+        {
+            state: "cancelled",
+        },
+        config
+    );
+
+    if (response.status !== 200) {
+        throw new Error(
+            response.data.error.message ||
+                response.data.message ||
+                "Error cancelling bus journey"
+        );
+    }
+    return response.data;
+};
