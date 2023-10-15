@@ -26,13 +26,8 @@ const Stack = createNativeStackNavigator();
 
 const Navigator = () => {
     const { theme, toggleTheme } = getThemeContext();
-    const { USER, loadingUser } = getAppContext();
+    const { USER, loadingUser, removeUser } = getAppContext();
     const [showOverlay, setShowOverlay] = useState(false);
-    const [themeSwitch, setThemeSwitch] = useState(theme.mode === "dark");
-
-    useEffect(() => {
-        toggleTheme(themeSwitch ? "dark" : "light");
-    }, [themeSwitch]);
 
     if (loadingUser) {
         return <SplashScreen />;
@@ -97,35 +92,6 @@ const Navigator = () => {
     const getHeaderRight = () => {
         return (
             <>
-                <ThemeOverlay visible={showOverlay} onPressBg={onClickBg}>
-                    <View style={styles.mainCon}>
-                        <Text style={styles.title}>Settings</Text>
-                        <View style={styles.btnContainer}>
-                            <Text style={styles.labelText}>Light</Text>
-                            <Switch
-                                value={themeSwitch}
-                                onValueChange={() => {
-                                    setShowOverlay(false);
-                                    setThemeSwitch(!themeSwitch);
-                                }}
-                            />
-                            <Text style={styles.labelText}>{"    "}Dark</Text>
-                        </View>
-                        <ThemeButton
-                            title='Sign Out'
-                            onPress={() => {
-                                removeUser();
-                            }}
-                            variant={"outlined"}
-                            textSize={16}>
-                            <MaterialIcons
-                                name='logout'
-                                color={theme.colors.icon}
-                                style={styles.logoutIcon}
-                            />
-                        </ThemeButton>
-                    </View>
-                </ThemeOverlay>
                 <TouchableOpacity
                     style={styles.settingsButton}
                     onPress={() => setShowOverlay(true)}>
@@ -134,6 +100,36 @@ const Navigator = () => {
                         size={28}
                         color={theme.colors.text}
                     />
+                    <ThemeOverlay visible={showOverlay} onPressBg={onClickBg}>
+                        <View style={styles.mainCon}>
+                            <Text style={styles.title}>Settings</Text>
+                            <ThemeButton
+                                title={
+                                    "Switch To " +
+                                    (theme.mode === "dark"
+                                        ? "Light Mode"
+                                        : "Dark Mode")
+                                }
+                                onPress={() => {
+                                    setShowOverlay(false);
+                                    toggleTheme();
+                                }}
+                            />
+                            <ThemeButton
+                                title='Sign Out'
+                                onPress={() => {
+                                    removeUser();
+                                }}
+                                variant={"outlined"}
+                                textSize={16}>
+                                <MaterialIcons
+                                    name='logout'
+                                    color={theme.colors.icon}
+                                    style={styles.logoutIcon}
+                                />
+                            </ThemeButton>
+                        </View>
+                    </ThemeOverlay>
                 </TouchableOpacity>
             </>
         );

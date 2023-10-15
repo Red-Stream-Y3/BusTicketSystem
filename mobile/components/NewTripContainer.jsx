@@ -187,9 +187,7 @@ const NewTripContainer = ({ navigation }) => {
     }, [origin, destination]);
 
     return (
-        <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-            style={styles.container}>
+        <KeyboardAvoidingView behavior={"padding"} style={styles.container}>
             <ThemeSearchInput
                 title='Route'
                 value={route}
