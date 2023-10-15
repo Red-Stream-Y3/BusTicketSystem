@@ -13,14 +13,14 @@ import {
 } from 'react-icons/bs';
 
 const navLinks = [
-    { navTitle: 'Dashboard', navLink: '/dashboard', navIcon: BsFillHouseFill },
-    { navTitle: 'Schedules', navLink: '/schedules', navIcon: BsClockFill },
-    { navTitle: 'Employees', navLink: '/employees', navIcon: BsFillPersonFill },
-    { navTitle: 'Buses', navLink: '/buses', navIcon: BsFillBusFrontFill },
-    { navTitle: 'Bus Stops', navLink: '/stops', navIcon: BsMapFill },
-    { navTitle: 'Routes', navLink: '/routes', navIcon: BsSignRailroadFill },
-    { navTitle: 'Fares', navLink: '/fares', navIcon: BsCurrencyDollar },
-    { navTitle: 'Reports', navLink: '/reports', navIcon: BsFillBarChartLineFill },
+    { navTitle: 'Dashboard', navLink: 'dashboard', navIcon: BsFillHouseFill },
+    { navTitle: 'Schedules', navLink: 'schedules', navIcon: BsClockFill },
+    { navTitle: 'Employees', navLink: 'employees', navIcon: BsFillPersonFill },
+    { navTitle: 'Buses', navLink: 'buses', navIcon: BsFillBusFrontFill },
+    { navTitle: 'Bus Stops', navLink: 'stops', navIcon: BsMapFill },
+    { navTitle: 'Routes', navLink: 'routes', navIcon: BsSignRailroadFill },
+    { navTitle: 'Fares', navLink: 'fares', navIcon: BsCurrencyDollar },
+    { navTitle: 'Reports', navLink: 'reports', navIcon: BsFillBarChartLineFill },
 ];
 
 const SideNavBar = ({ isSidebarOpen }) => {

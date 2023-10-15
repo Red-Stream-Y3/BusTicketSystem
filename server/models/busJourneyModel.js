@@ -37,7 +37,7 @@ const busJourneySchema = new mongoose.Schema(
         },
         driver: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
+            ref: "Employee",
             required: true,
         },
         overCrowded: {

@@ -3,7 +3,7 @@ import axios from 'axios';
 // user login
 export const login = async (email, password) => {
     try {
-        const response = await axios.post('/api/users/login', {
+        const response = await axios.post('http://localhost:9120/api/users/login', {
             email,
             password,
         });
@@ -17,7 +17,7 @@ export const login = async (email, password) => {
 // user register
 export const register = async (username, firstName, lastName, email, password) => {
     try {
-        const response = await axios.post('/api/users', {
+        const response = await axios.post('http://localhost:9120/api/users', {
             username,
             firstName,
             lastName,
@@ -46,7 +46,7 @@ export const getUsers = async (token) => {
     };
 
     try {
-        const response = await axios.get('/api/users', config);
+        const response = await axios.get('http://localhost:9120/api/users', config);
         return response;
     } catch (error) {
         console.log(error);
@@ -62,7 +62,7 @@ export const getUserDetails = async (id, token) => {
     };
 
     try {
-        const response = await axios.get(`/api/users/${id}`, config);
+        const response = await axios.get(`http://localhost:9120/api/users/${id}`, config);
         return response;
     } catch (error) {
         console.log(error);
@@ -78,7 +78,7 @@ export const updateProfile = async (user, token) => {
         },
     };
     try {
-        const response = await axios.put('/api/users/profile', user, config);
+        const response = await axios.put('http://localhost:9120/api/users/profile', user, config);
 
         localStorage.setItem('userInfo', JSON.stringify(response.data));
         return response;
@@ -96,7 +96,7 @@ export const updateUser = async (user, token) => {
         },
     };
     try {
-        const response = await axios.put(`/api/users/${user._id}`, user, config);
+        const response = await axios.put(`http://localhost:9120/api/users/${user._id}`, user, config);
         return response;
     } catch (error) {
         console.log(error);

@@ -49,7 +49,7 @@ const Employees = () => {
 
     return (
         <div className="mt-16">
-            <PageHeader title="Employees" buttonText="Create Employees" buttonLink="/employees/create" />
+            <PageHeader title="Employees" buttonText="Create Employees" buttonLink="create" />
             {isLoading ? (
                 <Loader />
             ) : (

@@ -13,3 +13,7 @@ export { default as CreateFare } from './CreateFare';
 export { default as UpdateFare } from './UpdateFare';
 export { default as Reports } from './Reports';
 export { default as Schedules } from './Schedules';
+export { default as Stops } from './BusStops/Stops';
+export { default as AddStop } from './BusStops/AddStop';
+export { default as BusRoutes } from './Routes/BusRoutes';
+export { default as AddRoute } from './Routes/AddRoute';

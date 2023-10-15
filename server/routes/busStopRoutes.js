@@ -1,8 +1,19 @@
-import express from "express";
-import { createBusStop } from "../controllers/busStopController.js";
+import express from 'express';
+import {
+  createBusStop,
+  deleteBusStop,
+  getBusStopById,
+  getBusStops,
+  updateBusStop,
+} from '../controllers/busStopController.js';
 
 const router = express.Router();
 
-router.route("/").post(createBusStop);
+router.route('/').get(getBusStops).post(createBusStop);
+router
+  .route('/:id')
+  .get(getBusStopById)
+  .put(updateBusStop)
+  .delete(deleteBusStop);
 
 export default router;
