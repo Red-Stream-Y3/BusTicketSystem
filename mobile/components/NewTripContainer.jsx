@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from "react";
 import {
-    View,
-    TextInput,
-    Button,
+    KeyboardAvoidingView,
     StyleSheet,
     Text,
     ActivityIndicator,
+    Platform,
 } from "react-native";
 import getThemeContext from "../context/ThemeContext";
 import ThemeSearchInput from "./common/ThemeSearchInput";
-import ThemeTextInput from "./common/ThemeTextInput";
 import ThemeDropDownInput from "./common/ThemeDropDownInput";
 import ThemeButton from "./common/ThemeButton";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -189,7 +187,9 @@ const NewTripContainer = ({ navigation }) => {
     }, [origin, destination]);
 
     return (
-        <View style={styles.container}>
+        <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={styles.container}>
             <ThemeSearchInput
                 title='Route'
                 value={route}
@@ -242,7 +242,7 @@ const NewTripContainer = ({ navigation }) => {
                     />
                 )}
             </ThemeButton>
-        </View>
+        </KeyboardAvoidingView>
     );
 };
 

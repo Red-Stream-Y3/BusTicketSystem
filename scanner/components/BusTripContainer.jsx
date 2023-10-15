@@ -60,7 +60,6 @@ const BusTripContainer = ({ navigation, trip }) => {
     const playSuccessSound = async () => {
         try {
             await successSound.replayAsync();
-            console.log("success sound playing");
         } catch (error) {
             console.log("error playing success sound ==>", error);
         }

@@ -5,6 +5,8 @@ import {
     StyleSheet,
     Text,
     View,
+    KeyboardAvoidingView,
+    Platform,
 } from "react-native";
 import ThemeTextInput from "./common/ThemeTextInput";
 import ThemeButton from "./common/ThemeButton";
@@ -122,7 +124,9 @@ const RegisterContainer = ({
     });
 
     return (
-        <View style={styles.container}>
+        <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={styles.container}>
             <View style={styles.header}>
                 <Feather
                     name='x'
@@ -216,7 +220,7 @@ const RegisterContainer = ({
                     <ActivityIndicator color={theme.colors.buttonText} />
                 )}
             </ThemeButton>
-        </View>
+        </KeyboardAvoidingView>
     );
 };
 
