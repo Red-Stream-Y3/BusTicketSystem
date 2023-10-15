@@ -9,9 +9,11 @@ import ThemeDropDownInput from "./common/ThemeDropDownInput";
 import { getAppContext } from "../context/AppContext";
 import Toast from "react-native-toast-message";
 import ThemeSearchInput from "./common/ThemeSearchInput";
+import { getBusBySearch } from "../services/busJourneyServices";
 
 const NewBusTripContainer = ({ navigation }) => {
     const { theme, toggleTheme } = getThemeContext();
+    const { USER } = getAppContext();
     const [route, setRoute] = useState("");
     const [bus, setBus] = useState("");
     const [busList, setBusList] = useState([]);
@@ -22,7 +24,23 @@ const NewBusTripContainer = ({ navigation }) => {
     const [selectedRoute, setSelectedRoute] = useState({});
     const [selectedBus, setSelectedBus] = useState({});
 
-    const handleBusSearch = async (text) => {};
+    const handleBusSearch = async (text) => {
+        setBus(text);
+        setLoading(true);
+        try {
+            const response = await getBusBySearch(text, USER.token);
+
+            setBusList(response);
+            setLoading(false);
+        } catch (error) {
+            Toast.show({
+                type: "error",
+                text1: "Error",
+                text2: error.response?.data?.message || error.message,
+            });
+            setLoading(false);
+        }
+    };
 
     const handleBusItemPress = (item) => {};
 
@@ -45,6 +63,14 @@ const NewBusTripContainer = ({ navigation }) => {
         scrollContainer: {
             maxHeight: 500,
         },
+        scrollContentContainer: {
+            // justifyContent: "center",
+            // alignItems: "center",
+        },
+        flexRow: {
+            flexDirection: "row",
+            alignItems: "center",
+        },
         flexRowCenter: {
             flexDirection: "row",
             justifyContent: "center",
@@ -62,7 +88,9 @@ const NewBusTripContainer = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <ScrollView style={styles.scrollContainer}>
+            <ScrollView
+                style={styles.scrollContainer}
+                contentContainerStyle={styles.scrollContentContainer}>
                 <ThemeSearchInput
                     placeholder='Search for your bus'
                     title='Bus'
@@ -74,6 +102,22 @@ const NewBusTripContainer = ({ navigation }) => {
                     onPressitem={handleBusItemPress}
                 />
 
+                <View style={styles.flexRow}>
+                    <Text style={styles.text}>
+                        Use the original route?{"    "}
+                    </Text>
+                    <View style={styles.flexRowCenter}>
+                        <Text style={styles.text}>No</Text>
+                        <Switch
+                            value={isOriginalRoute}
+                            onValueChange={(value) =>
+                                handleIsOrignalRouteChange(value)
+                            }
+                        />
+                        <Text style={styles.text}>Yes</Text>
+                    </View>
+                </View>
+
                 <ThemeDropDownInput
                     title='Route'
                     placeholder={"Select route"}
@@ -84,18 +128,6 @@ const NewBusTripContainer = ({ navigation }) => {
                     onChange={(text) => handleRouteSearch(text)}
                     onPressitem={handleRouteItemPress}
                 />
-
-                <Text style={styles.text}>Use the original route?</Text>
-                <View style={styles.flexRowCenter}>
-                    <Text style={styles.text}>No</Text>
-                    <Switch
-                        value={isOriginalRoute}
-                        onValueChange={(value) =>
-                            handleIsOrignalRouteChange(value)
-                        }
-                    />
-                    <Text style={styles.text}>Yes</Text>
-                </View>
             </ScrollView>
         </View>
     );

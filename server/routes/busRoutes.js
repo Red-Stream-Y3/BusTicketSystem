@@ -1,17 +1,19 @@
 import express from "express";
 import {
-  createBus,
-  getAllBuses,
-  getBusByBusNumber,
-  getBusById,
-  getBusCount,
-  getBusesByCapacity,
-  getBusesByRoute,
-  getBusesByRouteAndType,
-  getBusesByType,
-  updateBusById,
-  deleteBusById,
+    createBus,
+    getAllBuses,
+    getBusByBusNumber,
+    getBusById,
+    getBusCount,
+    getBusesByCapacity,
+    getBusesByRoute,
+    getBusesByRouteAndType,
+    getBusesByType,
+    updateBusById,
+    deleteBusById,
+    getBusBySearch,
 } from "../controllers/busController.js";
+import { protect } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
@@ -26,5 +28,6 @@ router.route("/type/:type").get(getBusesByType);
 router.route("/capacity/:capacity").get(getBusesByCapacity);
 router.route("/route/:routeId").get(getBusesByRoute);
 router.route("/route/:routeId/type/:type").get(getBusesByRouteAndType);
+router.route("/search/:searchterm").get(protect, getBusBySearch);
 
 export default router;

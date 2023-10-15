@@ -23,6 +23,8 @@ const busSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
+busSchema.index({ busNumber: 1 }, { unique: true });
+
 const Bus = mongoose.model("Bus", busSchema);
 
 export default Bus;
