@@ -6,7 +6,11 @@ import {
     CreateEmployee,
     UpdateEmployee,
     Buses,
+    CreateBus,
+    UpdateBus,
     Fares,
+    CreateFare,
+    UpdateFare,
     Home,
     Login,
     Register,
@@ -27,7 +31,11 @@ function App() {
                     <Route path="employees/create" element={<CreateEmployee />} />
                     <Route path="employees/:id" element={<UpdateEmployee />} />
                     <Route path="buses" element={<Buses />} />
+                    <Route path="buses/create" element={<CreateBus />} />
+                    <Route path="buses/:id" element={<UpdateBus />} />
                     <Route path="fares" element={<Fares />} />
+                    <Route path="fares/create" element={<CreateFare />} />
+                    <Route path="fares/:id" element={<UpdateFare />} />
                 </Route>
             </Routes>
             <Footer />
