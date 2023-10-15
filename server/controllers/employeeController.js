@@ -26,6 +26,7 @@ export const getAllEmployees = asyncHandler(async (req, res) => {
 
     const employeesIdNameRoleDepotName = employees.map((employee) => {
       return {
+        _id: employee._id,
         employeeId: employee.employeeId,
         employeeName: employee.employeeName,
         employeeRole: employee.employeeRole,
