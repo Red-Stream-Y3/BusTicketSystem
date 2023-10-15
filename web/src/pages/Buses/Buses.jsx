@@ -48,15 +48,15 @@ const Buses = () => {
     }, []);
 
     return (
-        <div className="mt-16">
-            <PageHeader title="Buses" buttonText="Create Bus" buttonLink="/buses/create" />
+        <div className="my-16">
+            <PageHeader title="Buses" buttonText="Create Bus" buttonLink="create" />
             {isLoading ? (
                 <Loader />
             ) : (
                 <Table
                     data={buses}
                     pageEntries={5}
-                    tableHeaders={['Object ID', 'License Plate', 'Type', 'Capacity', 'Route Number', 'Route Name']}
+                    tableHeaders={['License Plate', 'Type', 'Capacity', 'Route Number', 'Route Name']}
                     onDelete={confirmDelete}
                     isActionButtonsHidden={false}
                 />

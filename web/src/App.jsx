@@ -18,6 +18,7 @@ import {
     Stops,
     BusRoutes,
     AddRoute,
+    UpdateRoute,
     AddStop,
 } from './pages';
 
@@ -44,6 +45,7 @@ function App() {
                     <Route path="stops/create" element={<AddStop />} />
                     <Route path="routes" element={<BusRoutes />} />
                     <Route path="routes/create" element={<AddRoute />} />
+                    <Route path="routes/:id" element={<UpdateRoute />} />
                     <Route path="fares" element={<Fares />} />
                     <Route path="fares/create" element={<CreateFare />} />
                     <Route path="fares/:id" element={<UpdateFare />} />

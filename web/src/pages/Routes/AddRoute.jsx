@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { PageHeader } from '../../components';
 import { createBusRoute } from '../../services/busRouteService';
 import { getAllBusStops } from '../../services/busStopService';
 
 const AddRoute = () => {
+    const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
     const [isError, setIsError] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
@@ -30,6 +32,7 @@ const AddRoute = () => {
         try {
             await createBusRoute(busRoute);
             setIsSuccess(true);
+            navigate('/admin/routes');
         } catch (error) {
             setIsError(true);
         }
@@ -55,7 +58,7 @@ const AddRoute = () => {
     };
 
     return (
-        <div className="mt-16">
+        <div className="my-16">
             <PageHeader title="Bus Route" buttonText="Create Stop" buttonLink="/admin/stops/create" />
             <div className="flex justify-center items-center">
                 <div className="mt-5">

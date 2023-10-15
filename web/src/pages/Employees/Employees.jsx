@@ -56,7 +56,7 @@ const Employees = () => {
                 <Table
                     data={employees}
                     pageEntries={5}
-                    tableHeaders={['Object ID', 'Employee ID', 'Name', 'Role', 'Depot']}
+                    tableHeaders={['Employee ID', 'Name', 'Role', 'Depot']}
                     onDelete={confirmDelete}
                     isActionButtonsHidden={false}
                 />
