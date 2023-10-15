@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
 
 import { getAllBusJourneys } from '../services/busJourneyService';
-import { Link } from 'react-router-dom';
+import { getAllStaffSchedules } from '../services/staffScheduleService';
 
 const Schedules = () => {
     const [schedules, setSchedules] = useState([]);
@@ -12,13 +12,17 @@ const Schedules = () => {
     const [loading, setLoading] = useState(true);
     const [scheduleTable, setScheduleTable] = useState(false);
 
-    // const user = JSON.parse(localStorage.getItem('userInfo'));
+    const user = JSON.parse(localStorage.getItem('userInfo'));
 
     useEffect(() => {
         getAllBusJourneys().then((schedules) => {
             setSchedules(schedules);
             setLoading(false);
             setScheduleTable(true);
+        });
+        getAllStaffSchedules().then((staffSchedules) => {
+            setStaffSchedules(staffSchedules);
+            setLoading(false);
         });
     }, []);
 
@@ -77,21 +81,58 @@ const Schedules = () => {
         Status: item.state,
     }));
 
+    const staffHeaders = ['Name', 'Role', 'Shift Start', 'Shift End'];
+    const staffData = staffSchedules.map((item) => ({
+        'Employee Name': item.staff.employeeName,
+        Role: item.staff.employeeRole,
+        'Shift Start': formatDate(item.shiftStart),
+        'Shift End': formatDate(item.shiftEnd),
+    }));
+
     return (
         <div className="mt-16">
-            <PageHeader title="Bus Schedules" buttonText="Create Schedules" buttonLink="/create/buschedules" />
             {loading ? (
                 <Loader />
             ) : (
                 <>
                     {scheduleTable ? (
-                        <Table data={bData} pageEntries={5} tableHeaders={bHeaders} />
+                        <>
+                            <PageHeader title="Bus Schedules" buttonText="Schedule" buttonLink="create/bus-schedules" />
+                            <Table data={bData} pageEntries={5} tableHeaders={bHeaders} />
+                            <div className="mt-6 sm:flex sm:items-center sm:justify-between px-5">
+                                <div className="text-sm text-gray-500 dark:text-gray-400 mt-6" />
+                                <div className="flex items-center mt-4 gap-x-4 sm:mt-0">
+                                    <button
+                                        onClick={() => setScheduleTable(false)}
+                                        className="flex items-center justify-center px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200 bg-white border rounded-md sm:w-auto gap-x-2 hover:bg-gray-100 dark:bg-quaternary dark:text-gray-200 dark:border-gray-700 dark:hover:bg-darkbg"
+                                    >
+                                        Staff Schedules
+                                        <i className="fas fa-chevron-right" />
+                                    </button>
+                                </div>
+                            </div>
+                        </>
                     ) : (
-                        <Table
-                            data={staffSchedules}
-                            pageEntries={5}
-                            tableHeaders={['Date', 'Time', 'Bus ID', 'Driver ID', 'Conductor ID', 'Route ID']}
-                        />
+                        <>
+                            <PageHeader
+                                title="Staff Schedules"
+                                buttonText="Staff Schedule"
+                                buttonLink="/create/staff-schedules"
+                            />
+                            <Table data={staffData} pageEntries={5} tableHeaders={staffHeaders} />
+                            <div className="mt-6 sm:flex sm:items-center sm:justify-between px-5">
+                                <div className="text-sm text-gray-500 dark:text-gray-400 mt-6" />
+                                <div className="flex items-center mt-4 gap-x-4 sm:mt-0">
+                                    <button
+                                        onClick={() => setScheduleTable(true)}
+                                        className="flex items-center justify-center px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200 bg-white border rounded-md sm:w-auto gap-x-2 hover:bg-gray-100 dark:bg-quaternary dark:text-gray-200 dark:border-gray-700 dark:hover:bg-darkbg"
+                                    >
+                                        <i className="fa-solid fa-circle-chevron-left" />
+                                        Bus Schedules
+                                    </button>
+                                </div>
+                            </div>
+                        </>
                     )}
                 </>
             )}
