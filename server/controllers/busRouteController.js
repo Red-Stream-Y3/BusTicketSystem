@@ -182,9 +182,8 @@ export const updateBusRouteById = asyncHandler(async (req, res) => {
 
 export const deleteBusRouteById = asyncHandler(async (req, res) => {
   try {
-    const busRoute = await BusRoute.findById(req.params.id);
+    const busRoute = await BusRoute.findByIdAndDelete(req.params.id);
     if (busRoute) {
-      await busRoute.remove();
       res.status(200).json({ message: 'Bus route removed' });
     } else {
       res.status(404).json({ message: 'Bus route not found' });

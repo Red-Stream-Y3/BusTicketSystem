@@ -21,6 +21,7 @@ export const createBusJourney = asyncHandler(async (req, res) => {
 });
 
 export const updateBusJourney = asyncHandler(async (req, res) => {
+    console.log("updateBusJourney");
     const { boardedUser, state } = req.body;
     const { id } = req.params;
     const driver = req.user._id; //get the driver id from the token
@@ -181,10 +182,9 @@ export const getBusJourneyById = asyncHandler(async (req, res) => {
 });
 
 export const deleteBusJourney = asyncHandler(async (req, res) => {
-    const busJourney = await BusJourney.findById(req.params.id);
+    const busJourney = await BusJourney.findByIdAndDelete(req.params.id);
 
     if (busJourney) {
-        await busJourney.remove();
         res.json({ message: "Bus Journey removed" });
     } else {
         res.status(404);
@@ -234,11 +234,6 @@ export const getBusJourneyByUser = asyncHandler(async (req, res) => {
                 $unwind: "$route",
             },
             {
-                $sort: {
-                    createdAt: -1,
-                },
-            },
-            {
                 $project: {
                     _id: 1,
                     route: {
@@ -268,6 +263,67 @@ export const getBusJourneyByUser = asyncHandler(async (req, res) => {
         ]);
 
         res.json(busJourneys);
+    } catch (error) {
+        res.status(405).json({ message: error.message });
+    }
+});
+
+export const scheduleBusJourney = asyncHandler(async (req, res) => {
+    const {
+        bus,
+        route,
+        state,
+        departureTime,
+        arrivalTime,
+        boardedUsers,
+        driver,
+    } = req.body;
+
+    try {
+        const busJourney = new BusJourney({
+            bus,
+            route,
+            state,
+            departureTime,
+            arrivalTime,
+            boardedUsers,
+            driver,
+        });
+        const createdBusJourney = await busJourney.save();
+        res.status(201).json(createdBusJourney);
+    } catch (error) {
+        console.log("dad");
+        res.json({ message: error.message });
+    }
+});
+
+export const updateScheduleJourney = asyncHandler(async (req, res) => {
+    const {
+        bus,
+        route,
+        state,
+        departureTime,
+        arrivalTime,
+        boardedUsers,
+        driver,
+    } = req.body;
+
+    try {
+        const busJourney = await BusJourney.findById(req.params.id);
+        if (busJourney) {
+            busJourney.bus = bus;
+            busJourney.route = route;
+            busJourney.state = state;
+            busJourney.departureTime = departureTime;
+            busJourney.arrivalTime = arrivalTime;
+            busJourney.boardedUsers = boardedUsers;
+            busJourney.driver = driver;
+            const updatedBusJourney = await busJourney.save();
+            res.json(updatedBusJourney);
+        } else {
+            res.status(404);
+            throw new Error("Bus Journey not found");
+        }
     } catch (error) {
         res.status(405).json({ message: error.message });
     }

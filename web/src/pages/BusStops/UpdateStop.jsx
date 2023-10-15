@@ -1,67 +1,85 @@
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import PageHeader from '../../components/PageHeader';
-import { createBusStop } from '../../services/busStopService';
-import { useNavigate } from 'react-router-dom';
+import { getBusStopById, updateBusStopById } from '../../services/busStopService';
+import { useNavigate, useParams } from 'react-router-dom';
 
-const AddStop = () => {
+const UpdateStop = () => {
+    const { id } = useParams();
     const navigate = useNavigate();
-    const [newBusStop, setNewBusStop] = useState({
+
+    const [busStop, setBusStop] = useState({
         name: '',
         latitude: '',
         longitude: '',
     });
 
+    useEffect(() => {
+        const fetchBusStop = async () => {
+            const fetchedBusStop = await getBusStopById(id);
+            setBusStop(fetchedBusStop);
+        };
+        fetchBusStop();
+    }, [id]);
+
     const handleChange = (event) => {
         const { name, value } = event.target;
-        setNewBusStop((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }));
+        console.log(name);
+        if (name === 'latitude' || name === 'longitude') {
+            setBusStop((prevData) => ({
+                ...prevData,
+                location: {
+                    type: 'Point',
+                    coordinates: [
+                        name === 'latitude' ? value : prevData.location?.coordinates[0] || '6.9319',
+                        name === 'longitude' ? value : prevData.location?.coordinates[1] || '79.8478',
+                    ],
+                },
+            }));
+        } else {
+            setBusStop((prevData) => ({
+                ...prevData,
+                [name]: value,
+            }));
+        }
     };
 
     const handleCancel = () => {
-        setNewBusStop({
-            name: '',
-            latitude: '',
-            longitude: '',
-        });
-        navigate('/admin/routes/create');
+        navigate('/admin/stops');
     };
 
     const handleSubmit = async () => {
         const formattedBusStop = {
-            name: newBusStop.name,
+            name: busStop.name,
             location: {
                 type: 'Point',
-                coordinates: [parseFloat(newBusStop.longitude), parseFloat(newBusStop.latitude)],
+                coordinates: [parseFloat(busStop.latitude), parseFloat(busStop.longitude)],
             },
         };
 
         Swal.fire({
             title: 'Are you sure?',
-            text: 'You are creating a bus stop!',
+            text: 'You are updating a bus stop!',
             icon: 'warning',
             color: '#f8f9fa',
             background: '#1F2937',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Add',
+            confirmButtonText: 'Update',
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    await createBusStop(formattedBusStop);
+                    await updateBusStopById(id, formattedBusStop);
                     Swal.fire({
                         icon: 'success',
-                        title: 'Bus stop created successfully',
+                        title: 'Bus stop updated successfully',
                         color: '#f8f9fa',
                         background: '#1F2937',
                         showConfirmButton: false,
                         timer: 2000,
                     });
-                    navigate('/admin/routes/create');
-                    handleCancel();
+                    navigate('/admin/stops');
                 } catch (error) {
                     throw error;
                 }
@@ -71,7 +89,7 @@ const AddStop = () => {
 
     return (
         <div className="my-16">
-            <PageHeader title="Add Bus Stop" isHiddenButton={true} />
+            <PageHeader title="Update Bus Stop" isHiddenButton={true} />
             <div className="flex justify-center items-center">
                 <div className="mt-5">
                     <div className="flex justify-center items-center bg-gray-100 rounded-lg">
@@ -90,7 +108,7 @@ const AddStop = () => {
                                 <input
                                     type="text"
                                     name="name"
-                                    value={newBusStop.name}
+                                    value={busStop.name}
                                     className="mt-1 p-2 w-full border rounded-md"
                                     onChange={handleChange}
                                     required
@@ -102,9 +120,8 @@ const AddStop = () => {
                                     Latitude
                                 </label>
                                 <input
-                                    type="text"
                                     name="latitude"
-                                    value={newBusStop.latitude}
+                                    value={busStop.location?.coordinates[0]}
                                     className="mt-1 p-2 w-full border rounded-md"
                                     onChange={handleChange}
                                     required
@@ -115,9 +132,8 @@ const AddStop = () => {
                                     Longitude
                                 </label>
                                 <input
-                                    type="text"
                                     name="longitude"
-                                    value={newBusStop.longitude}
+                                    value={busStop.location?.coordinates[1]}
                                     className="mt-1 p-2 w-full border rounded-md"
                                     onChange={handleChange}
                                     required
@@ -135,7 +151,7 @@ const AddStop = () => {
                                     type="submit"
                                     className="px-4 py-2 rounded bg-primary text-white hover:bg-secondary"
                                 >
-                                    Submit
+                                    Save
                                 </button>
                             </div>
                         </form>
@@ -146,4 +162,4 @@ const AddStop = () => {
     );
 };
 
-export default AddStop;
+export default UpdateStop;
