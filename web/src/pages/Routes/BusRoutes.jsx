@@ -1,9 +1,8 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Loader, PageHeader, Table } from '../../components';
-import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
 
-import { getAllBusRoutes } from '../../services/busRouteService';
+import { getAllBusRoutes, deleteBusRouteById } from '../../services/busRouteService';
 
 const BusRoutes = () => {
     const [busRoutes, setBusRoutes] = useState([]);
@@ -11,22 +10,20 @@ const BusRoutes = () => {
 
     const user = JSON.parse(localStorage.getItem('userInfo'));
 
-    useEffect(() => {
-        getAllBusRoutes().then((busRoutes) => {
-            setBusRoutes(busRoutes);
-            setLoading(false);
-        });
-    }, []);
+    if (!user) {
+        window.location.href = 'http://127.0.0.1:5173/';
+    }
 
-    const handleAccept = async (id, type) => {};
-
-    const handleDelete = async (id, type) => {
-        if (type === 'bus') {
-        } else {
+    const handleOnDelete = async (id) => {
+        try {
+            await deleteBusRouteById(id);
+            setBusRoutes(busRoutes.filter((busRoute) => busRoute._id !== id));
+        } catch (error) {
+            console.error('Error deleting bus route: ', error);
         }
     };
 
-    const confirmDelete = (id, type) => {
+    const confirmDelete = (id) => {
         Swal.fire({
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
@@ -39,10 +36,10 @@ const BusRoutes = () => {
             confirmButtonText: 'Yes, remove it!',
         }).then((result) => {
             if (result.isConfirmed) {
-                handleDelete(id, type);
+                handleOnDelete(id);
                 Swal.fire({
                     icon: 'success',
-                    title: `${type} removed successfully`,
+                    title: 'Bus route removed successfully',
                     color: '#f8f9fa',
                     background: '#1F2937',
                     showConfirmButton: false,
@@ -52,17 +49,15 @@ const BusRoutes = () => {
         });
     };
 
-    // format date function
-    function formatDate(dateString) {
-        const date = new Date(dateString);
-        const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-        const formattedDate = date.toLocaleDateString('en-US', options);
-        const formattedTime = date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+    useEffect(() => {
+        getAllBusRoutes().then((busRoutes) => {
+            setBusRoutes(busRoutes);
+            setLoading(false);
+        });
+    }, []);
 
-        return `${formattedDate} ${formattedTime} `;
-    }
-    const routesHeaders = ['Route Number', 'Route', 'Bus Stops', 'Fare (Rs)'];
     const routesData = busRoutes.map((item) => ({
+        _id: item._id,
         'Route Number': item.routeNumber,
         Route: item.routeName,
         'Bus Stops': item.stops.length,
@@ -70,13 +65,19 @@ const BusRoutes = () => {
     }));
 
     return (
-        <div className="mt-16">
+        <div className="my-16">
             {loading ? (
                 <Loader />
             ) : (
                 <>
                     <PageHeader title="Bus Routes" buttonText="Add Route" buttonLink="create" />
-                    <Table data={routesData} pageEntries={5} tableHeaders={routesHeaders} />
+                    <Table
+                        data={routesData}
+                        pageEntries={5}
+                        tableHeaders={['Route Number', 'Route', 'Bus Stops', 'Fare (Rs)']}
+                        onDelete={confirmDelete}
+                        isActionButtonsHidden={false}
+                    />
                 </>
             )}
         </div>

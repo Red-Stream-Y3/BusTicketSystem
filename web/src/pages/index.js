@@ -17,3 +17,4 @@ export { default as Stops } from './BusStops/Stops';
 export { default as AddStop } from './BusStops/AddStop';
 export { default as BusRoutes } from './Routes/BusRoutes';
 export { default as AddRoute } from './Routes/AddRoute';
+export { default as UpdateRoute } from './Routes/UpdateRoute';
