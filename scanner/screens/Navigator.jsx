@@ -22,6 +22,8 @@ import SplashScreen from "./SplashScreen";
 import NewBusJourneyScreen from "./NewBusJourneyScreen";
 import ThemeOverlay from "../components/common/ThemeOverlay";
 import { ThemeButton } from "../components";
+import BusTripScreen from "./BusTripScreen";
+import HistoryScreen from "./HistoryScreen";
 
 const Stack = createStackNavigator();
 
@@ -178,6 +180,15 @@ const Navigator = () => {
                                 name='NewTrip'
                                 component={NewBusJourneyScreen}
                                 options={{ title: "New Trip" }}
+                            />
+                            <Stack.Screen
+                                name='BusTrip'
+                                component={BusTripScreen}
+                                options={{ title: "Trip" }}
+                            />
+                            <Stack.Screen
+                                name='History'
+                                component={HistoryScreen}
                             />
                         </>
                     )}

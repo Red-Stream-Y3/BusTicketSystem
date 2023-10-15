@@ -66,3 +66,25 @@ export const getBusBySearch = async (searchterm, token) => {
 
     return response.data;
 };
+
+export const getRouteBySearch = async (searchterm, token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    };
+
+    const response = await axios.get(
+        `${BASE}/api/busroutes/search/${searchterm}`,
+        config
+    );
+
+    if (response.status !== 200) {
+        throw new Error(
+            response.data.error.message ||
+                response.data.message ||
+                "Error searching bus routes"
+        );
+    }
+    return response.data;
+};

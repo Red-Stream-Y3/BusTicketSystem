@@ -1,18 +1,27 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, Switch, ScrollView } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+    View,
+    Text,
+    StyleSheet,
+    Switch,
+    ScrollView,
+    Dimensions,
+    ActivityIndicator,
+} from "react-native";
 import ThemeButton from "./common/ThemeButton";
-import ThemeChip from "./common/ThemeChip";
-import ThemeOverlay from "./common/ThemeOverlay";
 import getThemeContext from "../context/ThemeContext";
-import ThemeTextInput from "./common/ThemeTextInput";
-import ThemeDropDownInput from "./common/ThemeDropDownInput";
 import { getAppContext } from "../context/AppContext";
 import Toast from "react-native-toast-message";
 import ThemeSearchInput from "./common/ThemeSearchInput";
-import { getBusBySearch } from "../services/busJourneyServices";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import {
+    createBusJourney,
+    getBusBySearch,
+    getRouteBySearch,
+} from "../services/busJourneyServices";
 
 const NewBusTripContainer = ({ navigation }) => {
-    const { theme, toggleTheme } = getThemeContext();
+    const { theme } = getThemeContext();
     const { USER } = getAppContext();
     const [route, setRoute] = useState("");
     const [bus, setBus] = useState("");
@@ -20,12 +29,16 @@ const NewBusTripContainer = ({ navigation }) => {
     const [routeList, setRouteList] = useState([]);
     const [loading, setLoading] = useState(false);
     const [isOriginalRoute, setIsOriginalRoute] = useState(true);
+    const [submitting, setSubmitting] = useState(false);
 
-    const [selectedRoute, setSelectedRoute] = useState({});
-    const [selectedBus, setSelectedBus] = useState({});
+    const [selectedRoute, setSelectedRoute] = useState(null);
+    const [selectedBus, setSelectedBus] = useState(null);
 
     const handleBusSearch = async (text) => {
         setBus(text);
+
+        if (text === "") return;
+
         setLoading(true);
         try {
             const response = await getBusBySearch(text, USER.token);
@@ -42,13 +55,103 @@ const NewBusTripContainer = ({ navigation }) => {
         }
     };
 
-    const handleBusItemPress = (item) => {};
+    const handleBusItemPress = (item) => {
+        const bus = busList.find((bus) => bus.busNumber === item);
+        setSelectedBus(bus);
+        setBus(bus.busNumber);
+    };
 
-    const handleRouteSearch = async (text) => {};
+    const handleRouteSearch = async (text) => {
+        setRoute(text);
 
-    const handleRouteItemPress = (item) => {};
+        if (text === "") return;
 
-    const handleIsOrignalRouteChange = (value) => {};
+        setLoading(true);
+        try {
+            const response = await getRouteBySearch(text, USER.token);
+
+            setRouteList(response);
+            setLoading(false);
+        } catch (error) {
+            Toast.show({
+                type: "error",
+                text1: "Error",
+                text2: error.response?.data?.message || error.message,
+            });
+            setLoading(false);
+        }
+    };
+
+    const handleRouteItemPress = (item) => {
+        const route = routeList.find(
+            (route) => `${route.routeNumber} | ${route.routeName}` === item
+        );
+        setSelectedRoute(route);
+        setRoute(route.routeName);
+    };
+
+    const handleIsOrignalRouteChange = () => {
+        setIsOriginalRoute(!isOriginalRoute);
+    };
+
+    const handleStartTripPress = async () => {
+        if (selectedBus === null) {
+            Toast.show({
+                type: "error",
+                text1: "Error",
+                text2: "Please select a bus",
+            });
+            return;
+        }
+
+        if (!isOriginalRoute && selectedRoute === null) {
+            Toast.show({
+                type: "error",
+                text1: "Error",
+                text2: "Please select a route",
+            });
+            return;
+        }
+
+        setSubmitting(true);
+        try {
+            const data = {
+                bus: selectedBus._id,
+                route: isOriginalRoute
+                    ? selectedBus.busRoute._id
+                    : selectedRoute._id,
+                state: "scheduled",
+            };
+
+            const createdTrip = await createBusJourney(data, USER.token);
+            console.log("new trip ==>", createdTrip);
+            setSubmitting(false);
+            navigation.navigate("BusTrip", { trip: createdTrip });
+        } catch (error) {
+            Toast.show({
+                type: "error",
+                text1: "Error",
+                text2: error.response?.data?.message || error.message,
+            });
+            setSubmitting(false);
+        }
+    };
+
+    useEffect(() => {
+        if (isOriginalRoute) {
+            setRoute(
+                selectedBus
+                    ? `${selectedBus?.busRoute?.routeNumber} | ${selectedBus?.busRoute?.routeName}`
+                    : ""
+            );
+        } else {
+            setRoute(
+                selectedRoute
+                    ? `${selectedRoute?.routeNumber} | ${selectedRoute?.routeName}`
+                    : ""
+            );
+        }
+    }, [bus, isOriginalRoute]);
 
     const styles = StyleSheet.create({
         container: {
@@ -59,13 +162,17 @@ const NewBusTripContainer = ({ navigation }) => {
             borderRadius: 10,
             padding: 10,
             elevation: 5,
+            flex: 1,
+            maxHeight: Dimensions.get("window").height * 0.5,
         },
         scrollContainer: {
-            maxHeight: 500,
+            flex: 1,
+            maxHeight: "100%",
+            overflow: "visible",
         },
         scrollContentContainer: {
-            // justifyContent: "center",
-            // alignItems: "center",
+            flexGrow: 1,
+            justifyContent: "center",
         },
         flexRow: {
             flexDirection: "row",
@@ -89,6 +196,7 @@ const NewBusTripContainer = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <ScrollView
+                keyboardShouldPersistTaps='handled'
                 style={styles.scrollContainer}
                 contentContainerStyle={styles.scrollContentContainer}>
                 <ThemeSearchInput
@@ -96,10 +204,10 @@ const NewBusTripContainer = ({ navigation }) => {
                     title='Bus'
                     value={bus}
                     setValue={setBus}
-                    options={busList}
+                    options={busList.map((bus) => bus.busNumber)}
                     loading={loading}
                     onChange={(text) => handleBusSearch(text)}
-                    onPressitem={handleBusItemPress}
+                    onPressitem={(item) => handleBusItemPress(item)}
                 />
 
                 <View style={styles.flexRow}>
@@ -110,24 +218,43 @@ const NewBusTripContainer = ({ navigation }) => {
                         <Text style={styles.text}>No</Text>
                         <Switch
                             value={isOriginalRoute}
-                            onValueChange={(value) =>
-                                handleIsOrignalRouteChange(value)
-                            }
+                            onValueChange={handleIsOrignalRouteChange}
                         />
                         <Text style={styles.text}>Yes</Text>
                     </View>
                 </View>
 
-                <ThemeDropDownInput
+                <ThemeSearchInput
                     title='Route'
                     placeholder={"Select route"}
                     value={route}
                     setValue={setRoute}
-                    options={routeList}
+                    options={routeList.map(
+                        (route) => `${route.routeNumber} | ${route.routeName}`
+                    )}
+                    disabled={isOriginalRoute}
                     loading={loading}
                     onChange={(text) => handleRouteSearch(text)}
                     onPressitem={handleRouteItemPress}
                 />
+
+                <ThemeButton
+                    title={submitting ? "" : "Start Trip"}
+                    textSize={16}
+                    onPress={handleStartTripPress}>
+                    {submitting ? (
+                        <ActivityIndicator
+                            size={24}
+                            color={theme.colors.primaryicon}
+                        />
+                    ) : (
+                        <MaterialCommunityIcons
+                            name='bus-side'
+                            size={24}
+                            color={theme.colors.primaryIcon}
+                        />
+                    )}
+                </ThemeButton>
             </ScrollView>
         </View>
     );

@@ -11,20 +11,25 @@ import ThemeButton from "./common/ThemeButton";
 import getThemeContext from "../context/ThemeContext";
 import { getAppContext } from "../context/AppContext";
 import Toast from "react-native-toast-message";
-import Animated from "react-native-reanimated";
 import { Entypo } from "@expo/vector-icons";
 import TripCard from "./common/TripCard";
-import TripSummary from "./common/TripSummary";
-import ThemeOverlay from "./common/ThemeOverlay";
 import { getBusJourneys } from "../services/busJourneyServices";
 
 const HomeContainer = ({ navigation }) => {
-    const { theme, toggleTheme } = getThemeContext();
-    const { USER, credits, removeUser } = getAppContext();
+    const { theme } = getThemeContext();
+    const { USER } = getAppContext();
     const [recent, setRecent] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
-    const [showSelected, setShowSelected] = useState(false);
-    const [selected, setSelected] = useState(null);
+    const [currentTime, setCurrentTime] = useState(
+        new Date().toLocaleTimeString()
+    );
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentTime(new Date().toLocaleTimeString());
+        }, 1000);
+        return () => clearInterval(interval);
+    }, []);
 
     const fetchRecent = async () => {
         try {
@@ -146,53 +151,12 @@ const HomeContainer = ({ navigation }) => {
         handleRefresh();
     }, []);
 
-    const handleDeleteClick = async () => {
-        if (!selected) return;
-
-        try {
-            //const trip = await cancelUserTrip(selected._id, USER.token);
-
-            if (trip) {
-                Toast.show({
-                    type: "success",
-                    text1: "Success",
-                    text2: "Trip cancelled successfully",
-                });
-                handleRefresh();
-                setShowSelected(false);
-            }
-        } catch (error) {
-            Toast.show({
-                type: "error",
-                text1: "Error",
-                text2: error.response?.data?.error || error.message,
-            });
-        }
-    };
-
-    const handleQrClick = () => {
-        if (!selected) return;
-        setShowSelected(false);
-    };
-
-    const handleModalBgPress = () => {
-        setShowSelected(false);
-    };
-
     const handleItemClick = (item) => {
-        setSelected(item);
-        setShowSelected(true);
+        navigation.navigate("BusTrip", { trip: item });
     };
 
     return (
         <>
-            <ThemeOverlay visible={showSelected} onPressBg={handleModalBgPress}>
-                <TripSummary
-                    trip={selected}
-                    onClose={handleQrClick}
-                    onDelete={handleDeleteClick}
-                />
-            </ThemeOverlay>
             <ScrollView
                 refreshControl={
                     <RefreshControl
@@ -203,25 +167,18 @@ const HomeContainer = ({ navigation }) => {
                 style={styles.container}
                 contentContainerStyle={{ alignItems: "center" }}>
                 <View style={styles.cardRow}>
+                    <View style={styles.creditContainer}>
+                        <Text style={styles.h1}>{currentTime}</Text>
+                        <Text style={styles.h2}>
+                            {new Date().toLocaleDateString()}
+                        </Text>
+                    </View>
                     <View style={styles.userContainer}>
                         <Text style={styles.title}>{USER?.username}</Text>
                         <Text style={styles.text}>
                             {USER?.firstName} {USER?.lastName}
                         </Text>
                         <Text style={styles.text}>{USER?.email}</Text>
-                        <View style={styles.flexRowCenter}>
-                            <ThemeButton
-                                title={"Sign Out"}
-                                variant={"outlined"}
-                                onPress={() => removeUser()}
-                            />
-                            {/* TODO: remove theme toggle button */}
-                            <ThemeButton
-                                title={"Toggle Theme"}
-                                variant={"outlined"}
-                                onPress={() => toggleTheme()}
-                            />
-                        </View>
                     </View>
                 </View>
 
