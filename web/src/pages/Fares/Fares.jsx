@@ -55,7 +55,7 @@ const Fares = () => {
     };
 
     return (
-        <div className="mt-16">
+        <div className="mt-20">
             <PageHeader title="Update Fare Rate" isHiddenButton={true} />
             {isLoading ? (
                 <Loader />

@@ -45,7 +45,7 @@ const Table = ({ data, pageEntries, tableHeaders, onDelete, isActionButtonsHidde
     };
 
     return (
-        <div className="bg-white shadow-md rounded-lg my-6 pb-4 overflow-x-auto mx-6">
+        <div className="bg-white shadow-md rounded-lg my-6 pb-4 mx-6 max-w-8xl overflow-hidden text-ellipsis whitespace-nowrap">
             <div className="flex justify-between p-4">
                 <div className="rounded-md bg-gray-100 p-2 w-1/3">
                     <input
