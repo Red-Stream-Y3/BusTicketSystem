@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Table, Loader, BoxWidget, PageHeader } from '../components';
 import { getDepartedJourneys } from '../services/busJourneyService';
+import { useGlobalContext } from '../context/ContextProvider';
 
 const Dashboard = () => {
     const [loading, setLoading] = useState(false);

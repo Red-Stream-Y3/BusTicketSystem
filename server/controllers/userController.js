@@ -338,33 +338,28 @@ const getUserByEmail = asyncHandler(async (req, res) => {
 // @route   GET /api/users/credits/:username
 // @access  Private
 const getUserCredits = asyncHandler(async (req, res) => {
-    const { username } = req.params;
+  const { username } = req.params;
 
-    try {
-        const user = await User.aggregate([
-            {
-                $match: {
-                    username: username,
-                    _id: req.user._id,
-                },
-            },
-            {
-                $project: {
-                    credits: 1,
-                },
-            },
-            {
-                $limit: 1,
-            },
-        ]).hint({ username: 1, credits: 1 });
+  try {
+    const user = await User.aggregate([
+      {
+        $match: {
+          username: username,
+          _id: req.user._id,
+        },
+      },
+      {
+        $project: {
+          credits: 1,
+        },
+      },
+      {
+        $limit: 1,
+      },
+    ]).hint({ username: 1, credits: 1 });
 
-        if (user) {
-            res.json(user);
-        }
-    } catch (error) {
-        res.status(400).json({
-            error: error.message,
-        });
+    if (user) {
+      res.json(user);
     }
   } catch (error) {
     res.status(400).json({
@@ -377,34 +372,29 @@ const getUserCredits = asyncHandler(async (req, res) => {
 // @route   PUT /api/users/credits/:username
 // @access  Private
 const updateUserCredits = asyncHandler(async (req, res) => {
-    const { username } = req.params;
-    const { credits } = req.body;
+  const { username } = req.params;
+  const { credits } = req.body;
 
-    try {
-        const user = await User.findOne({
-            username: username,
-            _id: req.user._id,
-        }).hint({
-            username: 1,
-            credits: 1,
-        });
+  try {
+    const user = await User.findOne({
+      username: username,
+      _id: req.user._id,
+    }).hint({
+      username: 1,
+      credits: 1,
+    });
 
-        if (user) {
-            user.credits = credits;
+    if (user) {
+      user.credits = credits;
 
-            const updatedUser = await user.save();
+      const updatedUser = await user.save();
 
-            res.json({
-                credits: updatedUser.credits,
-            });
-        } else {
-            res.status(404);
-            throw new Error("User not found");
-        }
-    } catch (error) {
-        res.status(400).json({
-            error: error.message,
-        });
+      res.json({
+        credits: updatedUser.credits,
+      });
+    } else {
+      res.status(404);
+      throw new Error("User not found");
     }
   } catch (error) {
     res.status(400).json({
