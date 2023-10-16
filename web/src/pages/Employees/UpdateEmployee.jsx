@@ -16,6 +16,12 @@ const UpdateEmployee = () => {
     });
     const [depots, setDepots] = useState([]);
 
+    const user = JSON.parse(localStorage.getItem('userInfo'));
+
+    if (!user) {
+        window.location.href = 'http://127.0.0.1:5173/';
+    }
+
     useEffect(() => {
         const fetchDepots = async () => {
             const depots = await getAllDepots();

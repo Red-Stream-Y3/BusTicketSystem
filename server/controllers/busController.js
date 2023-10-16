@@ -1,6 +1,9 @@
-import asyncHandler from "express-async-handler";
-import Bus from "../models/busModel.js";
+import asyncHandler from 'express-async-handler';
+import Bus from '../models/busModel.js';
 
+// @desc    Create a bus
+// @route   POST /api/buses
+// @access  Private/Admin
 export const createBus = asyncHandler(async (req, res) => {
   const { busNumber, busCapacity, busType, busRoute } = req.body;
   try {
@@ -17,12 +20,15 @@ export const createBus = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    Get all buses
+// @route   GET /api/buses
+// @access  Public
 export const getAllBuses = asyncHandler(async (req, res) => {
   // only _id, busNumber, busCapacity, busType, busRouteNumber, busRouteName
   try {
     const buses = await Bus.find({}).populate(
-      "busRoute",
-      "routeNumber routeName"
+      'busRoute',
+      'routeNumber routeName'
     );
     const busesIdNumberCapacityTypeRouteNumberRouteName = buses.map((bus) => {
       return {
@@ -61,17 +67,17 @@ export const getBusByBusNumber = asyncHandler(async (req, res) => {
 export const updateBusById = asyncHandler(async (req, res) => {
   try {
     const bus = await Bus.findById(req.params.id);
-    console.log("bus: ", req.body);
+    console.log('bus: ', req.body);
     if (bus) {
       bus.busNumber = req.body.busNumber || bus.busNumber;
       bus.busCapacity = req.body.busCapacity || bus.busCapacity;
       bus.busType = req.body.busType || bus.busType;
       bus.busRoute = req.body.busRoute || bus.busRoute;
       const updatedBus = await bus.save();
-      console.log("updatedBus: ", updatedBus);
+      console.log('updatedBus: ', updatedBus);
       res.json(updatedBus);
     } else {
-      res.status(404).json({ message: "Bus not found" });
+      res.status(404).json({ message: 'Bus not found' });
     }
   } catch (error) {
     res.status(404).json({ message: error.message });
@@ -82,9 +88,9 @@ export const deleteBusById = asyncHandler(async (req, res) => {
   try {
     const bus = await Bus.findByIdAndDelete(req.params.id);
     if (bus) {
-      res.json({ message: "Bus removed" });
+      res.json({ message: 'Bus removed' });
     } else {
-      res.status(404).json({ message: "Bus not found" });
+      res.status(404).json({ message: 'Bus not found' });
     }
   } catch (error) {
     res.status(404).json({ message: error.message });
@@ -147,20 +153,20 @@ export const getBusBySearch = asyncHandler(async (req, res) => {
         $match: {
           busNumber: {
             $regex: searchterm,
-            $options: "i",
+            $options: 'i',
           },
         },
       },
       {
         $lookup: {
-          from: "busroutes",
-          localField: "busRoute",
-          foreignField: "_id",
-          as: "busRoute",
+          from: 'busroutes',
+          localField: 'busRoute',
+          foreignField: '_id',
+          as: 'busRoute',
         },
       },
       {
-        $unwind: "$busRoute",
+        $unwind: '$busRoute',
       },
       {
         $project: {
