@@ -3,6 +3,28 @@ import React, { useState, useEffect } from 'react';
 const Form = ({ fields, initialData, onSubmit }) => {
     const [formData, setFormData] = useState(initialData);
 
+    const handleAddPassenger = () => {
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            boardedPassengers: [...prevFormData.boardedPassengers, ''],
+        }));
+    };
+
+    const handleRemovePassenger = (index) => {
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            boardedPassengers: prevFormData.boardedPassengers.filter((_, i) => i !== index),
+        }));
+    };
+
+    const handleChangePassenger = (index, value) => {
+        setFormData((prevFormData) => {
+            const updatedPassengers = [...prevFormData.boardedPassengers];
+            updatedPassengers[index] = value;
+            return { ...prevFormData, boardedPassengers: updatedPassengers };
+        });
+    };
+
     useEffect(() => {
         setFormData(initialData);
     }, [initialData]);
@@ -74,6 +96,51 @@ const Form = ({ fields, initialData, onSubmit }) => {
                                         </option>
                                     ))}
                                 </select>
+                            )}
+                            {type === 'datetime-local' && (
+                                <input
+                                    type="datetime-local"
+                                    name={key}
+                                    value={formData[key] || ''}
+                                    className="mt-1 p-2 w-full border rounded-md"
+                                    onChange={handleChange}
+                                    required
+                                />
+                            )}
+                            {type === 'dynamic-list' && (
+                                <div>
+                                    <div className="my-4 flex justify-between items-center">
+                                        <label className="block text-md text-start mb-2 font-medium text-quaternary">
+                                            {label}
+                                        </label>
+                                        <button
+                                            type="button"
+                                            onClick={() => handleAddPassenger()} // Replace with your appropriate function
+                                            className="px-2 py-1 bg-primary text-white rounded hover:bg-secondary"
+                                        >
+                                            <i className="fa-solid fa-plus"></i>
+                                        </button>
+                                    </div>
+                                    {formData.boardedPassengers.map((passenger, index) => (
+                                        <div key={index} className="flex items-center mt-1">
+                                            <input
+                                                type="text"
+                                                value={passenger}
+                                                onChange={(e) => handleChangePassenger(index, e.target.value)}
+                                                className="p-2 w-full border rounded-md"
+                                            />
+                                            {formData.boardedPassengers.length > 1 && (
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleRemovePassenger(index)} // Replace with your appropriate function
+                                                    className="ml-2 px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                                                >
+                                                    <i className="fa-solid fa-circle-minus"></i>
+                                                </button>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
                             )}
                         </div>
                     );

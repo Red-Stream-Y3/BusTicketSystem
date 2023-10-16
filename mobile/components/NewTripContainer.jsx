@@ -1,21 +1,20 @@
 import React, { useEffect, useState } from "react";
 import {
-    View,
-    TextInput,
-    Button,
+    KeyboardAvoidingView,
     StyleSheet,
     Text,
     ActivityIndicator,
+    Platform,
 } from "react-native";
 import getThemeContext from "../context/ThemeContext";
 import ThemeSearchInput from "./common/ThemeSearchInput";
-import ThemeTextInput from "./common/ThemeTextInput";
 import ThemeDropDownInput from "./common/ThemeDropDownInput";
 import ThemeButton from "./common/ThemeButton";
 import { MaterialIcons } from "@expo/vector-icons";
 import { createUserTrip, searchBusRoutes } from "../services/userTripServices";
 import { getAppContext } from "../context/AppContext";
 import Toast from "react-native-toast-message";
+import { getFareRates } from "./../services/userTripServices";
 
 const NewTripContainer = ({ navigation }) => {
     const { theme } = getThemeContext();
@@ -34,7 +33,25 @@ const NewTripContainer = ({ navigation }) => {
     const [selectedOrigin, setSelectedOrigin] = useState({});
     const [selectedDestination, setSelectedDestination] = useState({});
 
+    const [fareRate, setFareRate] = useState(0);
     const [fare, setFare] = useState(0);
+
+    const fetchFareRate = async () => {
+        try {
+            const response = await getFareRates(USER.token);
+            setFareRate(response.fareAmount);
+        } catch (error) {
+            Toast.show({
+                type: "error",
+                text1: "Error",
+                text2: error.message,
+            });
+        }
+    };
+
+    useEffect(() => {
+        fetchFareRate();
+    }, []);
 
     const handleSubmit = async () => {
         if (route === "" || origin === "" || destination === "") {
@@ -141,6 +158,11 @@ const NewTripContainer = ({ navigation }) => {
         title: {
             fontSize: 16,
             fontWeight: "bold",
+            color: theme.colors.text,
+            alignSelf: "center",
+        },
+        text: {
+            fontSize: 14,
             marginBottom: 10,
             color: theme.colors.text,
             alignSelf: "center",
@@ -159,13 +181,13 @@ const NewTripContainer = ({ navigation }) => {
         );
 
         const distance = Math.abs(destinationIndex - originIndex);
-        const fare = distance * parseInt(selectedRoute.fareRate);
+        const fare = distance * parseInt(fareRate || selectedRoute.fareRate);
 
         setFare(fare);
     }, [origin, destination]);
 
     return (
-        <View style={styles.container}>
+        <KeyboardAvoidingView behavior={"padding"} style={styles.container}>
             <ThemeSearchInput
                 title='Route'
                 value={route}
@@ -198,6 +220,9 @@ const NewTripContainer = ({ navigation }) => {
             />
 
             <Text style={styles.title}>Calculated Fare : Rs.{fare}</Text>
+            <Text style={styles.text}>
+                {`Fare Rate : Rs.${fareRate || selectedRoute.fareRate}`}
+            </Text>
 
             <ThemeButton
                 title={submitting ? "" : "Add New Trip"}
@@ -215,7 +240,7 @@ const NewTripContainer = ({ navigation }) => {
                     />
                 )}
             </ThemeButton>
-        </View>
+        </KeyboardAvoidingView>
     );
 };
 

@@ -22,6 +22,10 @@ import {
     UpdateRoute,
     AddStop,
     UpdateStop,
+    CreateSchedule,
+    UpdateSchedule,
+    CreateStaff,
+    UpdateStaff,
 } from './pages';
 
 import './App.css';
@@ -37,6 +41,10 @@ function App() {
                 <Route path="/admin/*" element={<Home />}>
                     <Route path="dashboard" element={<Dashboard />} />
                     <Route path="schedules" element={<Schedules />} />
+                    <Route path="schedules/bus-schedules" element={<CreateSchedule />} />
+                    <Route path="schedules/:id" element={<UpdateSchedule />} />
+                    <Route path="schedules/staff" element={<CreateStaff />} />
+                    <Route path="schedules/staff/:id" element={<UpdateStaff />} />
                     <Route path="employees" element={<Employees />} />
                     <Route path="employees/create" element={<CreateEmployee />} />
                     <Route path="employees/:id" element={<UpdateEmployee />} />
