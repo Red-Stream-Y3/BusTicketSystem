@@ -31,10 +31,10 @@ router
   .get(protect, getUserProfile)
   .put(protect, updateUserProfile);
 router
-  .route("/:id")
-  .delete(protect, admin, deleteUser)
-  .get(protect, getUserById)
-  .put(protect, updateUser);
+    .route("/:id")
+    .delete(protect, deleteUser)
+    .get(protect, getUserById)
+    .put(protect, updateUser);
 router.route("getbyrole/:username/:role").get(getUserByUsernameAndRole);
 router
   .route("/credits/:username")

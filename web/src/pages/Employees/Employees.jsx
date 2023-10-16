@@ -7,6 +7,12 @@ const Employees = () => {
     const [employees, setEmployees] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
+    const user = JSON.parse(localStorage.getItem('userInfo'));
+
+    if (!user) {
+        window.location.href = 'http://127.0.0.1:5173/';
+    }
+
     const handleOnDelete = (id) => {
         deleteUser(id);
     };

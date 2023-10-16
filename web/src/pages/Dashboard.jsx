@@ -5,6 +5,8 @@ import { getDepartedJourneys } from '../services/busJourneyService';
 const Dashboard = () => {
     const isAccess = true;
     const [loading, setLoading] = useState(false);
+    const { user } = useGlobalContext();
+
     const [departedJourneys, setDepartedJourneys] = useState([]);
 
     useEffect(() => {
@@ -16,6 +18,15 @@ const Dashboard = () => {
         };
         fetchDepartedJourneys();
     }, []);
+
+    const isAccess = JSON.parse(localStorage.getItem('userInfo'));
+
+    useEffect(() => {
+        if (!user || !isAccess) {
+            logout();
+            window.location.href = '/';
+        }
+    }, [isAccess, user]);
 
     if (loading) {
         return (

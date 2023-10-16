@@ -6,7 +6,13 @@ import Swal from 'sweetalert2';
 
 const CreateEmployee = () => {
     const navigate = useNavigate();
+
     const [employee, setEmployee] = useState({});
+    const user = JSON.parse(localStorage.getItem('userInfo'));
+
+    if (!user) {
+        window.location.href = 'http://127.0.0.1:5173/';
+    }
 
     const handleSubmit = async (employee) => {
         await createUser(employee);

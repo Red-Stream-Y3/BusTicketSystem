@@ -7,20 +7,19 @@ import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
 
 const Home = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-    //   const { user } = useGlobalContext();
+    const { user } = useGlobalContext();
 
-    const isAccess = true;
-
+    const isAccess = JSON.parse(localStorage.getItem('userInfo'));
     const toggleSidebar = () => {
         setIsSidebarOpen(!isSidebarOpen);
     };
 
-    //   useEffect(() => {
-    //     if (!user || !isAccess) {
-    //       logout();
-    //       window.location.href = '/login';
-    //     }
-    //   }, [isAccess, user]);
+    useEffect(() => {
+        if (!user || !isAccess) {
+            logout();
+            window.location.href = '/';
+        }
+    }, [isAccess, user]);
 
     return (
         <>

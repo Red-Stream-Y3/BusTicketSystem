@@ -1,44 +1,42 @@
 {
-  "expo": {
-    "name": "Bus Ticket System",
-    "slug": "bus-ticket-system",
-    "version": "1.3.1",
-    "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "automatic",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "supportsTablet": true
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
-      "package": "com.dinushkasam.busticketsystem"
-    },
-    "web": {
-      "favicon": "./assets/favicon.png",
-      "name": "Bus Ticket System"
-    },
-    "extra": {
-      "eas": {
-        "projectId": "3138a915-b2f2-465d-a195-2be838e8b0db"
-      }
-    },
-    "owner": "redstream",
-    "runtimeVersion": {
-      "policy": "appVersion"
-    },
-    "updates": {
-      "url": "https://u.expo.dev/3a35077c-922e-4a19-8667-aa8c92cfb663"
+    "expo": {
+        "name": "Bus Ticket System",
+        "slug": "bus-ticket-system",
+        "version": "1.3.2",
+        "orientation": "portrait",
+        "icon": "./assets/icon.png",
+        "userInterfaceStyle": "automatic",
+        "splash": {
+            "image": "./assets/splash.png",
+            "resizeMode": "contain",
+            "backgroundColor": "#ffffff"
+        },
+        "assetBundlePatterns": ["**/*"],
+        "ios": {
+            "supportsTablet": true
+        },
+        "android": {
+            "adaptiveIcon": {
+                "foregroundImage": "./assets/adaptive-icon.png",
+                "backgroundColor": "#ffffff"
+            },
+            "package": "com.dinushkasam.busticketsystem"
+        },
+        "web": {
+            "favicon": "./assets/favicon.png",
+            "name": "Bus Ticket System"
+        },
+        "extra": {
+            "eas": {
+                "projectId": "3138a915-b2f2-465d-a195-2be838e8b0db"
+            }
+        },
+        "owner": "redstream",
+        "runtimeVersion": {
+            "policy": "appVersion"
+        },
+        "updates": {
+            "url": "https://u.expo.dev/3a35077c-922e-4a19-8667-aa8c92cfb663"
+        }
     }
-  }
 }
