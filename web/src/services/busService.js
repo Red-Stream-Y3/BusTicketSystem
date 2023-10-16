@@ -41,6 +41,7 @@ export const getBusById = async (id) => {
 export const updateBusById = async (id, bus) => {
     try {
         const response = await axios.put(`${API_URL}/${id}`, bus);
+        console.log('bus service response: ', response.data); // 'response.data' is the updated bus object
         return response.data;
     } catch (error) {
         return error;

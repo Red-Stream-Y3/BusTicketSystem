@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import {
     BsFillHouseFill,
     BsClockFill,
+    BsFillCalendarEventFill,
     BsFillPersonFill,
     BsFillBusFrontFill,
     BsMapFill,
@@ -15,6 +16,7 @@ import {
 const navLinks = [
     { navTitle: 'Dashboard', navLink: 'dashboard', navIcon: BsFillHouseFill },
     { navTitle: 'Schedules', navLink: 'schedules', navIcon: BsClockFill },
+    { navTitle: 'Journeys', navLink: 'journeys', navIcon: BsFillCalendarEventFill },
     { navTitle: 'Employees', navLink: 'employees', navIcon: BsFillPersonFill },
     { navTitle: 'Buses', navLink: 'buses', navIcon: BsFillBusFrontFill },
     { navTitle: 'Bus Stops', navLink: 'stops', navIcon: BsMapFill },
@@ -31,7 +33,7 @@ const SideNavBar = ({ isSidebarOpen }) => {
             className={`bg-primary w-64 flex-shrink-0 ${isSidebarOpen ? 'block' : 'hidden'} md:block`}
             style={{ minHeight: '100vh', flexDirection: 'column' }}
         >
-            <ul className="mt-16">
+            <ul className="mt-20">
                 {navLinks.map((link, index) => (
                     <li key={index} className="relative">
                         <Link

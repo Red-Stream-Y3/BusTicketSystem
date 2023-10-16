@@ -17,8 +17,17 @@ export const createFare = asyncHandler(async (req, res) => {
 
 export const getAllFares = asyncHandler(async (req, res) => {
   try {
-    const fares = await Fare.find({});
-    res.json(fares);
+    const fares = await Fare.find({}).populate("fareName", "fareAmount");
+
+    const faresIdNameAmount = fares.map((fare) => {
+      return {
+        _id: fare._id,
+        fareName: fare.fareName,
+        fareAmount: fare.fareAmount,
+      };
+    });
+
+    res.json(faresIdNameAmount);
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
