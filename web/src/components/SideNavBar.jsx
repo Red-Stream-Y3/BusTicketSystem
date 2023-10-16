@@ -16,7 +16,6 @@ import {
 const navLinks = [
     { navTitle: 'Dashboard', navLink: 'dashboard', navIcon: BsFillHouseFill },
     { navTitle: 'Schedules', navLink: 'schedules', navIcon: BsClockFill },
-    { navTitle: 'Journeys', navLink: 'journeys', navIcon: BsFillCalendarEventFill },
     { navTitle: 'Employees', navLink: 'employees', navIcon: BsFillPersonFill },
     { navTitle: 'Buses', navLink: 'buses', navIcon: BsFillBusFrontFill },
     { navTitle: 'Bus Stops', navLink: 'stops', navIcon: BsMapFill },
