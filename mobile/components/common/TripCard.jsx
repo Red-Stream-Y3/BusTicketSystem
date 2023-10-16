@@ -45,10 +45,24 @@ const TripCard = ({ trip, onPress, width }) => {
         ripple: {
             color: theme.colors.ripple,
         },
+        hrStrip: {
+            borderBottomColor:
+                trip.state === "completed"
+                    ? "green"
+                    : trip.state === "cancelled"
+                    ? "red"
+                    : trip.state === "boarded"
+                    ? "blue"
+                    : trip.state === "scheduled"
+                    ? "yellow"
+                    : "black",
+            borderBottomWidth: 5,
+        },
     });
 
     return (
         <View style={styles.card}>
+            <View style={styles.hrStrip} />
             <Pressable
                 android_ripple={styles.ripple}
                 style={styles.pressableContainer}
