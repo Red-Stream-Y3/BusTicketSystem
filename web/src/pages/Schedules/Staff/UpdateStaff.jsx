@@ -77,7 +77,7 @@ const UpdateStaff = () => {
     });
 
     return (
-        <div className="mt-16">
+        <div className="mt-20">
             <PageHeader title="Update Staff Schedule" isHiddenButton={true} />
             <div className="flex justify-center items-center">
                 <div className="mt-5">
