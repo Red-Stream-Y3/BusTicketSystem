@@ -4,21 +4,17 @@ import { useGlobalContext } from '../context/ContextProvider';
 import { logout } from '../api/user';
 
 const Dashboard = () => {
-    // const { user } = useGlobalContext();
-    const isAccess = true;
     const [loading, setLoading] = useState(false);
+    const { user } = useGlobalContext();
 
-    // const fetchSite = async () => {
-    //     setLoading(false);
-    // };
+    const isAccess = JSON.parse(localStorage.getItem('userInfo'));
 
-    // useEffect(() => {
-    //     if (!user || !isAccess) {
-    //         logout();
-    //         window.location.href = '/login';
-    //     }
-    //     fetchSite();
-    // }, [isAccess, user]);
+    useEffect(() => {
+        if (!user || !isAccess) {
+            logout();
+            window.location.href = '/';
+        }
+    }, [isAccess, user]);
 
     if (loading) {
         return (
