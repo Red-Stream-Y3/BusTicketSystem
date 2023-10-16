@@ -66,6 +66,10 @@ const CreateBus = () => {
     };
 
     const routeOptions = routes.map((route) => ({ name: route.routeName, value: route._id }));
+    const typeOptions = [
+        { name: 'AC', value: 'AC' },
+        { name: 'Non-AC', value: 'Non-AC' },
+    ];
 
     return (
         <div className="my-16">
@@ -73,7 +77,7 @@ const CreateBus = () => {
             <Form
                 fields={[
                     { key: 'busNumber', label: 'License Plate', type: 'text' },
-                    { key: 'busType', label: 'Type', type: 'text' },
+                    { key: 'busType', label: 'Type', type: 'select', options: typeOptions },
                     { key: 'busCapacity', label: 'Capacity', type: 'text' },
                     {
                         key: 'busRoute',

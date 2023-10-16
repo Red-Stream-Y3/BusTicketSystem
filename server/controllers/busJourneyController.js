@@ -21,7 +21,6 @@ export const createBusJourney = asyncHandler(async (req, res) => {
 });
 
 export const updateBusJourney = asyncHandler(async (req, res) => {
-    console.log("updateBusJourney");
     const { boardedUser, state } = req.body;
     const { id } = req.params;
     const driver = req.user._id; //get the driver id from the token
@@ -31,6 +30,7 @@ export const updateBusJourney = asyncHandler(async (req, res) => {
             boardedUsers: 1,
             state: 1,
             bus: 1,
+            route: 1,
         });
 
         if (!busJourney) {
@@ -61,20 +61,18 @@ export const updateBusJourney = asyncHandler(async (req, res) => {
                 throw new Error("User Trip is not for this route");
             }
 
-            if (
-                busJourney.boardedUsers.length === 0 ||
-                !busJourney.boardedUsers.includes(boardedUser)
-            ) {
-                busJourney.boardedUsers.push(boardedUser);
+            if (userTrip.state === "scheduled") {
                 userTrip.state = "boarded";
                 userTrip.bus = busJourney.bus;
                 userTrip.driver = driver;
-            } else if (
-                userTrip.state === "boarded" &&
-                userTrip.state !== "cancelled"
-            ) {
+            } else if (userTrip.state === "boarded") {
                 userTrip.state = "completed";
             }
+
+            if (!busJourney.boardedUsers.includes(boardedUser)) {
+                busJourney.boardedUsers.push(boardedUser);
+            }
+
             await busJourney.save();
             await userTrip.save();
         }

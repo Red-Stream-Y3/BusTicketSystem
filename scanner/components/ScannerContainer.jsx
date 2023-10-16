@@ -15,8 +15,7 @@ export default function ScannerContainer({ onCodeScanned }) {
 
     const handleBarCodeScanned = async ({ type, data }) => {
         setScanned(true);
-        await onCodeScanned(data);
-        setScanned(false);
+        await onCodeScanned(data, () => setScanned(false));
     };
 
     if (hasPermission === null) {

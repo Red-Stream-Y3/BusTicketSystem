@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 import User from "../models/userModel.js";
 
 export const createUserTrip = asyncHandler(async (req, res) => {
-    const { route, origin, destination, state, fare } = req.body;
+    const { route, origin, destination, state, fare, busJourney } = req.body;
     const user = req.user._id;
     try {
         //get user's unpaid trips
@@ -61,7 +61,9 @@ export const createUserTrip = asyncHandler(async (req, res) => {
             state,
             user,
             fare,
+            busJourney,
         });
+
         const createdTrip = await trip.save();
         res.status(201).json(createdTrip);
     } catch (error) {
@@ -119,6 +121,14 @@ export const getUserTrips = asyncHandler(async (req, res) => {
                 },
             },
             {
+                $lookup: {
+                    from: "busjourneys",
+                    localField: "busJourney",
+                    foreignField: "_id",
+                    as: "busJourney",
+                },
+            },
+            {
                 $unwind: "$origin",
             },
             {
@@ -136,6 +146,12 @@ export const getUserTrips = asyncHandler(async (req, res) => {
             {
                 $unwind: {
                     path: "$driver",
+                    preserveNullAndEmptyArrays: true,
+                },
+            },
+            {
+                $unwind: {
+                    path: "$busJourney",
                     preserveNullAndEmptyArrays: true,
                 },
             },
@@ -419,6 +435,24 @@ export const getAllUserTrips = asyncHandler(async (req, res) => {
         ]).hint({ user: 1, route: 1, createdAt: -1 });
 
         res.json(trips);
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+});
+
+export const deleteUserTrip = asyncHandler(async (req, res) => {
+    const user = req.user._id;
+    const id = req.params.id;
+
+    try {
+        const trip = await UserTrip.findByIdAndDelete(id);
+
+        if (trip) {
+            res.json({ message: "Trip removed" });
+        } else {
+            res.status(404);
+            throw new Error("Trip not found");
+        }
     } catch (error) {
         res.status(404).json({ message: error.message });
     }

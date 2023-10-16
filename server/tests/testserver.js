@@ -5,26 +5,20 @@ import dotenv from "dotenv";
 import cors from "cors";
 import bodyParser from "body-parser";
 import findConfig from "find-config";
-import connectDB from "./config/db.js";
-import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
+import connectDB from "../config/db.js";
+import { notFound, errorHandler } from "../middleware/errorMiddleware.js";
 
-import userRoutes from "./routes/userRoutes.js";
-import paymentRoutes from "./routes/paymentRoutes.js";
-import busRoutes from "./routes/busRoutes.js";
-import busStopRoutes from "./routes/busStopRoutes.js";
-import busRouteRoutes from "./routes/busRouteRoutes.js";
-import userTripRoutes from "./routes/userTripRoutes.js";
-import employeeRoutes from "./routes/employeeRoutes.js";
-import depotRoutes from "./routes/depotRoutes.js";
-import fareRoutes from "./routes/fareRoutes.js";
-import staffScheduleRoutes from "./routes/staffScheduleRoutes.js";
-import busJourneyRoutes from "./routes/busJourneyRoutes.js";
-
-import { fileURLToPath } from "url";
-import { dirname } from "path";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+import userRoutes from "../routes/userRoutes.js";
+import paymentRoutes from "../routes/paymentRoutes.js";
+import busRoutes from "../routes/busRoutes.js";
+import busStopRoutes from "../routes/busStopRoutes.js";
+import busRouteRoutes from "../routes/busRouteRoutes.js";
+import userTripRoutes from "../routes/userTripRoutes.js";
+import employeeRoutes from "../routes/employeeRoutes.js";
+import depotRoutes from "../routes/depotRoutes.js";
+import fareRoutes from "../routes/fareRoutes.js";
+import staffScheduleRoutes from "../routes/staffScheduleRoutes.js";
+import busJourneyRoutes from "../routes/busJourneyRoutes.js";
 
 let dbUri;
 
@@ -51,10 +45,6 @@ app.use("/api/depots", depotRoutes);
 app.use("/api/fares", fareRoutes);
 app.use("/api/staffschedules", staffScheduleRoutes);
 app.use("/api/busjourneys", busJourneyRoutes);
-
-app.get("/braintree", (req, res) => {
-    res.sendFile(path.join(__dirname, "braintree.html"));
-});
 
 app.use(notFound);
 app.use(errorHandler);
