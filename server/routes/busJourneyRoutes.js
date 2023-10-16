@@ -1,4 +1,4 @@
-import express from 'express';
+import express from "express";
 import {
   createBusJourney,
   getBusJourneys,
@@ -8,19 +8,23 @@ import {
   getBusJourneyByUser,
   scheduleBusJourney,
   updateScheduleJourney,
-} from '../controllers/busJourneyController.js';
-import { protect } from '../middleware/authMiddleware.js';
+  getDepartedJourneys,
+  getAllBusJourneys,
+} from "../controllers/busJourneyController.js";
+import { protect } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router.route('/').post(protect, createBusJourney).get(getBusJourneys);
-router.route('/schedule').post(scheduleBusJourney);
-router.route('/schedule/:id').put(updateScheduleJourney);
+router.route("/all").get(getAllBusJourneys);
+router.route("/departed").get(getDepartedJourneys);
+router.route("/").post(protect, createBusJourney).get(getBusJourneys);
+router.route("/schedule").post(scheduleBusJourney);
+router.route("/schedule/:id").put(updateScheduleJourney);
 router
-  .route('/:id')
+  .route("/:id")
   .get(getBusJourneyById)
   .put(protect, updateBusJourney)
   .delete(deleteBusJourney);
-router.route('/user/:limit').get(protect, getBusJourneyByUser);
+router.route("/user/:limit").get(protect, getBusJourneyByUser);
 
 export default router;

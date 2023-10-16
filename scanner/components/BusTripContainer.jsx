@@ -6,6 +6,7 @@ import {
     ActivityIndicator,
     Dimensions,
     ScrollView,
+    RefreshControl,
 } from "react-native";
 import getThemeContext from "../context/ThemeContext";
 import ScannerContainer from "./ScannerContainer";
@@ -26,21 +27,20 @@ import { Audio } from "expo-av";
 const Success = require("../assets/sounds/success.mp3");
 const Error = require("../assets/sounds/fail.mp3");
 
-const BusTripContainer = ({ navigation, trip }) => {
+const BusTripContainer = ({ navigation, selectedTrip }) => {
     const { theme } = getThemeContext();
     const { USER } = getAppContext();
+    const [trip, setTrip] = useState(trip || {}); // [trip, setTrip]
     const [showOverlay, setShowOverlay] = useState(false);
     const [showDeleteOverlay, setShowDeleteOverlay] = useState(false);
     const [loading, setLoading] = useState(false);
     const [submittingComplete, setSubmittingComplete] = useState(false);
     const [submittingCancel, setSubmittingCancel] = useState(false);
     const [overlayData, setOverlayData] = useState({});
-    const [capacity, setCapacity] = useState(trip?.bus?.busCapacity);
-    const [boarded, setBoarded] = useState(trip?.boardedUsers);
     const [stats, setStats] = useState({
         totalPassengers: 0,
         totalBoarded: 0,
-        crowd: "",
+        crowd: "refresh to get crowd stats",
     });
     const OVERLAY_TIMEOUT = 3000;
 
@@ -87,55 +87,58 @@ const BusTripContainer = ({ navigation, trip }) => {
         try {
             setLoading(true);
 
-            const response = await getBusJourneyById(trip._id, USER.token);
+            const response = await getBusJourneyById(
+                selectedTrip._id,
+                USER.token
+            );
 
-            setCapacity(response.bus.busCapacity);
-            setBoarded(response.boardedUsers);
+            setTrip(response);
+
+            const totalPassengers = response.boardedUsers?.length;
+            const totalBoarded = response.boardedUsers?.filter(
+                (passenger) => passenger.state === "boarded"
+            )?.length;
+
+            let crowd = "";
+
+            if (
+                response.bus.busCapacity !== null &&
+                response.bus.busCapacity !== undefined &&
+                totalBoarded !== null
+            ) {
+                if (totalBoarded >= response.bus.busCapacity) {
+                    crowd = "Currently overcrowded";
+                } else {
+                    crowd =
+                        response.bus.busCapacity - totalBoarded + " seats left";
+                }
+            } else {
+                crowd = "No bus capacity set";
+            }
+
+            setStats({
+                totalPassengers,
+                totalBoarded,
+                crowd,
+            });
+
             setLoading(false);
         } catch (error) {
             Toast.show({
                 type: "error",
                 text1: "Error",
-                text2: error.response?.data?.message || error.message,
+                text2: error.response?.data?.message || error?.message,
             });
             setLoading(false);
         }
     };
 
     useEffect(() => {
-        if (!trip?.bus?.busCapacity) {
+        if (!selectedTrip?.bus?.busCapacity) {
             handleRefresh();
         }
-    }, []);
+    }, [selectedTrip, loading]);
 
-    useEffect(() => {
-        const totalPassengers = boarded?.length;
-        const totalBoarded = boarded?.filter(
-            (passenger) => passenger.state === "boarded"
-        )?.length;
-
-        let crowd = "";
-
-        if (
-            capacity !== null &&
-            capacity !== undefined &&
-            totalBoarded !== null
-        ) {
-            if (totalBoarded >= capacity) {
-                crowd = "Currently overcrowded";
-            } else {
-                crowd = capacity - totalBoarded + " seats left";
-            }
-        } else {
-            crowd = "No bus capacity set";
-        }
-
-        setStats({
-            totalPassengers,
-            totalBoarded,
-            crowd,
-        });
-    }, [trip]);
 
     const styles = StyleSheet.create({
         container: {
@@ -228,7 +231,7 @@ const BusTripContainer = ({ navigation, trip }) => {
         },
     });
 
-    const onCodeScanned = async (data) => {
+    const onCodeScanned = async (data, enableScanner) => {
         setShowOverlay(true);
 
         try {
@@ -249,21 +252,28 @@ const BusTripContainer = ({ navigation, trip }) => {
             });
 
             await playSuccessSound();
+            await handleRefresh();
             setLoading(false);
             setTimeout(() => {
                 setShowOverlay(false);
+                enableScanner();
             }, OVERLAY_TIMEOUT);
         } catch (error) {
             await playErrorSound();
+
             setLoading(false);
             setOverlayData({
                 title: "Error",
-                message: error.response?.data?.message || error.message,
+                message:
+                    error.response?.data?.message ||
+                    error.message ||
+                    "Invalid QR Code",
                 icon: "alert-circle",
                 iconColor: theme.colors.error,
             });
             setTimeout(() => {
                 setShowOverlay(false);
+                enableScanner();
             }, OVERLAY_TIMEOUT);
         }
     };
@@ -413,8 +423,14 @@ const BusTripContainer = ({ navigation, trip }) => {
                 </View>
             </ThemeOverlay>
 
-            {trip?.state === "departed" ? (
+            {selectedTrip?.state === "departed" ? (
                 <ScrollView
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={loading}
+                            onRefresh={handleRefresh}
+                        />
+                    }
                     keyboardShouldPersistTaps='handled'
                     style={styles.scrollContainer}
                     contentContainerStyle={styles.scrollContentContainer}>

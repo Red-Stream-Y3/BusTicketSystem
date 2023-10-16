@@ -7,3 +7,6 @@ export { default as Form } from './Form';
 export { default as PageHeader } from './PageHeader';
 export { default as SideNavBar } from './SideNavBar';
 export { default as CreateButton } from './CreateButton';
+export { default as PieChart } from './Charts/PieChart';
+export { default as BarChart } from './Charts/BarChart';
+export { default as LineChart } from './Charts/LineChart';

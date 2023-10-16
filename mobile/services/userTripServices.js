@@ -1,5 +1,5 @@
 import axios from "axios";
-const BASE = "https://bus-ticket-system-ukkxew3r5q-uc.a.run.app";
+const BASE = "http://192.168.1.175:9120"; //"https://bus-ticket-system-ukkxew3r5q-uc.a.run.app";
 const FARE_ID = "652aa3db13470991d964f167";
 
 export const getUserTrips = async (limit, token) => {

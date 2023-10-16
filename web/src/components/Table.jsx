@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import CreateButton from './CreateButton';
 import { Link } from 'react-router-dom';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 const Table = ({ data, pageEntries, tableHeaders, onDelete, isActionButtonsHidden, edit }) => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -44,8 +46,41 @@ const Table = ({ data, pageEntries, tableHeaders, onDelete, isActionButtonsHidde
         setCurrentPage(1);
     };
 
+    const downloadPdf = () => {
+        const unit = 'pt';
+        const size = 'A4';
+
+        const orientation = 'landscape';
+
+        const marginLeft = 40;
+        const doc = new jsPDF(orientation, unit, size);
+
+        doc.setFontSize(15);
+        const title = 'Bus Ticket System Report';
+        const headers = filteredTableHeaders.map((header) => header.toUpperCase());
+        const dataForPdf = data.map((item) => {
+            const filteredItem = {};
+            for (const key in item) {
+                if (key !== '_id') {
+                    filteredItem[key] = item[key];
+                }
+            }
+            return Object.values(filteredItem);
+        });
+
+        let content = {
+            startY: 50,
+            head: [headers],
+            body: dataForPdf,
+        };
+
+        doc.text(title, marginLeft, 40);
+        doc.autoTable(content);
+        doc.save('bus_ticket_system_report.pdf');
+    };
+
     return (
-        <div className="bg-white shadow-md rounded-lg my-6 pb-4 overflow-x-auto mx-6">
+        <div className="bg-white shadow-md rounded-lg my-6 pb-4 mx-6 max-w-8xl overflow-hidden text-ellipsis whitespace-nowrap">
             <div className="flex justify-between p-4">
                 <div className="rounded-md bg-gray-100 p-2 w-1/3">
                     <input
@@ -59,6 +94,12 @@ const Table = ({ data, pageEntries, tableHeaders, onDelete, isActionButtonsHidde
                 {/* <div className="flex items-center rounded-md bg-gray-100 p-2 w-1/3 justify-end">
                     <input type="date" onChange={handleDateChange} className="bg-transparent outline-none w-full" />
                 </div> */}
+
+                <div className="flex items-center rounded-md  w-1/3 justify-end">
+                    <button onClick={downloadPdf} className="bg-primary text-white px-4 py-2 rounded-lg mr-4">
+                        Generate Report
+                    </button>
+                </div>
             </div>
 
             <table className="min-w-max w-full table-auto">
@@ -108,8 +149,11 @@ const Table = ({ data, pageEntries, tableHeaders, onDelete, isActionButtonsHidde
 
                     {Array.from({ length: emptyRows }, (_, index) => (
                         <tr key={index + currentItems.length} className="border-b border-gray-200 hover:bg-gray-100">
-                            {tableHeaders.map((_, index) => (
-                                <td key={index} className="py-5 px-6 text-center">
+                            {tableHeaders.map((_, columnIndex) => (
+                                <td
+                                    key={columnIndex}
+                                    className={`py-${isActionButtonsHidden ? 3 : 5} px-6 text-center`}
+                                >
                                     &#x2800;
                                 </td>
                             ))}

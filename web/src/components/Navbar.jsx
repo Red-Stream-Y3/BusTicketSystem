@@ -13,7 +13,7 @@ const Navbar = () => {
     const [isLogged, setIsLogged] = useState(true);
     const [search, setSearch] = useState('');
 
-    // const { user } = useGlobalContext();
+    const { user } = useGlobalContext();
     const isAccess = true;
     const userImage =
         'http://res.cloudinary.com/dqyue23nj/image/upload/v1684232271/agrohelp/photo-1633332755192-727a05c4013d_mti3jt.webp';
@@ -55,7 +55,7 @@ const Navbar = () => {
     return (
         <nav className="top-0 fixed bg-darkbg w-full z-50">
             <div className=" max-w-full mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex justify-between h-16">
+                <div className="flex justify-between h-20">
                     <div className="flex items-center">
                         <Link to="/dashboard" className="flex-shrink-0 flex items-center">
                             <BsBusFront className="h-8 w-8 text-lightbg" />

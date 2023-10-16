@@ -31,7 +31,6 @@ const Form = ({ fields, initialData, onSubmit }) => {
 
     const handleChange = (event) => {
         const { name, value } = event.target;
-        console.log(name, value);
         setFormData((prevFormData) => ({
             ...prevFormData,
             [name]: value,
@@ -39,7 +38,6 @@ const Form = ({ fields, initialData, onSubmit }) => {
     };
 
     const handleSubmit = (event) => {
-        console.log(formData);
         event.preventDefault();
         onSubmit(formData);
     };
@@ -65,6 +63,26 @@ const Form = ({ fields, initialData, onSubmit }) => {
                                     onChange={handleChange}
                                     required
                                     pattern="[A-Za-z0-9 ]+"
+                                />
+                            )}
+                            {type === 'password' && (
+                                <input
+                                    type="password"
+                                    name={key}
+                                    value={formData[key] || ''}
+                                    className="mt-1 p-2 w-full border rounded-md"
+                                    onChange={handleChange}
+                                    required
+                                />
+                            )}
+                            {type === 'email' && (
+                                <input
+                                    type="email"
+                                    name={key}
+                                    value={formData[key] || ''}
+                                    className="mt-1 p-2 w-full border rounded-md"
+                                    onChange={handleChange}
+                                    required
                                 />
                             )}
                             {type === 'radio' &&

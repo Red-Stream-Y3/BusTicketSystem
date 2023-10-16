@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import {
     BsFillHouseFill,
     BsClockFill,
+    BsFillCalendarEventFill,
     BsFillPersonFill,
     BsFillBusFrontFill,
     BsMapFill,
@@ -31,7 +32,7 @@ const SideNavBar = ({ isSidebarOpen }) => {
             className={`bg-primary w-64 flex-shrink-0 ${isSidebarOpen ? 'block' : 'hidden'} md:block`}
             style={{ minHeight: '100vh', flexDirection: 'column' }}
         >
-            <ul className="mt-16">
+            <ul className="mt-20">
                 {navLinks.map((link, index) => (
                     <li key={index} className="relative">
                         <Link

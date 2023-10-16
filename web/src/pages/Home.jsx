@@ -7,20 +7,19 @@ import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
 
 const Home = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-    //   const { user } = useGlobalContext();
+    const { user } = useGlobalContext();
 
-    const isAccess = true;
-
+    const isAccess = JSON.parse(localStorage.getItem('userInfo'));
     const toggleSidebar = () => {
         setIsSidebarOpen(!isSidebarOpen);
     };
 
-    //   useEffect(() => {
-    //     if (!user || !isAccess) {
-    //       logout();
-    //       window.location.href = '/login';
-    //     }
-    //   }, [isAccess, user]);
+    useEffect(() => {
+        if (!user || !isAccess) {
+            logout();
+            window.location.href = '/';
+        }
+    }, [isAccess, user]);
 
     return (
         <>
@@ -34,7 +33,7 @@ const Home = () => {
                     {/* Main content */}
                     <main className="flex-1 flex flex-col">
                         {/* Button to open sidebar */}
-                        <div className="md:hidden flex justify-start h-18 w-8 bg-darkbg rounded-r-md mt-16">
+                        <div className="md:hidden flex justify-start h-18 w-8 bg-darkbg rounded-r-md mt-20">
                             <button className="text-white rounded-md" onClick={toggleSidebar}>
                                 {isSidebarOpen ? (
                                     <FaAngleLeft className="text-3xl" />

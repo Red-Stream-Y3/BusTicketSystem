@@ -73,3 +73,12 @@ export const deleteBusJourneyById = async (id) => {
         return error;
     }
 };
+
+export const getDepartedJourneys = async () => {
+    try {
+        const response = await axios.get(`${API_URL}/departed`);
+        return response.data;
+    } catch (error) {
+        return error;
+    }
+};

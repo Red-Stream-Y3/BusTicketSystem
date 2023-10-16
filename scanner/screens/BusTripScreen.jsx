@@ -18,7 +18,7 @@ const BusTripScreen = ({ navigation, route }) => {
 
     return (
         <View style={styles.container}>
-            <BusTripContainer navigation={navigation} trip={trip} />
+            <BusTripContainer navigation={navigation} selectedTrip={trip} />
         </View>
     );
 };
