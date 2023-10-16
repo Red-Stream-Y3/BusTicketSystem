@@ -330,3 +330,96 @@ export const updateUserTrip = asyncHandler(async (req, res) => {
         res.status(404).json({ message: error.message });
     }
 });
+
+export const getAllUserTrips = asyncHandler(async (req, res) => {
+    try {
+        const trips = await UserTrip.aggregate([
+            {
+                $lookup: {
+                    from: "busstops",
+                    localField: "origin",
+                    foreignField: "_id",
+                    as: "origin",
+                },
+            },
+            {
+                $lookup: {
+                    from: "busstops",
+                    localField: "destination",
+                    foreignField: "_id",
+                    as: "destination",
+                },
+            },
+            {
+                $lookup: {
+                    from: "busroutes",
+                    localField: "route",
+                    foreignField: "_id",
+                    as: "route",
+                },
+            },
+            {
+                $lookup: {
+                    from: "buses",
+                    localField: "bus",
+                    foreignField: "_id",
+                    as: "bus",
+                },
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "driver",
+                    foreignField: "_id",
+                    as: "driver",
+                },
+            },
+            {
+                $unwind: "$origin",
+            },
+            {
+                $unwind: "$destination",
+            },
+            {
+                $unwind: "$route",
+            },
+            {
+                $unwind: {
+                    path: "$bus",
+                    preserveNullAndEmptyArrays: true,
+                },
+            },
+            {
+                $unwind: {
+                    path: "$driver",
+                    preserveNullAndEmptyArrays: true,
+                },
+            },
+            {
+                $project: {
+                    _id: 1,
+                    user: 1,
+                    route: 1,
+                    origin: 1,
+                    destination: 1,
+                    fare: 1,
+                    paid: 1,
+                    refunded: 1,
+                    departureTime: 1,
+                    arrivalTime: 1,
+                    state: 1,
+                    bus: 1,
+                    driver: 1,
+                    createdAt: 1,
+                },
+            },
+            {
+                $sort: { createdAt: -1 },
+            },
+        ]).hint({ user: 1, route: 1, createdAt: -1 });
+
+        res.json(trips);
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+});
