@@ -7,6 +7,12 @@ const Buses = () => {
     const [buses, setBuses] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
+    const user = JSON.parse(localStorage.getItem('userInfo'));
+
+    if (!user) {
+        window.location.href = 'http://127.0.0.1:5173/';
+    }
+
     const handleOnDelete = (id) => {
         deleteBusById(id).then(() => {
             setBuses(buses.filter((bus) => bus.id !== id));

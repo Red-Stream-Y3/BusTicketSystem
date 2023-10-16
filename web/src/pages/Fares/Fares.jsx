@@ -9,6 +9,12 @@ const Fares = () => {
 
     const id = '652aa3db13470991d964f167';
 
+    const user = JSON.parse(localStorage.getItem('userInfo'));
+
+    if (!user) {
+        window.location.href = 'http://127.0.0.1:5173/';
+    }
+
     useEffect(() => {
         const fetchFare = async () => {
             const fare = await getFareById(id);
