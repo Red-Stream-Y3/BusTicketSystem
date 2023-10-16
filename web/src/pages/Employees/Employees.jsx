@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Table, PageHeader, Loader } from '../../components';
-import { getAllEmployees, deleteEmployee } from '../../services/employeeService';
+import { getAllUsers, deleteUser } from '../../services/usersService';
 import Swal from 'sweetalert2';
 
 const Employees = () => {
@@ -14,9 +14,7 @@ const Employees = () => {
     }
 
     const handleOnDelete = (id) => {
-        deleteEmployee(id).then(() => {
-            setEmployees(employees.filter((employee) => employee.id !== id));
-        });
+        deleteUser(id);
     };
 
     const confirmDelete = (id) => {
@@ -47,22 +45,25 @@ const Employees = () => {
     };
 
     useEffect(() => {
-        getAllEmployees().then((employees) => {
+        const fetchEmployees = async () => {
+            const employees = await getAllUsers();
             setEmployees(employees);
             setIsLoading(false);
-        });
+            console.log(employees);
+        };
+        fetchEmployees();
     }, []);
 
     return (
         <div className="mt-20">
-            <PageHeader title="Employees" buttonText="Create Employees" buttonLink="create" />
+            <PageHeader title="Employees" buttonText="Create Employee" buttonLink="create" />
             {isLoading ? (
                 <Loader />
             ) : (
                 <Table
                     data={employees}
                     pageEntries={5}
-                    tableHeaders={['Employee ID', 'Name', 'Role', 'Depot']}
+                    tableHeaders={['First Name', 'Last Name', 'Email', 'Role']}
                     onDelete={confirmDelete}
                     isActionButtonsHidden={false}
                 />

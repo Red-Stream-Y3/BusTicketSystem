@@ -65,6 +65,26 @@ const Form = ({ fields, initialData, onSubmit }) => {
                                     pattern="[A-Za-z0-9 ]+"
                                 />
                             )}
+                            {type === 'password' && (
+                                <input
+                                    type="password"
+                                    name={key}
+                                    value={formData[key] || ''}
+                                    className="mt-1 p-2 w-full border rounded-md"
+                                    onChange={handleChange}
+                                    required
+                                />
+                            )}
+                            {type === 'email' && (
+                                <input
+                                    type="email"
+                                    name={key}
+                                    value={formData[key] || ''}
+                                    className="mt-1 p-2 w-full border rounded-md"
+                                    onChange={handleChange}
+                                    required
+                                />
+                            )}
                             {type === 'radio' &&
                                 options.map((option) => (
                                     <div key={option.value} className="flex items-center mt-1">

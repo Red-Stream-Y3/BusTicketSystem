@@ -1,11 +1,23 @@
 import { useState, useEffect } from 'react';
-import { BoxWidget, Loader } from '../components';
+import { Table, Loader, BoxWidget, PageHeader } from '../components';
+import { getDepartedJourneys } from '../services/busJourneyService';
 import { useGlobalContext } from '../context/ContextProvider';
-import { logout } from '../api/user';
 
 const Dashboard = () => {
     const [loading, setLoading] = useState(false);
     const { user } = useGlobalContext();
+
+    const [departedJourneys, setDepartedJourneys] = useState([]);
+
+    useEffect(() => {
+        const fetchDepartedJourneys = async () => {
+            setLoading(true);
+            const departedJourneys = await getDepartedJourneys();
+            setDepartedJourneys(departedJourneys);
+            setLoading(false);
+        };
+        fetchDepartedJourneys();
+    }, []);
 
     const isAccess = JSON.parse(localStorage.getItem('userInfo'));
 
@@ -28,8 +40,25 @@ const Dashboard = () => {
             {isAccess && loading ? (
                 <Loader />
             ) : (
-                <div className="grid gap-4 md:gap-8 mt-8 pb-10 md:px-5 bg-white rounded-xl overflow-x-auto">
-                    DashBoard
+                <div className="mt-20">
+                    <PageHeader title="Live Dashboard" isHiddenButton={true} />
+                    {loading ? (
+                        <Loader />
+                    ) : (
+                        <Table
+                            data={departedJourneys}
+                            pageEntries={6}
+                            tableHeaders={[
+                                'Route Number',
+                                'Route Name',
+                                'Bus Number',
+                                'Capacity',
+                                'Departure Time',
+                                'Status',
+                            ]}
+                            isActionButtonsHidden={true}
+                        />
+                    )}
                 </div>
             )}
         </>

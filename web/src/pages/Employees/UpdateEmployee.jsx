@@ -1,51 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { Form, PageHeader } from '../../components';
-import { updateEmployee, getEmployeeById } from '../../services/employeeService';
-import { getAllDepots } from '../../services/depotService';
+import { editUser, getUserById } from '../../services/usersService';
 import { useParams, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
 const UpdateEmployee = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const [employee, setEmployee] = useState({
-        employeeId: '',
-        employeeName: '',
-        employeeRole: '',
-        depotId: '',
-    });
-    const [depots, setDepots] = useState([]);
 
+
+    const [employee, setEmployee] = useState({});
     const user = JSON.parse(localStorage.getItem('userInfo'));
 
-    if (!user) {
-        window.location.href = 'http://127.0.0.1:5173/';
-    }
-
-    useEffect(() => {
-        const fetchDepots = async () => {
-            const depots = await getAllDepots();
-            setDepots(depots);
-        };
-        fetchDepots();
-    }, []);
+      if (!user) {
+          window.location.href = 'http://127.0.0.1:5173/';
+      }
 
     useEffect(() => {
         const fetchEmployee = async () => {
-            const employee = await getEmployeeById(id);
+            const employee = await getUserById(id);
             setEmployee(employee);
         };
         fetchEmployee();
     }, [id]);
 
     const handleSubmit = async (employee) => {
-        try {
-            await updateEmployee(id, employee);
-            setEmployee(employee);
-            navigate('/admin/employees');
-        } catch (error) {
-            throw error;
-        }
+        await editUser(id, employee);
     };
 
     const confirmSubmit = (employee) => {
@@ -70,18 +50,15 @@ const UpdateEmployee = () => {
                     showConfirmButton: false,
                     timer: 2000,
                 });
+                navigate('/admin/employees');
             }
         });
     };
 
-    const depotOptions = depots.map((depot) => {
-        return { name: depot.depotName, value: depot._id };
-    });
-
     const employeeOptions = [
-        { name: 'Manager', value: 'Manager' },
-        { name: 'Driver', value: 'Driver' },
-        { name: 'Inspector', value: 'Inspector' },
+        { name: 'Manager', value: 'manager' },
+        { name: 'Driver', value: 'driver' },
+        { name: 'Inspector', value: 'inspector' },
     ];
 
     return (
@@ -91,10 +68,12 @@ const UpdateEmployee = () => {
                 <div className="mt-5">
                     <Form
                         fields={[
-                            { key: 'employeeId', label: 'Employee ID', type: 'text' },
-                            { key: 'employeeName', label: 'Employee Name', type: 'text' },
-                            { key: 'employeeRole', label: 'Employee Role', type: 'select', options: employeeOptions },
-                            { key: 'employeeDepot', label: 'Depot', type: 'select', options: depotOptions },
+                            { key: 'username', label: 'Username', type: 'text' },
+                            { key: 'firstName', label: 'First Name', type: 'text' },
+                            { key: 'lastName', label: 'Last Name', type: 'text' },
+                            { key: 'email', label: 'Email', type: 'email' },
+                            { key: 'phone', label: 'Phone', type: 'text' },
+                            { key: 'role', label: 'Role', type: 'select', options: employeeOptions },
                         ]}
                         initialData={employee}
                         onSubmit={confirmSubmit}

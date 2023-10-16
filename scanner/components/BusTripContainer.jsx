@@ -139,6 +139,7 @@ const BusTripContainer = ({ navigation, selectedTrip }) => {
         }
     }, [selectedTrip, loading]);
 
+
     const styles = StyleSheet.create({
         container: {
             flex: 1,
