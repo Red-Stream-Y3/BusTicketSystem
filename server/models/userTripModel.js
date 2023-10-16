@@ -12,6 +12,10 @@ const userTripSchema = new mongoose.Schema(
             ref: "BusRoute",
             required: true,
         },
+        busJourney: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "BusJourney",
+        },
         origin: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "BusStop",
