@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 import User from "../models/userModel.js";
 
 export const createUserTrip = asyncHandler(async (req, res) => {
-    const { route, origin, destination, state, fare } = req.body;
+    const { route, origin, destination, state, fare, busJourney } = req.body;
     const user = req.user._id;
     try {
         //get user's unpaid trips
@@ -61,7 +61,9 @@ export const createUserTrip = asyncHandler(async (req, res) => {
             state,
             user,
             fare,
+            busJourney,
         });
+
         const createdTrip = await trip.save();
         res.status(201).json(createdTrip);
     } catch (error) {
@@ -119,6 +121,14 @@ export const getUserTrips = asyncHandler(async (req, res) => {
                 },
             },
             {
+                $lookup: {
+                    from: "busjourneys",
+                    localField: "busJourney",
+                    foreignField: "_id",
+                    as: "busJourney",
+                },
+            },
+            {
                 $unwind: "$origin",
             },
             {
@@ -136,6 +146,12 @@ export const getUserTrips = asyncHandler(async (req, res) => {
             {
                 $unwind: {
                     path: "$driver",
+                    preserveNullAndEmptyArrays: true,
+                },
+            },
+            {
+                $unwind: {
+                    path: "$busJourney",
                     preserveNullAndEmptyArrays: true,
                 },
             },
@@ -322,6 +338,117 @@ export const updateUserTrip = asyncHandler(async (req, res) => {
 
             const updatedTrip = await trip.save();
             res.json(updatedTrip);
+        } else {
+            res.status(404);
+            throw new Error("Trip not found");
+        }
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+});
+
+export const getAllUserTrips = asyncHandler(async (req, res) => {
+    try {
+        const trips = await UserTrip.aggregate([
+            {
+                $lookup: {
+                    from: "busstops",
+                    localField: "origin",
+                    foreignField: "_id",
+                    as: "origin",
+                },
+            },
+            {
+                $lookup: {
+                    from: "busstops",
+                    localField: "destination",
+                    foreignField: "_id",
+                    as: "destination",
+                },
+            },
+            {
+                $lookup: {
+                    from: "busroutes",
+                    localField: "route",
+                    foreignField: "_id",
+                    as: "route",
+                },
+            },
+            {
+                $lookup: {
+                    from: "buses",
+                    localField: "bus",
+                    foreignField: "_id",
+                    as: "bus",
+                },
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "driver",
+                    foreignField: "_id",
+                    as: "driver",
+                },
+            },
+            {
+                $unwind: "$origin",
+            },
+            {
+                $unwind: "$destination",
+            },
+            {
+                $unwind: "$route",
+            },
+            {
+                $unwind: {
+                    path: "$bus",
+                    preserveNullAndEmptyArrays: true,
+                },
+            },
+            {
+                $unwind: {
+                    path: "$driver",
+                    preserveNullAndEmptyArrays: true,
+                },
+            },
+            {
+                $project: {
+                    _id: 1,
+                    user: 1,
+                    route: 1,
+                    origin: 1,
+                    destination: 1,
+                    fare: 1,
+                    paid: 1,
+                    refunded: 1,
+                    departureTime: 1,
+                    arrivalTime: 1,
+                    state: 1,
+                    bus: 1,
+                    driver: 1,
+                    createdAt: 1,
+                },
+            },
+            {
+                $sort: { createdAt: -1 },
+            },
+        ]).hint({ user: 1, route: 1, createdAt: -1 });
+
+        res.json(trips);
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+});
+
+export const deleteUserTrip = asyncHandler(async (req, res) => {
+    const user = req.user._id;
+    const id = req.params.id;
+
+    try {
+        const trip = await UserTrip.findByIdAndDelete(id);
+
+        if (trip) {
+            res.json({ message: "Trip removed" });
         } else {
             res.status(404);
             throw new Error("Trip not found");

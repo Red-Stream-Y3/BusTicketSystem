@@ -12,6 +12,10 @@ const userTripSchema = new mongoose.Schema(
             ref: "BusRoute",
             required: true,
         },
+        busJourney: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "BusJourney",
+        },
         origin: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "BusStop",
@@ -85,9 +89,12 @@ userTripSchema.pre("save", async function (next) {
     if (this.isModified("state")) {
         if (this.state === "boarded" && !this.paid) {
             this.paid = true;
+            this.departureTime = new Date(Date.now());
             await this.model("User").findByIdAndUpdate(this.user, {
                 $inc: { credits: -this.fare },
             });
+        } else if (this.state === "completed" && !this.arrivalTime) {
+            this.arrivalTime = new Date(Date.now());
         }
     }
     next();

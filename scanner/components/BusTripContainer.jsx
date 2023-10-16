@@ -6,53 +6,138 @@ import {
     ActivityIndicator,
     Dimensions,
     ScrollView,
+    RefreshControl,
 } from "react-native";
 import getThemeContext from "../context/ThemeContext";
 import ScannerContainer from "./ScannerContainer";
 import ThemeOverlay from "./common/ThemeOverlay";
-import { updateBusJourney } from "../services/busJourneyServices";
+import {
+    cancelBusJourney,
+    endBusJourney,
+    getBusJourneyById,
+    updateBusJourney,
+} from "../services/busJourneyServices";
 import { Ionicons } from "@expo/vector-icons";
 import { getAppContext } from "../context/AppContext";
 import ThemeButton from "./common/ThemeButton";
+import Toast from "react-native-toast-message";
+import TripSummary from "./common/TripSummary";
+import { Audio } from "expo-av";
 
-const BusTripContainer = ({ trip }) => {
+const Success = require("../assets/sounds/success.mp3");
+const Error = require("../assets/sounds/fail.mp3");
+
+const BusTripContainer = ({ navigation, selectedTrip }) => {
     const { theme } = getThemeContext();
     const { USER } = getAppContext();
+    const [trip, setTrip] = useState(trip || {}); // [trip, setTrip]
     const [showOverlay, setShowOverlay] = useState(false);
     const [showDeleteOverlay, setShowDeleteOverlay] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [submittingComplete, setSubmittingComplete] = useState(false);
+    const [submittingCancel, setSubmittingCancel] = useState(false);
     const [overlayData, setOverlayData] = useState({});
     const [stats, setStats] = useState({
         totalPassengers: 0,
         totalBoarded: 0,
-        crowd: "",
+        crowd: "refresh to get crowd stats",
     });
     const OVERLAY_TIMEOUT = 3000;
 
-    useEffect(() => {
-        const totalPassengers = trip?.boardedUsers?.length;
-        const totalBoarded = trip?.boardedUsers?.filter(
-            (passenger) => passenger.state === "boarded"
-        )?.length;
+    const [successSound, setSuccessSound] = useState(null);
+    const [errorSound, setErrorSound] = useState(null);
 
-        let crowd = "";
+    const loadSuccessSound = async () => {
+        const { sound } = await Audio.Sound.createAsync(Success);
+        setSuccessSound(sound);
+    };
 
-        if (trip?.bus?.busCapacity !== null && totalBoarded !== null) {
-            if (totalBoarded >= trip?.bus?.busCapacity) {
-                crowd = "Currently overcrowded";
-            } else {
-                crowd = trip?.bus?.busCapacity - totalBoarded + " seats left";
-            }
-        } else {
-            crowd = "No bus capacity set";
+    const loadErrorSound = async () => {
+        const { sound } = await Audio.Sound.createAsync(Error);
+        setErrorSound(sound);
+    };
+
+    const playSuccessSound = async () => {
+        try {
+            await successSound.replayAsync();
+        } catch (error) {
+            console.log("error playing success sound ==>", error);
         }
+    };
 
-        setStats({
-            totalPassengers,
-            totalBoarded,
-            crowd,
-        });
-    }, [trip]);
+    const playErrorSound = async () => {
+        try {
+            await errorSound.replayAsync();
+        } catch (error) {
+            console.log("error playing error sound ==>", error);
+        }
+    };
+
+    useEffect(() => {
+        loadSuccessSound();
+        loadErrorSound();
+
+        return () => {
+            successSound?.unloadAsync();
+            errorSound?.unloadAsync();
+        };
+    }, []);
+
+    const handleRefresh = async () => {
+        try {
+            setLoading(true);
+
+            const response = await getBusJourneyById(
+                selectedTrip._id,
+                USER.token
+            );
+
+            setTrip(response);
+
+            const totalPassengers = response.boardedUsers?.length;
+            const totalBoarded = response.boardedUsers?.filter(
+                (passenger) => passenger.state === "boarded"
+            )?.length;
+
+            let crowd = "";
+
+            if (
+                response.bus.busCapacity !== null &&
+                response.bus.busCapacity !== undefined &&
+                totalBoarded !== null
+            ) {
+                if (totalBoarded >= response.bus.busCapacity) {
+                    crowd = "Currently overcrowded";
+                } else {
+                    crowd =
+                        response.bus.busCapacity - totalBoarded + " seats left";
+                }
+            } else {
+                crowd = "No bus capacity set";
+            }
+
+            setStats({
+                totalPassengers,
+                totalBoarded,
+                crowd,
+            });
+
+            setLoading(false);
+        } catch (error) {
+            Toast.show({
+                type: "error",
+                text1: "Error",
+                text2: error.response?.data?.message || error?.message,
+            });
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        if (!selectedTrip?.bus?.busCapacity) {
+            handleRefresh();
+        }
+    }, [selectedTrip, loading]);
 
     const styles = StyleSheet.create({
         container: {
@@ -137,9 +222,15 @@ const BusTripContainer = ({ trip }) => {
             color: theme.colors.text,
             marginBottom: 10,
         },
+        hr: {
+            borderBottomWidth: 1,
+            borderBottomColor: "#666",
+            width: "100%",
+            marginBottom: 5,
+        },
     });
 
-    const onCodeScanned = async (data) => {
+    const onCodeScanned = async (data, enableScanner) => {
         setShowOverlay(true);
 
         try {
@@ -159,39 +250,84 @@ const BusTripContainer = ({ trip }) => {
                 iconColor: theme.colors.primary,
             });
 
-            //TODO: start success sound
-
+            await playSuccessSound();
+            await handleRefresh();
             setLoading(false);
             setTimeout(() => {
-                //TODO: stop success sound
-
                 setShowOverlay(false);
+                enableScanner();
             }, OVERLAY_TIMEOUT);
         } catch (error) {
-            //TODO: start error sound
+            await playErrorSound();
 
             setLoading(false);
             setOverlayData({
                 title: "Error",
-                message: error.response?.data?.message || error.message,
+                message:
+                    error.response?.data?.message ||
+                    error.message ||
+                    "Invalid QR Code",
                 icon: "alert-circle",
                 iconColor: theme.colors.error,
             });
             setTimeout(() => {
-                //TODO: stop error sound
-
                 setShowOverlay(false);
+                enableScanner();
             }, OVERLAY_TIMEOUT);
         }
     };
 
-    const handleEndTripPress = () => {
+    const handleEndTripPress = async () => {
         if (!showDeleteOverlay) {
             setShowDeleteOverlay(true);
             return;
         }
 
-        setShowDeleteOverlay(false);
+        setSubmittingComplete(true);
+
+        try {
+            const response = await endBusJourney(trip._id, USER.token);
+            console.log("end trip response ==>", response);
+            setSubmittingComplete(false);
+            Toast.show({
+                type: "success",
+                text1: "Success",
+                text2: "Trip ended successfully",
+            });
+            setShowDeleteOverlay(false);
+
+            navigation.goBack();
+        } catch (error) {
+            Toast.show({
+                type: "error",
+                text1: "Error",
+                text2: error.response?.data?.message || error.message,
+            });
+        }
+    };
+
+    const handleCancelTripPress = async () => {
+        setSubmittingCancel(true);
+
+        try {
+            const response = await cancelBusJourney(trip._id, USER.token);
+            console.log("cancel trip response ==>", response);
+            setSubmittingCancel(false);
+            Toast.show({
+                type: "success",
+                text1: "Success",
+                text2: "Trip cancelled successfully",
+            });
+            setShowDeleteOverlay(false);
+
+            navigation.goBack();
+        } catch (error) {
+            Toast.show({
+                type: "error",
+                text1: "Error",
+                text2: error.response?.data?.message || error.message,
+            });
+        }
     };
 
     return (
@@ -232,7 +368,7 @@ const BusTripContainer = ({ trip }) => {
                     </Text>
                     <Text style={styles.text}>
                         Note* Any passengers that have not been scanned out will
-                        be marked as absent.
+                        be marked as absent and be refunded.
                     </Text>
                     <View style={styles.flexRowEnd}>
                         <ThemeButton
@@ -242,44 +378,90 @@ const BusTripContainer = ({ trip }) => {
                             textSize={16}
                         />
                         <ThemeButton
-                            title='Yes'
+                            title={
+                                submittingComplete ? (
+                                    <ActivityIndicator
+                                        color={theme.colors.primaryIcon}
+                                        size={30}
+                                    />
+                                ) : (
+                                    "Yes"
+                                )
+                            }
                             onPress={() => handleEndTripPress()}
+                            textSize={16}
+                        />
+                    </View>
+
+                    <View style={styles.hr} />
+
+                    <Text style={styles.subtitle}>
+                        Do you want to cancel this trip?
+                    </Text>
+                    <Text style={styles.text}>
+                        Note* Any passengers that have not been scanned out will
+                        be refunded.
+                    </Text>
+                    <View style={styles.flexRowEnd}>
+                        <ThemeButton
+                            title={
+                                submittingCancel ? (
+                                    <ActivityIndicator
+                                        color={theme.colors.primaryIcon}
+                                        size={30}
+                                    />
+                                ) : (
+                                    "Cancel This Trip"
+                                )
+                            }
+                            color={theme.colors.error}
+                            onPress={() => handleCancelTripPress()}
                             textSize={16}
                         />
                     </View>
                 </View>
             </ThemeOverlay>
 
-            <ScrollView
-                keyboardShouldPersistTaps='handled'
-                style={styles.scrollContainer}
-                contentContainerStyle={styles.scrollContentContainer}>
-                <View style={styles.topContainer}>
-                    <View>
-                        <Text style={styles.text}>
-                            Total Passengers: {stats.totalPassengers}
-                        </Text>
-                        <Text style={styles.text}>
-                            Currently Boarded: {stats.totalBoarded}
-                        </Text>
-                        <Text style={styles.text}>{stats.crowd}</Text>
-                    </View>
-                    <ThemeButton
-                        title='End Trip'
-                        onPress={handleEndTripPress}
-                        textSize={16}>
-                        <Ionicons
-                            name='checkmark-done'
-                            size={24}
-                            color={theme.colors.primaryIcon}
+            {selectedTrip?.state === "departed" ? (
+                <ScrollView
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={loading}
+                            onRefresh={handleRefresh}
                         />
-                    </ThemeButton>
-                </View>
+                    }
+                    keyboardShouldPersistTaps='handled'
+                    style={styles.scrollContainer}
+                    contentContainerStyle={styles.scrollContentContainer}>
+                    <View style={styles.topContainer}>
+                        <View>
+                            <Text style={styles.text}>
+                                Total Passengers: {stats.totalPassengers}
+                            </Text>
+                            <Text style={styles.text}>
+                                Currently Boarded: {stats.totalBoarded}
+                            </Text>
+                            <Text style={styles.text}>{stats.crowd}</Text>
+                        </View>
+                        <ThemeButton
+                            title='End Trip'
+                            onPress={handleEndTripPress}
+                            textSize={16}>
+                            <Ionicons
+                                name='checkmark-done'
+                                size={24}
+                                color={theme.colors.primaryIcon}
+                            />
+                        </ThemeButton>
+                    </View>
 
-                <View style={styles.scannerContainer}>
-                    <ScannerContainer onCodeScanned={onCodeScanned} />
-                </View>
-            </ScrollView>
+                    <View style={styles.scannerContainer}>
+                        <ScannerContainer onCodeScanned={onCodeScanned} />
+                    </View>
+                </ScrollView>
+            ) : (
+                <TripSummary trip={trip} />
+            )}
         </View>
     );
 };

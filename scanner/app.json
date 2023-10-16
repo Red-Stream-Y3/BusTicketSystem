@@ -1,8 +1,8 @@
 {
     "expo": {
-        "name": "BusTicket",
-        "slug": "BusTicket",
-        "version": "1.1.0",
+        "name": "Bus Ticket Scanner",
+        "slug": "bus-ticket-scanner",
+        "version": "1.3.3",
         "orientation": "portrait",
         "icon": "./assets/icon.png",
         "userInterfaceStyle": "automatic",
@@ -21,17 +21,35 @@
         ],
         "assetBundlePatterns": ["**/*"],
         "ios": {
-            "supportsTablet": true
+            "supportsTablet": true,
+            "infoPlist": {
+                "NSCameraUsageDescription": "Allow 'Bus Ticket System' to access camera.",
+                "NSMicrophoneUsageDescription": "Allow $(PRODUCT_NAME) to access your microphone"
+            }
         },
         "android": {
             "adaptiveIcon": {
                 "foregroundImage": "./assets/adaptive-icon.png",
                 "backgroundColor": "#ffffff"
-            }
+            },
+            "permissions": ["android.permission.CAMERA"],
+            "package": "com.redstream.busticketscanner"
         },
         "web": {
             "favicon": "./assets/favicon.png",
             "name": "Bus Ticket System"
+        },
+        "owner": "redstream",
+        "extra": {
+            "eas": {
+                "projectId": "966bc21a-864d-4003-9caf-25e353047d62"
+            }
+        },
+        "runtimeVersion": {
+            "policy": "appVersion"
+        },
+        "updates": {
+            "url": "https://u.expo.dev/966bc21a-864d-4003-9caf-25e353047d62"
         }
     }
 }

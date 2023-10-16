@@ -345,6 +345,7 @@ const getUserCredits = asyncHandler(async (req, res) => {
             {
                 $match: {
                     username: username,
+                    _id: req.user._id,
                 },
             },
             {
@@ -375,7 +376,10 @@ const updateUserCredits = asyncHandler(async (req, res) => {
     const { credits } = req.body;
 
     try {
-        const user = await User.findOne({ username: username }).hint({
+        const user = await User.findOne({
+            username: username,
+            _id: req.user._id,
+        }).hint({
             username: 1,
             credits: 1,
         });

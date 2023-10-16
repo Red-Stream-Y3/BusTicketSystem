@@ -1,3 +1,5 @@
+/** @format */
+
 import React, { useEffect, useState } from "react";
 import {
     View,
@@ -6,6 +8,7 @@ import {
     ScrollView,
     RefreshControl,
     Dimensions,
+    TouchableOpacity,
 } from "react-native";
 import ThemeButton from "./common/ThemeButton";
 import getThemeContext from "../context/ThemeContext";
@@ -24,13 +27,6 @@ const HomeContainer = ({ navigation }) => {
         new Date().toLocaleTimeString()
     );
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setCurrentTime(new Date().toLocaleTimeString());
-        }, 1000);
-        return () => clearInterval(interval);
-    }, []);
-
     const fetchRecent = async () => {
         try {
             const data = await getBusJourneys(4, USER.token);
@@ -44,6 +40,22 @@ const HomeContainer = ({ navigation }) => {
             });
         }
     };
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentTime(new Date().toLocaleTimeString());
+        }, 1000);
+
+        //refresh recent trips every 5 minutes
+        const interval2 = setInterval(() => {
+            handleRefresh();
+        }, 300000);
+
+        return () => {
+            clearInterval(interval);
+            clearInterval(interval2);
+        };
+    }, []);
 
     const styles = StyleSheet.create({
         container: {
@@ -139,6 +151,21 @@ const HomeContainer = ({ navigation }) => {
             color: theme.colors.text,
             elevation: 5,
         },
+        newTripBtn: {
+            backgroundColor: theme.colors.primary,
+            padding: 10,
+            borderRadius: 5,
+            elevation: 5,
+            width: 200,
+            alignItems: "center",
+            justifyContent: "center",
+        },
+        tripTxt: {
+            fontSize: 18,
+            fontWeight: "bold",
+            color: theme.colors.primaryText,
+            marginStart: 10,
+        },
     });
 
     const handleRefresh = async () => {
@@ -152,7 +179,9 @@ const HomeContainer = ({ navigation }) => {
     }, []);
 
     const handleItemClick = (item) => {
-        navigation.navigate("BusTrip", { trip: item });
+        navigation.navigate("BusTrip", {
+            trip: item,
+        });
     };
 
     return (
@@ -186,7 +215,9 @@ const HomeContainer = ({ navigation }) => {
                     <View style={styles.flexRowBetween}>
                         <ThemeButton
                             title={"New Trip"}
-                            textSize={16}
+                            textSize={18}
+                            paddingHorizontal={20}
+                            textmargin={5}
                             onPress={() => navigation.navigate("NewTrip")}>
                             <Entypo
                                 name='address'

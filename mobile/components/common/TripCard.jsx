@@ -20,7 +20,7 @@ const TripCard = ({ trip, onPress, width }) => {
             paddingHorizontal: 10,
         },
         cardHeader: {
-            flexDirection: "row",
+            alignItems: "flex-start",
             justifyContent: "space-between",
             marginBottom: 10,
         },
@@ -45,10 +45,24 @@ const TripCard = ({ trip, onPress, width }) => {
         ripple: {
             color: theme.colors.ripple,
         },
+        hrStrip: {
+            borderBottomColor:
+                trip.state === "completed"
+                    ? "green"
+                    : trip.state === "cancelled"
+                    ? "red"
+                    : trip.state === "boarded"
+                    ? "blue"
+                    : trip.state === "scheduled"
+                    ? "yellow"
+                    : "black",
+            borderBottomWidth: 5,
+        },
     });
 
     return (
         <View style={styles.card}>
+            <View style={styles.hrStrip} />
             <Pressable
                 android_ripple={styles.ripple}
                 style={styles.pressableContainer}
@@ -60,7 +74,9 @@ const TripCard = ({ trip, onPress, width }) => {
                             size={20}
                             color={theme.colors.text}
                         />
-                        <Text style={styles.cardHeaderText}>{trip.origin.name}</Text>
+                        <Text style={styles.cardHeaderText}>
+                            {trip.origin.name}
+                        </Text>
                     </View>
                     <View style={styles.flexRowCenter}>
                         <MaterialIcons
@@ -68,7 +84,9 @@ const TripCard = ({ trip, onPress, width }) => {
                             size={20}
                             color={theme.colors.text}
                         />
-                        <Text style={styles.cardHeaderText}>{trip.destination.name}</Text>
+                        <Text style={styles.cardHeaderText}>
+                            {trip.destination.name}
+                        </Text>
                     </View>
                 </View>
                 <View style={styles.cardBody}>

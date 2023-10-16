@@ -218,19 +218,6 @@ const HomeContainer = ({ navigation }) => {
                             {USER.firstName} {USER.lastName}
                         </Text>
                         <Text style={styles.text}>{USER.email}</Text>
-                        <View style={styles.flexRowCenter}>
-                            <ThemeButton
-                                title={"Sign Out"}
-                                variant={"outlined"}
-                                onPress={() => removeUser()}
-                            />
-                            {/* TODO: remove theme toggle button */}
-                            <ThemeButton
-                                title={"Toggle Theme"}
-                                variant={"outlined"}
-                                onPress={() => toggleTheme()}
-                            />
-                        </View>
                     </View>
                 </View>
 
