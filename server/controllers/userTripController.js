@@ -439,3 +439,21 @@ export const getAllUserTrips = asyncHandler(async (req, res) => {
         res.status(404).json({ message: error.message });
     }
 });
+
+export const deleteUserTrip = asyncHandler(async (req, res) => {
+    const user = req.user._id;
+    const id = req.params.id;
+
+    try {
+        const trip = await UserTrip.findByIdAndDelete(id);
+
+        if (trip) {
+            res.json({ message: "Trip removed" });
+        } else {
+            res.status(404);
+            throw new Error("Trip not found");
+        }
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+});

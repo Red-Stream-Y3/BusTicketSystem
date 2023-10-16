@@ -21,7 +21,6 @@ export const createBusJourney = asyncHandler(async (req, res) => {
 });
 
 export const updateBusJourney = asyncHandler(async (req, res) => {
-    console.log("updateBusJourney");
     const { boardedUser, state } = req.body;
     const { id } = req.params;
     const driver = req.user._id; //get the driver id from the token
@@ -73,8 +72,6 @@ export const updateBusJourney = asyncHandler(async (req, res) => {
             if (!busJourney.boardedUsers.includes(boardedUser)) {
                 busJourney.boardedUsers.push(boardedUser);
             }
-
-            console.log("busJourney", userTrip.state);
 
             await busJourney.save();
             await userTrip.save();
