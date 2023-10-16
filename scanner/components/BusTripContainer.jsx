@@ -106,9 +106,7 @@ const BusTripContainer = ({ navigation, trip }) => {
         if (!trip?.bus?.busCapacity) {
             handleRefresh();
         }
-    }, []);
 
-    useEffect(() => {
         const totalPassengers = boarded?.length;
         const totalBoarded = boarded?.filter(
             (passenger) => passenger.state === "boarded"

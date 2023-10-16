@@ -234,6 +234,11 @@ export const getBusJourneyByUser = asyncHandler(async (req, res) => {
                 $unwind: "$route",
             },
             {
+                $sort: {
+                    createdAt: -1,
+                },
+            },
+            {
                 $project: {
                     _id: 1,
                     route: {
