@@ -10,6 +10,8 @@ const ThemeButton = ({
     textSize,
     borderRadius,
     color,
+    textmargin,
+    paddingHorizontal,
 }) => {
     const { theme } = getThemeContext();
 
@@ -35,7 +37,7 @@ const ThemeButton = ({
         },
         buttonTitle: {
             fontSize: textSize || 14,
-            marginHorizontal: 2,
+            marginHorizontal: textmargin || 2,
             marginStart: children ? 5 : 2,
             fontWeight: "bold",
             color:
@@ -45,6 +47,7 @@ const ThemeButton = ({
         },
         pressableContainer: {
             padding: padding || 10,
+            paddingHorizontal: paddingHorizontal || undefined,
             alignItems: "center",
             flexDirection: "row",
             justifyContent: "center",
@@ -55,7 +58,7 @@ const ThemeButton = ({
                 variant === "clear" || variant === "outlined"
                     ? theme.colors.primary
                     : theme.colors.ripple,
-        }
+        },
     });
 
     return (
@@ -72,12 +75,7 @@ const ThemeButton = ({
                 style={styles.pressableContainer}
                 onPress={onPress || (() => {})}>
                 {children}
-                {title && (
-                    <Text
-                        style={styles.buttonTitle}>
-                        {title}
-                    </Text>
-                )}
+                {title && <Text style={styles.buttonTitle}>{title}</Text>}
             </Pressable>
         </Animated.View>
     );
