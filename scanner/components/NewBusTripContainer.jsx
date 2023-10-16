@@ -165,13 +165,11 @@ const NewBusTripContainer = ({ navigation }) => {
             borderRadius: 10,
             padding: 10,
             elevation: 5,
-            flex: 1,
-            maxHeight: Dimensions.get("window").height * 0.5,
         },
         scrollContainer: {
-            flex: 1,
+            flexG: 1,
             maxHeight: "100%",
-            overflow: "visible",
+            paddingBottom: 10,
         },
         scrollContentContainer: {
             flexGrow: 1,

@@ -4,6 +4,8 @@ import {
     StyleSheet,
     Text,
     ActivityIndicator,
+    Dimensions,
+    ScrollView,
     Platform,
 } from "react-native";
 import getThemeContext from "../context/ThemeContext";
@@ -154,6 +156,7 @@ const NewTripContainer = ({ navigation }) => {
             padding: 20,
             borderRadius: 10,
             elevation: 5,
+            maxHeight: Dimensions.get("window").height * 0.8,
         },
         title: {
             fontSize: 16,
@@ -166,6 +169,13 @@ const NewTripContainer = ({ navigation }) => {
             marginBottom: 10,
             color: theme.colors.text,
             alignSelf: "center",
+        },
+        scrollContainer: {
+            backgroundColor: theme.colors.surface,
+        },
+        scrollContentContainer: {
+            flexGrow: 1,
+            paddingBottom: 10,
         },
     });
 
@@ -187,59 +197,66 @@ const NewTripContainer = ({ navigation }) => {
     }, [origin, destination]);
 
     return (
-        <KeyboardAvoidingView behavior={"padding"} style={styles.container}>
-            <ThemeSearchInput
-                title='Route'
-                value={route}
-                options={searchResults}
-                loading={loading}
-                onChange={(text) => handleSearch(text)}
-                onPressitem={handleRouteItemPress}
-                setValue={setRoute}
-                placeholder='Search for route'
-            />
-            <ThemeDropDownInput
-                title='Start'
-                value={origin}
-                loading={loading}
-                options={originList}
-                onPressitem={handleOriginItemPress}
-                onChange={(text) => setOrigin(text)}
-                setValue={setOrigin}
-                placeholder='Select staring bus stop'
-            />
-            <ThemeDropDownInput
-                title='Destination'
-                value={destination}
-                loading={loading}
-                options={destinationList}
-                onPressitem={handleDestinationItemPress}
-                onChange={(text) => setDestination(text)}
-                setValue={setDestination}
-                placeholder='Select destination bus stop'
-            />
+        <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={styles.container}>
+            <ScrollView
+                style={styles.scrollContainer}
+                keyboardShouldPersistTaps='handled'
+                contentContainerStyle={styles.scrollContentContainer}>
+                <ThemeSearchInput
+                    title='Route'
+                    value={route}
+                    options={searchResults}
+                    loading={loading}
+                    onChange={(text) => handleSearch(text)}
+                    onPressitem={handleRouteItemPress}
+                    setValue={setRoute}
+                    placeholder='Search for route'
+                />
+                <ThemeDropDownInput
+                    title='Start'
+                    value={origin}
+                    loading={loading}
+                    options={originList}
+                    onPressitem={handleOriginItemPress}
+                    onChange={(text) => setOrigin(text)}
+                    setValue={setOrigin}
+                    placeholder='Select staring bus stop'
+                />
+                <ThemeDropDownInput
+                    title='Destination'
+                    value={destination}
+                    loading={loading}
+                    options={destinationList}
+                    onPressitem={handleDestinationItemPress}
+                    onChange={(text) => setDestination(text)}
+                    setValue={setDestination}
+                    placeholder='Select destination bus stop'
+                />
 
-            <Text style={styles.title}>Calculated Fare : Rs.{fare}</Text>
-            <Text style={styles.text}>
-                {`Fare Rate : Rs.${fareRate || selectedRoute.fareRate}`}
-            </Text>
+                <Text style={styles.title}>Calculated Fare : Rs.{fare}</Text>
+                <Text style={styles.text}>
+                    {`Fare Rate : Rs.${fareRate || selectedRoute.fareRate}`}
+                </Text>
 
-            <ThemeButton
-                title={submitting ? "" : "Add New Trip"}
-                onPress={handleSubmit}>
-                {submitting ? (
-                    <ActivityIndicator
-                        size={24}
-                        color={theme.colors.primaryIcon}
-                    />
-                ) : (
-                    <MaterialIcons
-                        name='add'
-                        size={24}
-                        color={theme.colors.primaryIcon}
-                    />
-                )}
-            </ThemeButton>
+                <ThemeButton
+                    title={submitting ? "" : "Add New Trip"}
+                    onPress={handleSubmit}>
+                    {submitting ? (
+                        <ActivityIndicator
+                            size={24}
+                            color={theme.colors.primaryIcon}
+                        />
+                    ) : (
+                        <MaterialIcons
+                            name='add'
+                            size={24}
+                            color={theme.colors.primaryIcon}
+                        />
+                    )}
+                </ThemeButton>
+            </ScrollView>
         </KeyboardAvoidingView>
     );
 };

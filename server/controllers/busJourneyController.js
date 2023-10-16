@@ -31,6 +31,7 @@ export const updateBusJourney = asyncHandler(async (req, res) => {
             boardedUsers: 1,
             state: 1,
             bus: 1,
+            route: 1,
         });
 
         if (!busJourney) {
