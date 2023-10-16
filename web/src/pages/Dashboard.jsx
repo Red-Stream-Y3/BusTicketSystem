@@ -3,7 +3,6 @@ import { Table, Loader, BoxWidget, PageHeader } from '../components';
 import { getDepartedJourneys } from '../services/busJourneyService';
 
 const Dashboard = () => {
-    const isAccess = true;
     const [loading, setLoading] = useState(false);
     const { user } = useGlobalContext();
 

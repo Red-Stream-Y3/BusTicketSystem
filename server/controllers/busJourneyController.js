@@ -21,64 +21,23 @@ export const createBusJourney = asyncHandler(async (req, res) => {
 });
 
 export const updateBusJourney = asyncHandler(async (req, res) => {
-    const { boardedUser, state } = req.body;
-    const { id } = req.params;
-    const driver = req.user._id; //get the driver id from the token
+  const { boardedUser, state } = req.body;
+  const { id } = req.params;
+  const driver = req.user._id; //get the driver id from the token
 
-    try {
-        const busJourney = await BusJourney.findById(id, {
-            boardedUsers: 1,
-            state: 1,
-            bus: 1,
-            route: 1,
-        });
+  try {
+    const busJourney = await BusJourney.findById(id, {
+      boardedUsers: 1,
+      state: 1,
+      bus: 1,
+      route: 1,
+    });
 
-        if (!busJourney) {
-            res.status(404);
-            throw new Error("Bus Journey not found");
-        }
+    if (!busJourney) {
+      res.status(404);
+      throw new Error("Bus Journey not found");
+    }
 
-        if (boardedUser) {
-            const userTrip = await UserTrip.findById(boardedUser);
-
-            if (!userTrip) {
-                res.status(404);
-                throw new Error("User Trip not found");
-            }
-
-            if (userTrip.state === "cancelled") {
-                res.status(400);
-                throw new Error("User Trip is cancelled");
-            }
-
-            if (userTrip.state === "completed") {
-                res.status(400);
-                throw new Error("User Trip is completed");
-            }
-
-            if (userTrip.route.toString() !== busJourney.route.toString()) {
-                res.status(400);
-                throw new Error("User Trip is not for this route");
-            }
-
-            if (userTrip.state === "scheduled") {
-                userTrip.state = "boarded";
-                userTrip.bus = busJourney.bus;
-                userTrip.driver = driver;
-            } else if (userTrip.state === "boarded") {
-                userTrip.state = "completed";
-            }
-
-            if (!busJourney.boardedUsers.includes(boardedUser)) {
-                busJourney.boardedUsers.push(boardedUser);
-            }
-
-            await busJourney.save();
-            await userTrip.save();
-        }
-        if (state) {
-            busJourney.state = state;
-          
     if (boardedUser) {
       const userTrip = await UserTrip.findById(boardedUser);
 
@@ -114,8 +73,6 @@ export const updateBusJourney = asyncHandler(async (req, res) => {
         busJourney.boardedUsers.push(boardedUser);
       }
 
-      console.log("busJourney", userTrip.state);
-
       await busJourney.save();
       await userTrip.save();
     }
@@ -144,7 +101,6 @@ export const getBusJourneys = asyncHandler(async (req, res) => {
   const busJourneys = await BusJourney.find({}).populate(
     "route bus driver boardedUsers"
   );
-  console.log("busJourneys", busJourneys);
   res.json(busJourneys);
 });
 
@@ -371,87 +327,6 @@ export const updateScheduleJourney = asyncHandler(async (req, res) => {
       res.status(404);
       throw new Error("Bus Journey not found");
     }
-  } catch (error) {
-    res.status(405).json({ message: error.message });
-  }
-});
-
-export const getBusJourneyByUser = asyncHandler(async (req, res) => {
-    const user = req.user._id;
-    const limit = parseInt(req.params.limit) || 10;
-
-    try {
-        const busJourneys = await BusJourney.aggregate([
-            {
-                $match: {
-                    driver: user,
-                },
-            },
-            {
-                $lookup: {
-                    from: "buses",
-                    localField: "bus",
-                    foreignField: "_id",
-                    as: "bus",
-                },
-            },
-            {
-                $lookup: {
-                    from: "busroutes",
-                    localField: "route",
-                    foreignField: "_id",
-                    as: "route",
-                },
-            },
-            {
-                $lookup: {
-                    from: "usertrips",
-                    localField: "boardedUsers",
-                    foreignField: "_id",
-                    as: "boardedUsers",
-                },
-            },
-            {
-                $unwind: "$bus",
-            },
-            {
-                $unwind: "$route",
-            },
-            {
-                $sort: {
-                    createdAt: -1,
-                },
-            },
-            {
-                $project: {
-                    _id: 1,
-                    route: {
-                        _id: 1,
-                        routeNumber: 1,
-                        routeName: 1,
-                    },
-                    state: 1,
-                    bus: {
-                        _id: 1,
-                        busNumber: 1,
-                        busType: 1,
-                        busCapacity: 1,
-                    },
-                    departureTime: 1,
-                    arrivalTime: 1,
-                    boardedUsers: {
-                        _id: 1,
-                        state: 1,
-                    },
-                    createdAt: 1,
-                },
-      },
-      {
-        $limit: limit,
-      },
-    ]);
-
-    res.json(busJourneys);
   } catch (error) {
     res.status(405).json({ message: error.message });
   }
