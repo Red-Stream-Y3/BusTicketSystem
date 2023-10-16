@@ -92,6 +92,9 @@ userTripSchema.pre("save", async function (next) {
             await this.model("User").findByIdAndUpdate(this.user, {
                 $inc: { credits: -this.fare },
             });
+            this.departureTime = new Date(Date.now());
+        } else if (this.state === "completed" && !this.arrivalTime) {
+            this.arrivalTime = new Date(Date.now());
         }
     }
     next();

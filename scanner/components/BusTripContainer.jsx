@@ -254,7 +254,7 @@ const BusTripContainer = ({ navigation, trip }) => {
             }, OVERLAY_TIMEOUT);
         } catch (error) {
             await playErrorSound();
-            console.log("error ==>", error.response?.data);
+
             setLoading(false);
             setOverlayData({
                 title: "Error",
