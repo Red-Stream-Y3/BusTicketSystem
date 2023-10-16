@@ -1,3 +1,5 @@
+/** @format */
+
 import React, { useEffect, useState } from "react";
 import {
     View,
@@ -7,6 +9,7 @@ import {
     ScrollView,
     Dimensions,
     ActivityIndicator,
+    KeyboardAvoidingView,
 } from "react-native";
 import ThemeButton from "./common/ThemeButton";
 import getThemeContext from "../context/ThemeContext";
@@ -124,9 +127,9 @@ const NewBusTripContainer = ({ navigation }) => {
             };
 
             const createdTrip = await createBusJourney(data, USER.token);
-            console.log("new trip ==>", createdTrip);
+
             setSubmitting(false);
-            navigation.navigate("BusTrip", { trip: createdTrip });
+            navigation.goBack();
         } catch (error) {
             Toast.show({
                 type: "error",
@@ -194,7 +197,9 @@ const NewBusTripContainer = ({ navigation }) => {
     });
 
     return (
-        <View style={styles.container}>
+        <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={styles.container}>
             <ScrollView
                 keyboardShouldPersistTaps='handled'
                 style={styles.scrollContainer}
@@ -215,12 +220,12 @@ const NewBusTripContainer = ({ navigation }) => {
                         Use the original route?{"    "}
                     </Text>
                     <View style={styles.flexRowCenter}>
-                        <Text style={styles.text}>No</Text>
+                        <Text style={styles.text}>No{"  "}</Text>
                         <Switch
                             value={isOriginalRoute}
                             onValueChange={handleIsOrignalRouteChange}
                         />
-                        <Text style={styles.text}>Yes</Text>
+                        <Text style={styles.text}>{"  "}Yes</Text>
                     </View>
                 </View>
 
@@ -256,7 +261,7 @@ const NewBusTripContainer = ({ navigation }) => {
                     )}
                 </ThemeButton>
             </ScrollView>
-        </View>
+        </KeyboardAvoidingView>
     );
 };
 
