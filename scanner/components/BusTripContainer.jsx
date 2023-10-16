@@ -96,7 +96,7 @@ const BusTripContainer = ({ navigation, trip }) => {
             Toast.show({
                 type: "error",
                 text1: "Error",
-                text2: error.response?.data?.message || error.message,
+                text2: error.response?.data?.message || error?.message,
             });
             setLoading(false);
         }
@@ -226,7 +226,7 @@ const BusTripContainer = ({ navigation, trip }) => {
         },
     });
 
-    const onCodeScanned = async (data) => {
+    const onCodeScanned = async (data, enableScanner) => {
         setShowOverlay(true);
 
         try {
@@ -250,18 +250,24 @@ const BusTripContainer = ({ navigation, trip }) => {
             setLoading(false);
             setTimeout(() => {
                 setShowOverlay(false);
+                enableScanner();
             }, OVERLAY_TIMEOUT);
         } catch (error) {
             await playErrorSound();
+            console.log("error ==>", error.response?.data);
             setLoading(false);
             setOverlayData({
                 title: "Error",
-                message: error.response?.data?.message || error.message,
+                message:
+                    error.response?.data?.message ||
+                    error.message ||
+                    "Invalid QR Code",
                 icon: "alert-circle",
                 iconColor: theme.colors.error,
             });
             setTimeout(() => {
                 setShowOverlay(false);
+                enableScanner();
             }, OVERLAY_TIMEOUT);
         }
     };
