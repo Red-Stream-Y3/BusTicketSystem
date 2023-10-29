@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
     View,
     Text,
@@ -7,30 +7,30 @@ import {
     Dimensions,
     ScrollView,
     RefreshControl,
-} from "react-native";
-import getThemeContext from "../context/ThemeContext";
-import ScannerContainer from "./ScannerContainer";
-import ThemeOverlay from "./common/ThemeOverlay";
+} from 'react-native';
+import getThemeContext from '../context/ThemeContext';
+import ScannerContainer from './ScannerContainer';
+import ThemeOverlay from './common/ThemeOverlay';
 import {
     cancelBusJourney,
     endBusJourney,
     getBusJourneyById,
     updateBusJourney,
-} from "../services/busJourneyServices";
-import { Ionicons } from "@expo/vector-icons";
-import { getAppContext } from "../context/AppContext";
-import ThemeButton from "./common/ThemeButton";
-import Toast from "react-native-toast-message";
-import TripSummary from "./common/TripSummary";
-import { Audio } from "expo-av";
+} from '../services/busJourneyServices';
+import { Ionicons } from '@expo/vector-icons';
+import { getAppContext } from '../context/AppContext';
+import ThemeButton from './common/ThemeButton';
+import Toast from 'react-native-toast-message';
+import TripSummary from './common/TripSummary';
+import { Audio } from 'expo-av';
 
-const Success = require("../assets/sounds/success.mp3");
-const Error = require("../assets/sounds/fail.mp3");
+const Success = require('../assets/sounds/success.mp3');
+const Error = require('../assets/sounds/fail.mp3');
 
 const BusTripContainer = ({ navigation, selectedTrip }) => {
     const { theme } = getThemeContext();
     const { USER } = getAppContext();
-    const [trip, setTrip] = useState(trip || {}); // [trip, setTrip]
+    const [trip, setTrip] = useState(selectedTrip || {}); // [trip, setTrip]
     const [showOverlay, setShowOverlay] = useState(false);
     const [showDeleteOverlay, setShowDeleteOverlay] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -40,7 +40,7 @@ const BusTripContainer = ({ navigation, selectedTrip }) => {
     const [stats, setStats] = useState({
         totalPassengers: 0,
         totalBoarded: 0,
-        crowd: "refresh to get crowd stats",
+        crowd: 'refresh to get crowd stats',
     });
     const OVERLAY_TIMEOUT = 3000;
 
@@ -61,7 +61,7 @@ const BusTripContainer = ({ navigation, selectedTrip }) => {
         try {
             await successSound.replayAsync();
         } catch (error) {
-            console.log("error playing success sound ==>", error);
+            console.log('error playing success sound ==>', error);
         }
     };
 
@@ -69,7 +69,7 @@ const BusTripContainer = ({ navigation, selectedTrip }) => {
         try {
             await errorSound.replayAsync();
         } catch (error) {
-            console.log("error playing error sound ==>", error);
+            console.log('error playing error sound ==>', error);
         }
     };
 
@@ -96,10 +96,10 @@ const BusTripContainer = ({ navigation, selectedTrip }) => {
 
             const totalPassengers = response.boardedUsers?.length;
             const totalBoarded = response.boardedUsers?.filter(
-                (passenger) => passenger.state === "boarded"
+                (passenger) => passenger.state === 'boarded'
             )?.length;
 
-            let crowd = "";
+            let crowd = '';
 
             if (
                 response.bus.busCapacity !== null &&
@@ -107,13 +107,13 @@ const BusTripContainer = ({ navigation, selectedTrip }) => {
                 totalBoarded !== null
             ) {
                 if (totalBoarded >= response.bus.busCapacity) {
-                    crowd = "Currently overcrowded";
+                    crowd = 'Currently overcrowded';
                 } else {
                     crowd =
-                        response.bus.busCapacity - totalBoarded + " seats left";
+                        response.bus.busCapacity - totalBoarded + ' seats left';
                 }
             } else {
-                crowd = "No bus capacity set";
+                crowd = 'No bus capacity set';
             }
 
             setStats({
@@ -125,8 +125,8 @@ const BusTripContainer = ({ navigation, selectedTrip }) => {
             setLoading(false);
         } catch (error) {
             Toast.show({
-                type: "error",
-                text1: "Error",
+                type: 'error',
+                text1: 'Error',
                 text2: error.response?.data?.message || error?.message,
             });
             setLoading(false);
@@ -137,51 +137,51 @@ const BusTripContainer = ({ navigation, selectedTrip }) => {
         if (!selectedTrip?.bus?.busCapacity) {
             handleRefresh();
         }
-    }, [selectedTrip, loading]);
+    }, [selectedTrip]);
 
     const styles = StyleSheet.create({
         container: {
             flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
+            justifyContent: 'center',
+            alignItems: 'center',
         },
         logo: {
             width: 150,
             height: 150,
-            resizeMode: "contain",
+            resizeMode: 'contain',
         },
         title: {
             fontSize: 24,
-            fontWeight: "bold",
+            fontWeight: 'bold',
             marginTop: 10,
             color: theme.colors.text,
         },
         scannerContainer: {
             flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
+            justifyContent: 'center',
+            alignItems: 'center',
         },
         overlayContainer: {
-            justifyContent: "center",
-            alignItems: "center",
+            justifyContent: 'center',
+            alignItems: 'center',
             backgroundColor: theme.colors.surface,
             padding: 20,
             borderRadius: 10,
         },
         messageContainer: {
-            justifyContent: "center",
-            alignItems: "center",
+            justifyContent: 'center',
+            alignItems: 'center',
         },
         topContainer: {
-            flexDirection: "row",
-            position: "absolute",
+            flexDirection: 'row',
+            position: 'absolute',
             top: 0,
             left: 0,
             right: 0,
             marginHorizontal: 10,
             zIndex: 100,
-            alignItems: "center",
-            justifyContent: "space-between",
+            alignItems: 'center',
+            justifyContent: 'space-between',
             paddingHorizontal: 20,
             paddingVertical: 10,
             elevation: 5,
@@ -189,43 +189,43 @@ const BusTripContainer = ({ navigation, selectedTrip }) => {
             backgroundColor: theme.colors.surface,
         },
         flexRowEnd: {
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "flex-end",
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'flex-end',
             marginTop: 10,
-            width: "100%",
+            width: '100%',
         },
         text: {
             color: theme.colors.text,
-            fontWeight: "bold",
+            fontWeight: 'bold',
         },
         scrollContainer: {
             flex: 1,
-            maxHeight: "100%",
-            overflow: "visible",
+            maxHeight: '100%',
+            overflow: 'visible',
         },
         scrollContentContainer: {
             flexGrow: 1,
-            justifyContent: "center",
+            justifyContent: 'center',
         },
         deleteContainer: {
-            justifyContent: "center",
-            alignItems: "flex-start",
+            justifyContent: 'center',
+            alignItems: 'flex-start',
             backgroundColor: theme.colors.surface,
             padding: 20,
             borderRadius: 10,
-            width: Dimensions.get("window").width * 0.8,
+            width: Dimensions.get('window').width * 0.8,
         },
         subtitle: {
             fontSize: 16,
-            fontWeight: "bold",
+            fontWeight: 'bold',
             color: theme.colors.text,
             marginBottom: 10,
         },
         hr: {
             borderBottomWidth: 1,
-            borderBottomColor: "#666",
-            width: "100%",
+            borderBottomColor: '#666',
+            width: '100%',
             marginBottom: 5,
         },
     });
@@ -244,9 +244,9 @@ const BusTripContainer = ({ navigation, selectedTrip }) => {
             const response = await updateBusJourney(busJourney, USER.token);
 
             setOverlayData({
-                title: "Success",
+                title: 'Success',
                 message: null,
-                icon: "checkmark-circle-sharp",
+                icon: 'checkmark-circle-sharp',
                 iconColor: theme.colors.primary,
             });
 
@@ -262,12 +262,12 @@ const BusTripContainer = ({ navigation, selectedTrip }) => {
 
             setLoading(false);
             setOverlayData({
-                title: "Error",
+                title: 'Error',
                 message:
                     error.response?.data?.message ||
                     error.message ||
-                    "Invalid QR Code",
-                icon: "alert-circle",
+                    'Invalid QR Code',
+                icon: 'alert-circle',
                 iconColor: theme.colors.error,
             });
             setTimeout(() => {
@@ -287,20 +287,20 @@ const BusTripContainer = ({ navigation, selectedTrip }) => {
 
         try {
             const response = await endBusJourney(trip._id, USER.token);
-            console.log("end trip response ==>", response);
+            console.log('end trip response ==>', response);
             setSubmittingComplete(false);
             Toast.show({
-                type: "success",
-                text1: "Success",
-                text2: "Trip ended successfully",
+                type: 'success',
+                text1: 'Success',
+                text2: 'Trip ended successfully',
             });
             setShowDeleteOverlay(false);
 
             navigation.goBack();
         } catch (error) {
             Toast.show({
-                type: "error",
-                text1: "Error",
+                type: 'error',
+                text1: 'Error',
                 text2: error.response?.data?.message || error.message,
             });
         }
@@ -311,20 +311,20 @@ const BusTripContainer = ({ navigation, selectedTrip }) => {
 
         try {
             const response = await cancelBusJourney(trip._id, USER.token);
-            console.log("cancel trip response ==>", response);
+            console.log('cancel trip response ==>', response);
             setSubmittingCancel(false);
             Toast.show({
-                type: "success",
-                text1: "Success",
-                text2: "Trip cancelled successfully",
+                type: 'success',
+                text1: 'Success',
+                text2: 'Trip cancelled successfully',
             });
             setShowDeleteOverlay(false);
 
             navigation.goBack();
         } catch (error) {
             Toast.show({
-                type: "error",
-                text1: "Error",
+                type: 'error',
+                text1: 'Error',
                 text2: error.response?.data?.message || error.message,
             });
         }
@@ -373,7 +373,7 @@ const BusTripContainer = ({ navigation, selectedTrip }) => {
                     <View style={styles.flexRowEnd}>
                         <ThemeButton
                             title='No'
-                            variant={"clear"}
+                            variant={'clear'}
                             onPress={() => setShowDeleteOverlay(false)}
                             textSize={16}
                         />
@@ -385,7 +385,7 @@ const BusTripContainer = ({ navigation, selectedTrip }) => {
                                         size={30}
                                     />
                                 ) : (
-                                    "Yes"
+                                    'Yes'
                                 )
                             }
                             onPress={() => handleEndTripPress()}
@@ -411,7 +411,7 @@ const BusTripContainer = ({ navigation, selectedTrip }) => {
                                         size={30}
                                     />
                                 ) : (
-                                    "Cancel This Trip"
+                                    'Cancel This Trip'
                                 )
                             }
                             color={theme.colors.error}
@@ -422,7 +422,7 @@ const BusTripContainer = ({ navigation, selectedTrip }) => {
                 </View>
             </ThemeOverlay>
 
-            {selectedTrip?.state === "departed" ? (
+            {selectedTrip?.state === 'departed' ? (
                 <ScrollView
                     refreshControl={
                         <RefreshControl

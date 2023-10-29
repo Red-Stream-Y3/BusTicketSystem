@@ -1,23 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
     View,
     Text,
     StyleSheet,
     ScrollView,
     ActivityIndicator,
-} from "react-native";
-import getThemeContext from "../../context/ThemeContext";
-import { MaterialIcons } from "@expo/vector-icons";
-import ThemeButton from "./ThemeButton";
-import Animated, { FadeInDown } from "react-native-reanimated";
-import { getAppContext } from "../../context/AppContext";
-import { useNavigation } from "@react-navigation/native";
+} from 'react-native';
+import getThemeContext from '../../context/ThemeContext';
+import { MaterialIcons } from '@expo/vector-icons';
+import ThemeButton from './ThemeButton';
+import Animated, { FadeInDown } from 'react-native-reanimated';
+import { getAppContext } from '../../context/AppContext';
+import { useNavigation } from '@react-navigation/native';
 import {
     cancelBusJourney,
     startBusJourney,
-} from "../../services/busJourneyServices";
-import Toast from "react-native-toast-message";
-import ThemeOverlay from "./ThemeOverlay";
+} from '../../services/busJourneyServices';
+import Toast from 'react-native-toast-message';
+import ThemeOverlay from './ThemeOverlay';
 
 const TripSummary = ({ trip, width }) => {
     const { theme } = getThemeContext();
@@ -38,14 +38,14 @@ const TripSummary = ({ trip, width }) => {
                 navigation.goBack();
                 // show success message
                 Toast.show({
-                    type: "success",
-                    text1: "Success",
-                    text2: "Trip cancelled successfully",
+                    type: 'success',
+                    text1: 'Success',
+                    text2: 'Trip cancelled successfully',
                 });
             } catch (error) {
                 Toast.show({
-                    type: "error",
-                    text1: "Error",
+                    type: 'error',
+                    text1: 'Error',
                     text2: error.response?.data?.message || error.message,
                 });
                 setLoading(false);
@@ -65,20 +65,20 @@ const TripSummary = ({ trip, width }) => {
             navigation.reset({
                 index: 0,
                 routes: [
-                    { name: "Home" },
-                    { name: "BusTrip", params: { trip: result } },
+                    { name: 'Home' },
+                    { name: 'BusTrip', params: { trip: result } },
                 ],
             });
             // show success message
             Toast.show({
-                type: "success",
-                text1: "Success",
-                text2: "Trip Started!",
+                type: 'success',
+                text1: 'Success',
+                text2: 'Trip Started!',
             });
         } catch (error) {
             Toast.show({
-                type: "error",
-                text1: "Error",
+                type: 'error',
+                text1: 'Error',
                 text2: error.response?.data?.message || error.message,
             });
             setLoading(false);
@@ -87,63 +87,63 @@ const TripSummary = ({ trip, width }) => {
 
     const styles = StyleSheet.create({
         card: {
-            borderWidth: theme.mode === "dark" ? 1 : 0,
+            borderWidth: theme.mode === 'dark' ? 1 : 0,
             paddingVertical: 10,
             paddingHorizontal: 10,
-            borderColor: "#666",
+            borderColor: '#666',
             backgroundColor: theme.colors.surface,
             borderRadius: 5,
             elevation: 5,
-            width: width || "80%",
+            width: width || '80%',
         },
         scrollContainer: {},
         scrollContentContainer: {
-            alignItems: "center",
-            justifyContent: "center",
+            alignItems: 'center',
+            justifyContent: 'center',
             paddingBottom: 20,
         },
         cardHeader: {
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
             marginBottom: 10,
         },
         cardHeaderText: {
             fontSize: 16,
-            fontWeight: "bold",
+            fontWeight: 'bold',
             color: theme.colors.text,
         },
         cardBody: {
-            alignItems: "flex-start",
-            width: width * 0.9 || "90%",
+            alignItems: 'flex-start',
+            width: width * 0.9 || '90%',
         },
         cardBodyText: {
             fontSize: 14,
             color: theme.colors.text,
         },
         flexRowCenter: {
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
         },
         flexRowBetween: {
-            width: "100%",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
+            width: '100%',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
         },
         ripple: {
             color: theme.colors.ripple,
         },
         textBold: {
             fontSize: 14,
-            fontWeight: "bold",
+            fontWeight: 'bold',
             color: theme.colors.primaryText,
-            textTransform: "uppercase",
+            textTransform: 'uppercase',
         },
         textWarning: {
             fontSize: 14,
-            fontWeight: "bold",
+            fontWeight: 'bold',
             color: theme.colors.text,
         },
         title: {
@@ -152,29 +152,29 @@ const TripSummary = ({ trip, width }) => {
         },
         hr: {
             borderBottomWidth: 1,
-            borderBottomColor: "#666",
-            width: width * 0.9 || "90%",
+            borderBottomColor: '#666',
+            width: width * 0.9 || '90%',
             marginBottom: 5,
         },
         stateContainer: {
-            alignSelf: "center",
+            alignSelf: 'center',
             padding: 5,
             borderRadius: 5,
             backgroundColor: theme.colors.primary,
-            justifyContent: "center",
-            alignItems: "center",
+            justifyContent: 'center',
+            alignItems: 'center',
             marginTop: 10,
         },
         legendContainer: {
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            alignSelf: "center",
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            alignSelf: 'center',
             marginTop: 10,
         },
         buttonContainer: {
             marginTop: 10,
-            alignItems: "center",
+            alignItems: 'center',
         },
     });
 
@@ -206,7 +206,7 @@ const TripSummary = ({ trip, width }) => {
                             <Text style={styles.cardHeaderText}>Route:</Text>
                         </View>
                         <Text style={styles.title}>
-                            {trip?.route?.routeNumber} |{" "}
+                            {trip?.route?.routeNumber} |{' '}
                             {trip?.route?.routeName}
                         </Text>
                     </View>
@@ -228,7 +228,7 @@ const TripSummary = ({ trip, width }) => {
                                 ? new Date(
                                       trip?.departureTime
                                   ).toLocaleTimeString()
-                                : "Unavailable"}
+                                : 'Unavailable'}
                         </Text>
                     </View>
 
@@ -249,7 +249,7 @@ const TripSummary = ({ trip, width }) => {
                                 ? new Date(
                                       trip?.arrivalTime
                                   ).toLocaleTimeString()
-                                : "Unavailable"}
+                                : 'Unavailable'}
                         </Text>
                     </View>
 
@@ -264,7 +264,7 @@ const TripSummary = ({ trip, width }) => {
                             <Text style={styles.cardHeaderText}>Bus:</Text>
                         </View>
                         <Text style={styles.title}>
-                            {trip?.bus?.busNumber || "Unavailable"}
+                            {trip?.bus?.busNumber || 'Unavailable'}
                         </Text>
                     </View>
 
@@ -279,8 +279,8 @@ const TripSummary = ({ trip, width }) => {
                             <Text style={styles.cardHeaderText}>Driver:</Text>
                         </View>
                         <Text style={styles.title}>
-                            {USER?.firstName + " " + USER?.lastName ||
-                                "Unavailable"}
+                            {USER?.firstName + ' ' + USER?.lastName ||
+                                'Unavailable'}
                         </Text>
                     </View>
 
@@ -304,7 +304,7 @@ const TripSummary = ({ trip, width }) => {
                     </View>
 
                     {/* buttons */}
-                    {trip?.state === "scheduled" && (
+                    {trip?.state === 'scheduled' && (
                         <View style={styles.buttonContainer}>
                             {deleteConfirm && (
                                 <Animated.Text
@@ -318,8 +318,8 @@ const TripSummary = ({ trip, width }) => {
                                 <ThemeButton
                                     title={
                                         deleteConfirm
-                                            ? "Yes, Cancel Trip"
-                                            : "Cancel Trip"
+                                            ? 'Yes, Cancel Trip'
+                                            : 'Cancel Trip'
                                     }
                                     color={theme.colors.error}
                                     onPress={handleDeleteClick}>

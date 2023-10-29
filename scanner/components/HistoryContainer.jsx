@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
     View,
     FlatList,
     StyleSheet,
     RefreshControl,
     Dimensions,
-} from "react-native";
-import getThemeContext from "../context/ThemeContext";
-import { getAppContext } from "../context/AppContext";
-import Toast from "react-native-toast-message";
-import TripCard from "./common/TripCard";
-import { getBusJourneys } from "../services/busJourneyServices";
+} from 'react-native';
+import getThemeContext from '../context/ThemeContext';
+import { getAppContext } from '../context/AppContext';
+import Toast from 'react-native-toast-message';
+import TripCard from './common/TripCard';
+import { getBusJourneys } from '../services/busJourneyServices';
 
 const HistoryContainer = ({ navigation }) => {
     const { theme } = getThemeContext();
@@ -24,8 +24,8 @@ const HistoryContainer = ({ navigation }) => {
             setHistory(data);
         } catch (error) {
             Toast.show({
-                type: "error",
-                text1: "Error",
+                type: 'error',
+                text1: 'Error',
                 text2: error.response?.data?.error || error.message,
             });
         }
@@ -44,7 +44,7 @@ const HistoryContainer = ({ navigation }) => {
         },
         title: {
             fontSize: 24,
-            fontWeight: "bold",
+            fontWeight: 'bold',
             marginBottom: 10,
         },
         text: {
@@ -52,32 +52,32 @@ const HistoryContainer = ({ navigation }) => {
         },
         subtitle: {
             fontSize: 14,
-            fontWeight: "bold",
+            fontWeight: 'bold',
             color: theme.colors.text,
         },
         itemStyle: {
             paddingVertical: 5,
             paddingHorizontal: 10,
-            borderWidth: theme.mode === "dark" ? 1 : 0,
-            borderColor: "#666",
+            borderWidth: theme.mode === 'dark' ? 1 : 0,
+            borderColor: '#666',
             borderRadius: 5,
-            width: Dimensions.get("window").width * 0.9,
+            width: Dimensions.get('window').width * 0.9,
             backgroundColor: theme.colors.surface,
             elevation: 5,
         },
         list: {
             flex: 1,
-            width: Dimensions.get("window").width,
+            width: Dimensions.get('window').width,
         },
         contentContainerStyle: {
-            alignItems: "center",
-            width: Dimensions.get("window").width,
+            alignItems: 'center',
+            width: Dimensions.get('window').width,
             marginVertical: 5,
         },
     });
 
     const handleItemClick = (item) => {
-        navigation.navigate("BusTrip", { trip: item });
+        navigation.navigate('BusTrip', { trip: item });
     };
 
     useEffect(() => {
@@ -100,7 +100,7 @@ const HistoryContainer = ({ navigation }) => {
                     <View style={styles.contentContainerStyle}>
                         <TripCard
                             trip={item}
-                            width={Dimensions.get("window").width * 0.9}
+                            width={Dimensions.get('window').width * 0.9}
                             onPress={() => handleItemClick(item)}
                         />
                     </View>
